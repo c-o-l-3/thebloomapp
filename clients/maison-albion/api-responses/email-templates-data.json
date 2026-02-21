@@ -1,0 +1,86 @@
+{
+  "builders": [
+    {
+      "name": "Radiance Beauty",
+      "updatedBy": "",
+      "isPlainText": false,
+      "lastUpdated": "2023-07-09T07:29:48.448Z",
+      "dateAdded": "2023-07-09T07:29:46.555Z",
+      "previewUrl": "https://firebasestorage.googleapis.com/v0/b/highlevel-backend.appspot.com/o/location%2FHzttFvMOh41pAjozlxkS%2Femails%2F64aa61e9c542271d1fa50374%2Findex.html?alt=media&token=07c822d7-8ce0-4c7d-8afa-421b7a773b7d",
+      "id": "64aa61e9c542271d1fa50374",
+      "version": "2",
+      "templateType": "builder"
+    },
+    {
+      "name": "A Wedding Present",
+      "updatedBy": "",
+      "isPlainText": false,
+      "lastUpdated": "2023-08-16T11:37:59.871Z",
+      "dateAdded": "2023-08-16T11:37:01.496Z",
+      "previewUrl": "https://firebasestorage.googleapis.com/v0/b/highlevel-backend.appspot.com/o/location%2FHzttFvMOh41pAjozlxkS%2Femails%2F64dcb4dc5accbecf0e854eab%2Findex.html?alt=media&token=d6d3d393-f81c-4d35-8f3c-f732a00e194b",
+      "id": "64dcb4dc5accbecf0e854eab",
+      "version": "2",
+      "templateType": "builder"
+    },
+    {
+      "name": "Are You Still Considering Us?",
+      "updatedBy": "",
+      "isPlainText": false,
+      "lastUpdated": "2023-08-16T16:07:53.970Z",
+      "dateAdded": "2023-08-16T11:50:23.298Z",
+      "previewUrl": "https://firebasestorage.googleapis.com/v0/b/highlevel-backend.appspot.com/o/location%2FHzttFvMOh41pAjozlxkS%2Femails%2F64dcb7fe003eaf7b7bc8373e%2Findex.html?alt=media&token=b6c217d4-ad3b-4a89-bf98-e3cadf17a6ed",
+      "id": "64dcb7fe003eaf7b7bc8373e",
+      "version": "2",
+      "templateType": "builder"
+    },
+    {
+      "name": "August 2023",
+      "updatedBy": "",
+      "isPlainText": false,
+      "lastUpdated": "2023-08-27T16:59:45.407Z",
+      "dateAdded": "2023-08-27T16:42:44.670Z",
+      "previewUrl": "https://firebasestorage.googleapis.com/v0/b/highlevel-backend.appspot.com/o/location%2FHzttFvMOh41pAjozlxkS%2Femails%2F64eb7d02bac978066a3751e2%2Findex.html?alt=media&token=efc5e1db-555b-421a-808a-b9d5e5d8cb25",
+      "id": "64eb7d02bac978066a3751e2",
+      "version": "2",
+      "templateType": "builder"
+    },
+    {
+      "name": "Visual Client Journey Template",
+      "updatedBy": "",
+      "isPlainText": false,
+      "lastUpdated": "2024-04-13T09:57:37.090Z",
+      "dateAdded": "2024-04-13T09:56:27.736Z",
+      "previewUrl": "https://firebasestorage.googleapis.com/v0/b/highlevel-backend.appspot.com/o/location%2FHzttFvMOh41pAjozlxkS%2Femails%2F661a56cb845484443725593e%2Findex.html?alt=media&token=384721b4-be51-4b26-8eaf-5f950b7a58f4",
+      "id": "661a56cb845484443725593e",
+      "version": "2",
+      "templateType": "builder"
+    },
+    {
+      "name": "New Template",
+      "updatedBy": "",
+      "isPlainText": false,
+      "lastUpdated": "2024-07-17T17:15:26.504Z",
+      "dateAdded": "2024-07-17T17:15:26.504Z",
+      "previewUrl": "https://firebasestorage.googleapis.com/v0/b/highlevel-backend.appspot.com/o/location%2FHzttFvMOh41pAjozlxkS%2Femails%2F6697fc2df095f253cbc046c7%2Findex.html?alt=media&token=be6ee44d-235a-4eaa-92ba-ada44977c10c",
+      "id": "6697fc2df095f253cbc046c7",
+      "version": "2",
+      "templateType": "builder"
+    },
+    {
+      "name": "00 Inquiry Journey",
+      "updatedBy": "",
+      "isPlainText": false,
+      "lastUpdated": "2024-04-23T21:23:59.147Z",
+      "dateAdded": "2024-04-23T21:23:59.147Z",
+      "id": "662826ef0125692b924de28b",
+      "version": "2",
+      "templateType": "folder",
+      "childCount": 1
+    }
+  ],
+  "total": [
+    {
+      "total": 7
+    }
+  ]
+}

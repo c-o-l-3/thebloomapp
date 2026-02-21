@@ -1,0 +1,149 @@
+{
+  "$schema": "../schemas/brand-voice-schema.json",
+  "version": "1.0.0",
+  "lastUpdated": "2026-02-21T16:00:00Z",
+  "companyName": "Example Wedding Venue",
+  "website": "https://www.examplevenue.com",
+  "logoUrl": "https://example.com/logo.png",
+  "voice": {
+    "adjectives": ["warm", "elegant", "approachable", "knowledgeable", "romantic"],
+    "personality": "An elegant but approachable host who genuinely loves celebrations",
+    "do": [
+      "Use warm, inviting language",
+      "Refer to the venue as 'we' and 'our team'",
+      "Include specific details and numbers",
+      "Address the couple by first name",
+      "Share genuine enthusiasm",
+      "Use sensory language to paint a picture",
+      "Ask rhetorical questions to engage",
+      "Tell short stories and anecdotes"
+    ],
+    "dont": [
+      "Use pushy sales language",
+      "Be overly formal or stuffy",
+      "Make promises that can't be kept",
+      "Use generic wedding industry buzzwords",
+      "Address couples as 'clients' or 'customers'",
+      "Use all caps for emphasis",
+      "Include unlimited alcohol claims",
+      "Use fear-based marketing"
+    ]
+  },
+  "vocabulary": {
+    "preferred": [
+      {
+        "term": "celebration",
+        "context": "Use instead of 'event' to convey joy",
+        "insteadOf": "event"
+      },
+      {
+        "term": "guests",
+        "context": "Use instead of 'attendees' to convey warmth",
+        "insteadOf": "attendees"
+      },
+      {
+        "term": "couple",
+        "context": "Use instead of 'client' or 'customer'",
+        "insteadOf": "client"
+      },
+      {
+        "term": "ceremony space",
+        "context": "Instead of just 'space'",
+        "insteadOf": "space"
+      }
+    ],
+    "prohibited": [
+      {
+        "term": "cheap",
+        "reason": "Implies low quality",
+        "alternative": "affordable"
+      },
+      {
+        "term": "unlimited alcohol",
+        "reason": "Legal compliance - requires review",
+        "alternative": "premium open bar"
+      },
+      {
+        "term": "free",
+        "reason": "Often misleading in wedding context",
+        "alternative": "included"
+      }
+    ],
+    "industry": [
+      "venue",
+      "ceremony",
+      "reception",
+      "catering",
+      "coordinator",
+      "planner",
+      "vendor"
+    ]
+  },
+  "tone": {
+    "byStage": [
+      {
+        "stage": "welcome",
+        "tone": "warm and personal, like a letter from a friend",
+        "formality": 0.3,
+        "enthusiasm": 0.8,
+        "urgency": 0.1
+      },
+      {
+        "stage": "nurture",
+        "tone": "helpful and educational",
+        "formality": 0.4,
+        "enthusiasm": 0.6,
+        "urgency": 0.2
+      },
+      {
+        "stage": "consideration",
+        "tone": "confident and transparent",
+        "formality": 0.5,
+        "enthusiasm": 0.7,
+        "urgency": 0.4
+      },
+      {
+        "stage": "decision",
+        "tone": "encouraging but respectful",
+        "formality": 0.5,
+        "enthusiasm": 0.7,
+        "urgency": 0.6
+      },
+      {
+        "stage": "close",
+        "tone": "gracious and supportive",
+        "formality": 0.4,
+        "enthusiasm": 0.5,
+        "urgency": 0.2
+      }
+    ],
+    "patterns": [
+      {
+        "name": "Rhetorical Questions",
+        "description": "Engage the reader with thoughtful questions they can picture",
+        "examples": [
+          "Can you see yourself walking down the aisle?",
+          "What does your dream wedding actually look like?"
+        ]
+      },
+      {
+        "name": "Sensory Details",
+        "description": "Use vivid sensory language",
+        "examples": [
+          "golden sunlight filtering through the branches",
+          "the clink of glasses as people toast"
+        ]
+      }
+    ]
+  },
+  "visual": {
+    "primaryColors": ["#2C3E50", "#D4AF37", "#FDFCFA"],
+    "secondaryColors": ["#F5F1EB", "#8B7355", "#FFFFFF"],
+    "typography": {
+      "headingFont": "Cormorant Garamond",
+      "bodyFont": "Poppins",
+      "accentFont": "Cormorant Garamond"
+    },
+    "imageryStyle": "Elegant, natural light photography with warm tones. Focus on candid moments and emotional connections."
+  }
+}

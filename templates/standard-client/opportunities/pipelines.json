@@ -1,0 +1,52 @@
+{
+  "pipelines": [
+    {
+      "id": "",
+      "name": "Main Sales Pipeline",
+      "stages": [
+        {
+          "id": "",
+          "name": "Lead",
+          "order": 1,
+          "color": "#36BFFA"
+        },
+        {
+          "id": "",
+          "name": "Contacted",
+          "order": 2,
+          "color": "#FFA94D"
+        },
+        {
+          "id": "",
+          "name": "Tour Scheduled",
+          "order": 3,
+          "color": "#69DB7C"
+        },
+        {
+          "id": "",
+          "name": "Proposal Sent",
+          "order": 4,
+          "color": "#FF8787"
+        },
+        {
+          "id": "",
+          "name": "Negotiation",
+          "order": 5,
+          "color": "#E599F7"
+        },
+        {
+          "id": "",
+          "name": "Booked/Won",
+          "order": 6,
+          "color": "#A9E34B"
+        },
+        {
+          "id": "",
+          "name": "Lost",
+          "order": 7,
+          "color": "#CED4DA"
+        }
+      ]
+    }
+  ]
+}

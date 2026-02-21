@@ -1,0 +1,26 @@
+{
+  "version": "1.0.1",
+  "lastCrawl": {
+    "startedAt": "2026-02-21T19:30:15.542Z",
+    "completedAt": "2026-02-21T19:31:29.023Z",
+    "url": "https://promise-farm.com/",
+    "pagesCrawled": 40,
+    "pagesChanged": 0,
+    "newFactsExtracted": 4,
+    "status": "completed"
+  },
+  "crawlHistory": [
+    {
+      "date": "2026-02-21T19:31:29.023Z",
+      "pagesCrawled": 40,
+      "pagesChanged": 0,
+      "status": "completed"
+    },
+    {
+      "date": "2026-02-14T10:00:00Z",
+      "pagesCrawled": 25,
+      "pagesChanged": 0,
+      "status": "completed"
+    }
+  ]
+}

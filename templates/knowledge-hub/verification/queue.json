@@ -1,0 +1,32 @@
+{
+  "$schema": "../schemas/verification-schema.json",
+  "version": "1.0.0",
+  "lastUpdated": "2026-02-21T16:00:00Z",
+  "pendingCount": 5,
+  "queue": [
+    {
+      "factId": "fact-cap-001",
+      "statement": "Garden ceremony space accommodates up to 200 guests",
+      "confidence": 0.88,
+      "source": {
+        "type": "website",
+        "reference": "venue-spaces"
+      },
+      "extractedAt": "2026-02-21T10:10:00Z",
+      "priority": "high",
+      "reason": "Capacity information is critical for accurate marketing"
+    },
+    {
+      "factId": "fact-policy-001",
+      "statement": "Open vendor policy - couples can bring their own vendors",
+      "confidence": 0.87,
+      "source": {
+        "type": "document",
+        "reference": "doc-002"
+      },
+      "extractedAt": "2026-02-19T10:30:00Z",
+      "priority": "medium",
+      "reason": "Policy details need human confirmation"
+    }
+  ]
+}

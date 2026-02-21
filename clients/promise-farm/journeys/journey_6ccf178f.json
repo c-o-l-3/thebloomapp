@@ -1,0 +1,52 @@
+{
+  "id": "journey_6ccf178f",
+  "name": "Inquiry Follow-Up",
+  "description": "3-touchpoint follow-up for new inquiries",
+  "category": "follow-up",
+  "status": "Draft",
+  "client": "promise-farm",
+  "touchpoints": [
+    {
+      "id": "tp_af37463c",
+      "name": "SMS Welcome - 10 min",
+      "type": "SMS",
+      "order": 1,
+      "delay": 0,
+      "delayUnit": "hours",
+      "content": "Hi {{contact.first_name}}! Thanks for your interest in {{company_name}}. Ready to see our venue? Book your tour here: {{tour_booking_link}} - Reply STOP to opt out"
+    },
+    {
+      "id": "tp_7d5df2db",
+      "name": "Email Details - 1 hour",
+      "type": "Email",
+      "order": 2,
+      "delay": 1,
+      "delayUnit": "hours",
+      "content": {
+        "type": "email",
+        "subject": "Thanks for reaching out to {{company_name}}",
+        "greeting": "Hi {{contact.first_name}},",
+        "body": "Thank you for your inquiry about {{company_name}}! I've received your message and will personally review your wedding vision.\n\nHere's what happens next:\n1. I'll review your details (within 24 hours)\n2. I'll send available dates that match your preferences\n3. We'll schedule your private tour\n\nIn the meantime, browse our gallery for inspiration: {{gallery_link}}\n\nExcited to connect soon!\n\nBest,\nThe {{company_name}} Team",
+        "cta": {
+          "text": "View Our Gallery",
+          "url": "{{gallery_link}}"
+        },
+        "templateType": "inquiry_response",
+        "compliance": {
+          "unsubscribeRequired": true,
+          "physicalAddressRequired": true,
+          "companyNameRequired": true
+        }
+      }
+    },
+    {
+      "id": "tp_2ba095c7",
+      "name": "SMS Barrier Removal - 3 days",
+      "type": "SMS",
+      "order": 3,
+      "delay": 3,
+      "delayUnit": "days",
+      "content": "Hi {{contact.first_name}}! Quick question - what's the #1 thing you're looking for in a venue? I might have some helpful info for you. - {{company_name}} Team"
+    }
+  ]
+}

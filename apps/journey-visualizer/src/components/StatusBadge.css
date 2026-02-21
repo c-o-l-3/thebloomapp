@@ -1,0 +1,52 @@
+/**
+ * StatusBadge Component Styles
+ */
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  font-weight: 500;
+  font-size: 13px;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.status-badge--small {
+  padding: 2px 8px;
+  font-size: 11px;
+  gap: 4px;
+}
+
+.status-badge--large {
+  padding: 6px 16px;
+  font-size: 15px;
+  gap: 8px;
+}
+
+.status-badge__icon {
+  font-size: 0.9em;
+}
+
+.status-badge__label {
+  text-transform: capitalize;
+}
+
+/* Status Indicator Dot */
+.status-indicator {
+  display: inline-block;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.status-indicator--small {
+  width: 8px;
+  height: 8px;
+}
+
+.status-indicator--medium {
+  width: 12px;
+  height: 12px;
+}

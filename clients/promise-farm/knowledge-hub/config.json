@@ -1,0 +1,35 @@
+{
+  "$schema": "./schemas/config-schema.json",
+  "version": "1.0.0",
+  "enabled": true,
+  "clientId": "promise-farm",
+  "settings": {
+    "autoExtract": true,
+    "verifyThreshold": 0.85,
+    "crawlFrequency": "weekly",
+    "embeddingModel": "text-embedding-3-large",
+    "chunkSize": 1000,
+    "chunkOverlap": 200
+  },
+  "sources": {
+    "website": {
+      "enabled": true,
+      "url": "https://promise-farm.com/",
+      "maxPages": 50,
+      "maxDepth": 3
+    },
+    "documents": {
+      "enabled": true,
+      "allowedTypes": ["pdf", "docx", "doc", "txt", "jpg", "jpeg", "png"]
+    },
+    "manual": {
+      "enabled": true
+    }
+  },
+  "integrations": {
+    "emailFactory": true,
+    "journeyVisualizer": true,
+    "syncEngine": true,
+    "airtable": true
+  }
+}

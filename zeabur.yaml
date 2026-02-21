@@ -1,0 +1,51 @@
+# Zeabur Deployment Configuration - Root Level
+# Deploys both frontend and API services
+# https://zeabur.com/docs
+
+name: bloom-builder
+icon: https://cdn-icons-png.flaticon.com/512/2920/2920277.png
+
+# Multi-service configuration
+services:
+  # Frontend - Journey Visualizer
+  - name: journey-visualizer
+    type: static
+    path: apps/journey-visualizer
+    build:
+      dockerfile: Dockerfile
+    ports:
+      - port: 80
+        protocol: http
+    environment:
+      VITE_DATA_SOURCE: api
+      VITE_API_URL: https://journey-api.zeabur.app/api
+    
+  # Backend - Journey API
+  - name: journey-api
+    type: nodejs
+    path: apps/journey-api
+    build:
+      dockerfile: Dockerfile
+    ports:
+      - port: 3001
+        protocol: http
+    environment:
+      NODE_ENV: production
+      PORT: 3001
+
+# Required environment variables (set in Zeabur dashboard):
+# For API service:
+#   DATABASE_URL - PostgreSQL connection (auto-bound from Zeabur PostgreSQL service)
+#   JWT_SECRET - JWT signing secret
+#   JWT_EXPIRES_IN - JWT expiration (default: 24h)
+#   CORS_ORIGIN - Frontend URL
+#   GHL_API_KEY - GoHighLevel API key
+
+# Health checks
+healthcheck:
+  journey-visualizer:
+    path: /health
+    port: 80
+  journey-api:
+    path: /health
+    port: 3001

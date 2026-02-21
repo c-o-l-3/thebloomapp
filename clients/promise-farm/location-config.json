@@ -1,0 +1,29 @@
+{
+  "locationId": "Ys6TV8qbSBcSRdgrPnpv",
+  "name": "Promise Farm",
+  "slug": "promise-farm",
+  "industry": "wedding-venue",
+  "contact": {
+    "website": "https://promise-farm.com/",
+    "email": "info@promise-farm.com",
+    "phone": "",
+    "address": {
+      "street": "Lancaster County",
+      "city": "Lancaster",
+      "state": "PA",
+      "zip": "",
+      "country": "US"
+    }
+  },
+  "settings": {
+    "timezone": "America/New_York",
+    "currency": "USD"
+  },
+  "onboarding": {
+    "completedAt": "2026-02-21T19:51:00.000Z",
+    "websiteCrawled": true,
+    "factsExtracted": 30,
+    "brandVoiceAnalyzed": true,
+    "journeysGenerated": true
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "_comment": "Publish state reset - republishing with correct API",
+  "001_e_day1_welcome": {
+    "lastPublished": "2026-02-09T14:46:12.376Z",
+    "hash": "6f718094b44f77366728d6a5c23bf56c",
+    "type": "email",
+    "name": "001 E Day 1 - Welcome",
+    "ghlTemplateId": "6989f3343f4660695176ab31"
+  },
+  "001_e_day2_what_to_look_for": {
+    "lastPublished": "2026-02-09T14:46:15.261Z",
+    "hash": "ae72449221d3123f3143cf5480e64144",
+    "type": "email",
+    "name": "001 E Day 2 - What to Look For",
+    "ghlTemplateId": "6989f336c528f4c2c8193535"
+  },
+  "001_e_day3_stories": {
+    "lastPublished": "2026-02-09T14:46:17.737Z",
+    "hash": "a3b8f16aaa60e2cd2ce3c0585ca5cf37",
+    "type": "email",
+    "name": "001 E Day 3 - Stories",
+    "ghlTemplateId": "6989f3391cf63d188e16bce0"
+  },
+  "001_e_day5_vision": {
+    "lastPublished": "2026-02-09T14:46:20.364Z",
+    "hash": "105d2028ebb67e52b9cf318b6b27467c",
+    "type": "email",
+    "name": "001 E Day 5 - Vision",
+    "ghlTemplateId": "6989f33b071827972b6f6708"
+  },
+  "001_e_day7_pinterest": {
+    "lastPublished": "2026-02-09T14:46:23.145Z",
+    "hash": "a50ff4bba56c2409290183b600470b4e",
+    "type": "email",
+    "name": "001 E Day 7 - Pinterest",
+    "ghlTemplateId": "6989f33e1cf63d439316bd6a"
+  },
+  "001_e_day10_inclusions": {
+    "lastPublished": "2026-02-09T14:46:25.665Z",
+    "hash": "feedc855a647e3ca9b7ae9b3ed9cca09",
+    "type": "email",
+    "name": "001 E Day 10 - Inclusions",
+    "ghlTemplateId": "6989f3413f466013e276ac1f"
+  },
+  "001_e_day12_faq": {
+    "lastPublished": "2026-02-09T14:46:28.367Z",
+    "hash": "54a90bb2351e13025efc0b0bdba191a2",
+    "type": "email",
+    "name": "001 E Day 12 - FAQ",
+    "ghlTemplateId": "6989f34319a4a94f6d7061f9"
+  },
+  "001_e_day14_close": {
+    "lastPublished": "2026-02-09T14:46:30.974Z",
+    "hash": "9fde90f73eb279da2188ef6c4477d3e0",
+    "type": "email",
+    "name": "001 E Day 14 - Close",
+    "ghlTemplateId": "6989f34673c4ce69cc49fff6"
+  }
+}

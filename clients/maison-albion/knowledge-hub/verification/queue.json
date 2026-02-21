@@ -1,0 +1,20 @@
+{
+  "$schema": "../schemas/verification-schema.json",
+  "version": "1.0.0",
+  "lastUpdated": "2026-02-21T16:48:53.550Z",
+  "pendingCount": 1,
+  "queue": [
+    {
+      "factId": "fact-policy-001",
+      "statement": "Open vendor policy - couples can bring their own vendors",
+      "confidence": 0.87,
+      "source": {
+        "type": "document",
+        "reference": "doc-002"
+      },
+      "extractedAt": "2026-02-19T10:30:00Z",
+      "priority": "medium",
+      "reason": "Policy details need human confirmation"
+    }
+  ]
+}

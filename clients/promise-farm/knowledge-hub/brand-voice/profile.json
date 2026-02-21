@@ -1,0 +1,306 @@
+{
+  "$schema": "../schemas/brand-voice-schema.json",
+  "version": "1.0.1",
+  "lastUpdated": "2026-02-21T19:37:56.909Z",
+  "companyName": "Example Wedding Venue",
+  "website": "https://www.examplevenue.com",
+  "logoUrl": "https://example.com/logo.png",
+  "voice": {
+    "adjectives": [
+      "warm",
+      "welcoming",
+      "peaceful",
+      "down-to-earth",
+      "flexible",
+      "affordable",
+      "natural",
+      "unpretentious"
+    ],
+    "personality": "Promise Farm comes across as a helpful, approachable neighbor who happens to own a beautiful property. They balance rustic charm with modern convenience while emphasizing that beautiful weddings don't require rigid rules or extravagant budgets.",
+    "do": [
+      "Use warm, sensory language that evokes the countryside setting",
+      "Emphasize flexibility and freedom of choice for vendors and catering",
+      "Address the reader directly using 'you' and 'your' to create personal connection",
+      "Mention affordability and value alongside elegance",
+      "Include specific natural details (ponds, fields, fresh air, light)",
+      "Use testimonials with authentic, enthusiastic quotes from couples",
+      "Keep sentences accessible and conversational",
+      "Highlight the Lancaster County location and rural setting",
+      "Use checkmark bullets for amenities and features",
+      "Refer to the venue as a 'canvas' or 'backdrop' for the couple's story"
+    ],
+    "dont": [
+      "Use stuffy, formal hospitality language or pretentious terminology",
+      "Imply rigid rules or restrictions on vendor choices",
+      "Focus exclusively on luxury or high-end positioning",
+      "Use pushy sales language or urgency tactics",
+      "Overwhelm with industry jargon or wedding planning complexity",
+      "Sound corporate or generic like a hotel banquet hall",
+      "Use urban-centric language that ignores the rural setting",
+      "Suggest that weddings must follow a specific traditional format",
+      "Use 'cheap' or imply low quality when discussing affordability"
+    ]
+  },
+  "vocabulary": {
+    "preferred": [
+      {
+        "term": "celebration",
+        "context": "Use instead of 'event' to convey joy",
+        "insteadOf": "event"
+      },
+      {
+        "term": "guests",
+        "context": "Use instead of 'attendees' to convey warmth",
+        "insteadOf": "attendees"
+      },
+      {
+        "term": "couple",
+        "context": "Use instead of 'client' or 'customer'",
+        "insteadOf": "client"
+      },
+      {
+        "term": "ceremony space",
+        "context": "Instead of just 'space'",
+        "insteadOf": "space"
+      },
+      {
+        "term": "celebration",
+        "insteadOf": "event",
+        "context": "Conveys joy and personal meaning"
+      },
+      {
+        "term": "gathering",
+        "insteadOf": "function",
+        "context": "Implies intimacy and connection"
+      },
+      {
+        "term": "backdrop",
+        "insteadOf": "location",
+        "context": "Positions venue as supporting the couple's story"
+      },
+      {
+        "term": "canvas",
+        "insteadOf": "space",
+        "context": "Emphasizes creative freedom and blank-slate potential"
+      },
+      {
+        "term": "homespun",
+        "insteadOf": "rustic",
+        "context": "Adds warmth and handmade quality"
+      },
+      {
+        "term": "meaningful",
+        "insteadOf": "fancy",
+        "context": "Values substance over ostentation"
+      },
+      {
+        "term": "peaceful",
+        "insteadOf": "quiet",
+        "context": "Positive connotation of serenity"
+      },
+      {
+        "term": "down-to-earth",
+        "insteadOf": "casual",
+        "context": "Authentic, grounded vibe without being sloppy"
+      }
+    ],
+    "prohibited": [
+      {
+        "term": "cheap",
+        "reason": "Implies low quality",
+        "alternative": "affordable"
+      },
+      {
+        "term": "unlimited alcohol",
+        "reason": "Legal compliance - requires review",
+        "alternative": "premium open bar"
+      },
+      {
+        "term": "free",
+        "reason": "Often misleading in wedding context",
+        "alternative": "included"
+      },
+      {
+        "term": "cheap",
+        "alternative": "affordable",
+        "reason": "Implies low quality rather than good value"
+      },
+      {
+        "term": "luxury",
+        "alternative": "elegant",
+        "reason": "Suggests exclusivity and high cost contrary to accessible positioning"
+      },
+      {
+        "term": "rules",
+        "alternative": "guidelines",
+        "reason": "They emphasize flexibility and freedom"
+      },
+      {
+        "term": "package",
+        "alternative": "options",
+        "reason": "Implies rigid bundles rather than customizable choices"
+      },
+      {
+        "term": "banquet hall",
+        "alternative": "barn",
+        "reason": "Suggests generic hotel feel rather than unique farm setting"
+      },
+      {
+        "term": "restrictions",
+        "alternative": "flexibility",
+        "reason": "Brand emphasizes vendor freedom and personalization"
+      }
+    ],
+    "industry": [
+      "venue",
+      "ceremony",
+      "reception",
+      "catering",
+      "coordinator",
+      "planner",
+      "vendor",
+      "barn wedding",
+      "vendors",
+      "caterer",
+      "bridal suite",
+      "groom's suite",
+      "day-of coordinator",
+      "climate-controlled",
+      "plated dinner",
+      "food truck",
+      "arch",
+      "florals",
+      "décor",
+      "getting-ready",
+      "tree-lined lane",
+      "chandeliers",
+      "rustic elegance"
+    ]
+  },
+  "tone": {
+    "byStage": [
+      {
+        "stage": "welcome",
+        "tone": "warm and personal, like a letter from a friend",
+        "formality": 0.3,
+        "enthusiasm": 0.8,
+        "urgency": 0.1
+      },
+      {
+        "stage": "nurture",
+        "tone": "helpful and educational",
+        "formality": 0.4,
+        "enthusiasm": 0.6,
+        "urgency": 0.2
+      },
+      {
+        "stage": "consideration",
+        "tone": "confident and transparent",
+        "formality": 0.5,
+        "enthusiasm": 0.7,
+        "urgency": 0.4
+      },
+      {
+        "stage": "decision",
+        "tone": "encouraging but respectful",
+        "formality": 0.5,
+        "enthusiasm": 0.7,
+        "urgency": 0.6
+      },
+      {
+        "stage": "close",
+        "tone": "gracious and supportive",
+        "formality": 0.4,
+        "enthusiasm": 0.5,
+        "urgency": 0.2
+      }
+    ],
+    "patterns": [
+      {
+        "name": "Sensory Setting Descriptions",
+        "description": "Sentences that evoke the physical experience of being at the farm",
+        "examples": [
+          "Promise Farm sits quietly in the hills of Lancaster County, surrounded by open fields and the easy beauty of the countryside.",
+          "It's bright, comfortable, and ready to host both intimate gatherings and large celebrations."
+        ]
+      },
+      {
+        "name": "You-Centered Statements",
+        "description": "Direct address emphasizing personal choice and customization",
+        "examples": [
+          "You can plan a meaningful celebration that feels completely your own.",
+          "You're welcome to choose the vendors that fit your style and budget."
+        ]
+      },
+      {
+        "name": "Short Punchy Hooks",
+        "description": "Brief statements that capture the essence of the venue",
+        "examples": [
+          "Promise Farm is where beautiful moments unfold.",
+          "The Perfect Canvas for Your Wedding Day."
+        ]
+      },
+      {
+        "name": "Feature Bullets with Icons",
+        "description": "Visual list format using checkmarks or icons for amenities",
+        "examples": [
+          " Air conditioned and heated barn, climate-controlled for year-round comfort",
+          " Outdoor ceremony area with sweeping countryside views"
+        ]
+      }
+    ],
+    "formalityLevel": 0.35,
+    "enthusiasmLevel": 0.65
+  },
+  "visual": {
+    "primaryColors": [
+      "#2C3E50",
+      "#D4AF37",
+      "#FDFCFA"
+    ],
+    "secondaryColors": [
+      "#F5F1EB",
+      "#8B7355",
+      "#FFFFFF"
+    ],
+    "typography": {
+      "headingFont": "Cormorant Garamond",
+      "bodyFont": "Poppins",
+      "accentFont": "Cormorant Garamond"
+    },
+    "imageryStyle": "Elegant, natural light photography with warm tones. Focus on candid moments and emotional connections."
+  },
+  "lastAnalyzed": "2026-02-21T19:37:56.909Z",
+  "analysisSource": [
+    "homepage",
+    "pricing",
+    "venue-spaces",
+    "page-465c6c20",
+    "page-9847227c",
+    "page-cb237bc6",
+    "page-c59cf2c4",
+    "page-7c4651c1",
+    "page-8bd67277",
+    "page-57b30a8e",
+    "page-c41225d2",
+    "page-80f40f6d",
+    "page-ce2eed09",
+    "page-b95fbb56",
+    "page-d5de8fa7",
+    "page-24e2cc61",
+    "page-c0bdb7c9",
+    "page-3cec416e",
+    "page-7476b89f",
+    "page-de8ff476",
+    "page-a8315887",
+    "page-e96fb4cd",
+    "page-598c4067",
+    "page-911456f2",
+    "accommodations",
+    "faq",
+    "page-fb6d650a",
+    "page-7cd4d522",
+    "page-5f31deaf",
+    "page-f1ac0205"
+  ]
+}

@@ -1,0 +1,220 @@
+{
+  "$schema": "../schemas/facts-schema.json",
+  "version": "1.0.0",
+  "lastUpdated": "2026-02-21T16:48:53.548Z",
+  "factCount": 24,
+  "verifiedCount": 5,
+  "categories": [
+    {
+      "id": "pricing",
+      "name": "Pricing & Packages",
+      "description": "All pricing-related facts",
+      "factCount": 6
+    },
+    {
+      "id": "capacity",
+      "name": "Capacity & Spaces",
+      "description": "Guest capacity and space information",
+      "factCount": 5
+    },
+    {
+      "id": "policies",
+      "name": "Policies",
+      "description": "Venue policies and rules",
+      "factCount": 4
+    },
+    {
+      "id": "amenities",
+      "name": "Amenities & Services",
+      "description": "Included services and amenities",
+      "factCount": 5
+    },
+    {
+      "id": "venue-details",
+      "name": "Venue Details",
+      "description": "Physical venue information",
+      "factCount": 4
+    }
+  ],
+  "facts": [
+    {
+      "id": "fact-price-001",
+      "category": "pricing",
+      "subcategory": "base-packages",
+      "type": "range",
+      "statement": "Wedding packages start at $5,000",
+      "value": {
+        "min": 5000,
+        "max": 15000
+      },
+      "unit": "USD",
+      "validFrom": "2026-01-01",
+      "source": {
+        "type": "website",
+        "reference": "homepage",
+        "url": "https://www.examplevenue.com",
+        "extractedAt": "2026-02-21T10:00:00Z"
+      },
+      "confidence": 0.95,
+      "verificationStatus": "verified",
+      "verifiedBy": "manager@venue.com",
+      "verifiedAt": "2026-02-21T12:00:00Z",
+      "tags": [
+        "pricing",
+        "packages",
+        "minimum",
+        "starting-price"
+      ],
+      "embeddingId": "emb-fact-price-001",
+      "usedIn": [
+        "email-welcome",
+        "email-pricing"
+      ]
+    },
+    {
+      "id": "fact-price-002",
+      "category": "pricing",
+      "subcategory": "payment-terms",
+      "type": "scalar",
+      "statement": "Initial deposit to secure date is $3,000",
+      "value": 3000,
+      "unit": "USD",
+      "validFrom": "2026-01-01",
+      "source": {
+        "type": "website",
+        "reference": "pricing",
+        "url": "https://www.examplevenue.com/pricing",
+        "extractedAt": "2026-02-21T10:05:00Z"
+      },
+      "confidence": 0.92,
+      "verificationStatus": "verified",
+      "verifiedBy": "manager@venue.com",
+      "verifiedAt": "2026-02-21T12:30:00Z",
+      "tags": [
+        "pricing",
+        "deposit",
+        "booking"
+      ],
+      "embeddingId": "emb-fact-price-002",
+      "usedIn": [
+        "email-faq",
+        "contract"
+      ]
+    },
+    {
+      "id": "fact-cap-001",
+      "category": "capacity",
+      "subcategory": "ceremony-spaces",
+      "type": "scalar",
+      "statement": "Garden ceremony space accommodates up to 200 guests",
+      "value": 200,
+      "unit": "guests",
+      "validFrom": "2026-01-01",
+      "source": {
+        "type": "website",
+        "reference": "venue-spaces",
+        "url": "https://www.examplevenue.com/venues",
+        "extractedAt": "2026-02-21T10:10:00Z"
+      },
+      "confidence": 1,
+      "verificationStatus": "verified",
+      "tags": [
+        "capacity",
+        "ceremony",
+        "garden",
+        "outdoor"
+      ],
+      "embeddingId": "emb-fact-cap-001",
+      "usedIn": [],
+      "verifiedBy": "test@venue.com",
+      "verifiedAt": "2026-02-21T16:48:53.548Z",
+      "verificationNotes": "Verified capacity during site visit"
+    },
+    {
+      "id": "fact-cap-002",
+      "category": "capacity",
+      "subcategory": "reception-venues",
+      "type": "scalar",
+      "statement": "Ballroom reception capacity is 250 guests for seated dinner",
+      "value": 250,
+      "unit": "guests",
+      "validFrom": "2026-01-01",
+      "source": {
+        "type": "website",
+        "reference": "venue-spaces",
+        "url": "https://www.examplevenue.com/venues",
+        "extractedAt": "2026-02-21T10:10:00Z"
+      },
+      "confidence": 0.91,
+      "verificationStatus": "verified",
+      "verifiedBy": "coordinator@venue.com",
+      "verifiedAt": "2026-02-21T14:00:00Z",
+      "tags": [
+        "capacity",
+        "reception",
+        "ballroom",
+        "seated"
+      ],
+      "embeddingId": "emb-fact-cap-002",
+      "usedIn": [
+        "email-welcome",
+        "brochure"
+      ]
+    },
+    {
+      "id": "fact-policy-001",
+      "category": "policies",
+      "subcategory": "vendor-policy",
+      "type": "boolean",
+      "statement": "Open vendor policy - couples can bring their own vendors",
+      "value": true,
+      "source": {
+        "type": "document",
+        "reference": "doc-002",
+        "extractedAt": "2026-02-19T10:30:00Z"
+      },
+      "confidence": 0.87,
+      "verificationStatus": "ai-extracted",
+      "tags": [
+        "policy",
+        "vendors",
+        "flexibility"
+      ],
+      "embeddingId": "emb-fact-policy-001",
+      "usedIn": []
+    },
+    {
+      "id": "fact-amenity-001",
+      "category": "amenities",
+      "subcategory": "included-services",
+      "type": "list",
+      "statement": "Day-of coordination is included in all packages",
+      "value": [
+        "day-of coordination",
+        "setup",
+        "cleanup",
+        "event manager"
+      ],
+      "source": {
+        "type": "document",
+        "reference": "doc-002",
+        "extractedAt": "2026-02-19T10:30:00Z"
+      },
+      "confidence": 0.89,
+      "verificationStatus": "verified",
+      "verifiedBy": "manager@venue.com",
+      "verifiedAt": "2026-02-20T09:00:00Z",
+      "tags": [
+        "amenities",
+        "services",
+        "coordination",
+        "included"
+      ],
+      "embeddingId": "emb-fact-amenity-001",
+      "usedIn": [
+        "email-welcome",
+        "email-inclusions"
+      ]
+    }
+  ]
+}

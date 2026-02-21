@@ -1,0 +1,299 @@
+{
+  "client": "maison-albion",
+  "description": "Maison Albion test data for sync engine validation",
+  "locationId": "loc_maison_albion_001",
+  "pipelines": [
+    {
+      "id": "pipe_1",
+      "name": "Wedding Planning",
+      "stages": [
+        { "id": "s1", "name": "Inquiry" },
+        { "id": "s2", "name": "Consultation" },
+        { "id": "s3", "name": "Proposal Sent" },
+        { "id": "s4", "name": "Contract Signed" },
+        { "id": "s5", "name": "Planning" },
+        { "id": "s6", "name": "Completed" }
+      ]
+    },
+    {
+      "id": "pipe_2",
+      "name": "Event Coordination",
+      "stages": [
+        { "id": "s1", "name": "Initial Contact" },
+        { "id": "s2", "name": "Needs Assessment" },
+        { "id": "s3", "name": "Quote" },
+        { "id": "s4", "name": "Booking Confirmed" },
+        { "id": "s5", "name": "Execution" },
+        { "id": "s6", "name": "Follow-up" }
+      ]
+    },
+    {
+      "id": "pipe_3",
+      "name": "Membership Program",
+      "stages": [
+        { "id": "s1", "name": "Sign-up" },
+        { "id": "s2", "name": "Welcome" },
+        { "id": "s3", "name": "Active Member" },
+        { "id": "s4", "name": "At Risk" },
+        { "id": "s5", "name": "Churned" }
+      ]
+    },
+    {
+      "id": "pipe_4",
+      "name": "Lead Nurture",
+      "stages": [
+        { "id": "s1", "name": "New Lead" },
+        { "id": "s2", "name": "Engaged" },
+        { "id": "s3", "name": "Qualified" },
+        { "id": "s4", "name": "Proposal" },
+        { "id": "s5", "name": "Won/Lost" }
+      ]
+    }
+  ],
+  "journeys": [
+    {
+      "id": "journey_welcome_series",
+      "name": "Welcome Series",
+      "description": "Automated welcome sequence for new contacts and members",
+      "status": "Published",
+      "client": "Maison Albion",
+      "version": 1,
+      "tags": ["welcome", "onboarding", "automation"],
+      "category": "Onboarding",
+      "touchpoints": [
+        {
+          "id": "tp_1",
+          "name": "Welcome Email",
+          "type": "Email",
+          "order": 0,
+          "config": {
+            "subject": "Welcome to Maison Albion!",
+            "content": "<h1>Welcome to Maison Albion</h1><p>Dear {{first_name}},</p><p>Thank you for joining our exclusive community.</p>",
+            "templateId": "email_welcome_maison"
+          }
+        },
+        {
+          "id": "tp_2",
+          "name": "Wait 24 Hours",
+          "type": "Wait",
+          "order": 1,
+          "config": {
+            "delay": 24,
+            "delayUnit": "hours"
+          }
+        },
+        {
+          "id": "tp_3",
+          "name": "Getting Started Guide",
+          "type": "Email",
+          "order": 2,
+          "config": {
+            "subject": "Your Getting Started Guide",
+            "content": "<h1>Getting Started</h1><p>Here's everything you need to know.</p>",
+            "templateId": "email_getting_started"
+          }
+        },
+        {
+          "id": "tp_4",
+          "name": "Wait 48 Hours",
+          "type": "Wait",
+          "order": 3,
+          "config": {
+            "delay": 48,
+            "delayUnit": "hours"
+          }
+        },
+        {
+          "id": "tp_5",
+          "name": "Check-in SMS",
+          "type": "SMS",
+          "order": 4,
+          "config": {
+            "content": "Hi {{first_name}}! Just checking in. How are you enjoying Maison Albion?",
+            "templateId": "sms_checkin"
+          }
+        },
+        {
+          "id": "tp_6",
+          "name": "Member Survey",
+          "type": "Task",
+          "order": 5,
+          "config": {
+            "title": "Send Member Survey to {{first_name}}",
+            "content": "Follow up to ensure great experience.",
+            "assignee": "membership@maisonalbion.com",
+            "dueIn": 24,
+            "priority": "normal"
+          }
+        }
+      ]
+    },
+    {
+      "id": "journey_wedding_inquiry",
+      "name": "Wedding Inquiry Flow",
+      "description": "Automated response and follow-up for wedding inquiries",
+      "status": "Published",
+      "client": "Maison Albion",
+      "version": 2,
+      "tags": ["wedding", "inquiry", "sales"],
+      "category": "Sales",
+      "touchpoints": [
+        {
+          "id": "tp_1",
+          "name": "Inquiry Confirmation",
+          "type": "Email",
+          "order": 0,
+          "config": {
+            "subject": "Thank you for your inquiry",
+            "content": "<h1>Thank You for Your Inquiry</h1><p>We've received your wedding inquiry.</p>",
+            "templateId": "email_wedding_inquiry"
+          }
+        },
+        {
+          "id": "tp_2",
+          "name": "Wait 2 Hours",
+          "type": "Wait",
+          "order": 1,
+          "config": {
+            "delay": 2,
+            "delayUnit": "hours"
+          }
+        },
+        {
+          "id": "tp_3",
+          "name": "Initial Response Email",
+          "type": "Email",
+          "order": 2,
+          "config": {
+            "subject": "Let's Plan Your Dream Wedding",
+            "content": "<h1>Let's Start Planning</h1><p>Our specialists are excited to help.</p>",
+            "templateId": "email_wedding_response"
+          }
+        },
+        {
+          "id": "tp_4",
+          "name": "Schedule Consultation",
+          "type": "Task",
+          "order": 3,
+          "config": {
+            "title": "Schedule consultation",
+            "content": "Contact to schedule consultation call.",
+            "assignee": "weddings@maisonalbion.com",
+            "dueIn": 48,
+            "priority": "high"
+          }
+        }
+      ]
+    },
+    {
+      "id": "journey_reengagement",
+      "name": "Re-engagement Campaign",
+      "description": "Win back inactive members",
+      "status": "Published",
+      "client": "Maison Albion",
+      "version": 1,
+      "tags": ["reengagement", "retention"],
+      "category": "Retention",
+      "touchpoints": [
+        {
+          "id": "tp_1",
+          "name": "We Miss You",
+          "type": "Email",
+          "order": 0,
+          "config": {
+            "subject": "We Miss You, {{first_name}}!",
+            "content": "<h1>We Miss You</h1><p>It's been a while since we've seen you.</p>",
+            "templateId": "email_reengagement_1"
+          }
+        },
+        {
+          "id": "tp_2",
+          "name": "Wait 4 Days",
+          "type": "Wait",
+          "order": 1,
+          "config": {
+            "delay": 4,
+            "delayUnit": "days"
+          }
+        },
+        {
+          "id": "tp_3",
+          "name": "Special Offer",
+          "type": "Email",
+          "order": 2,
+          "config": {
+            "subject": "A Gift Just for You",
+            "content": "<h1>Special Offer</h1><p>Use code: WELCOMEBACK20</p>",
+            "templateId": "email_reengagement_offer"
+          }
+        }
+      ]
+    },
+    {
+      "id": "journey_appointment_reminder",
+      "name": "Appointment Reminders",
+      "description": "Automated appointment reminder sequence",
+      "status": "Published",
+      "client": "Maison Albion",
+      "version": 3,
+      "tags": ["appointments", "reminders"],
+      "category": "Operations",
+      "touchpoints": [
+        {
+          "id": "tp_1",
+          "name": "Appointment Confirmation",
+          "type": "Email",
+          "order": 0,
+          "config": {
+            "subject": "Your Appointment is Confirmed",
+            "content": "<h1>Appointment Confirmed!</h1><p>Date: {{appointment_date}}</p>",
+            "templateId": "email_appointment_confirm"
+          }
+        },
+        {
+          "id": "tp_2",
+          "name": "Wait 24 Hours",
+          "type": "Wait",
+          "order": 1,
+          "config": {
+            "delay": 24,
+            "delayUnit": "hours"
+          }
+        },
+        {
+          "id": "tp_3",
+          "name": "24 Hour Reminder",
+          "type": "Email",
+          "order": 2,
+          "config": {
+            "subject": "Reminder: Appointment Tomorrow",
+            "content": "<h1>Appointment Tomorrow</h1><p>See you soon!</p>",
+            "templateId": "email_appointment_reminder_24"
+          }
+        },
+        {
+          "id": "tp_4",
+          "name": "Wait 2 Hours",
+          "type": "Wait",
+          "order": 3,
+          "config": {
+            "delay": 2,
+            "delayUnit": "hours"
+          }
+        },
+        {
+          "id": "tp_5",
+          "name": "Final SMS Reminder",
+          "type": "SMS",
+          "order": 4,
+          "config": {
+            "content": "Reminder: Your appointment is in 2 hours!",
+            "templateId": "sms_appointment_reminder"
+          }
+        }
+      ]
+    }
+  ],
+  "expectedWorkflows": 48,
+  "pipelinesCount": 4
+}

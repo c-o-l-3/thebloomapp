@@ -1,0 +1,238 @@
+{
+  "summary": {
+    "total": 20,
+    "passed": 15,
+    "failed": 3,
+    "warnings": 2,
+    "isValid": false
+  },
+  "results": [
+    {
+      "check": "client_directory",
+      "status": "pass",
+      "message": "Client directory exists",
+      "details": null,
+      "timestamp": "2026-02-21T18:27:51.526Z"
+    },
+    {
+      "check": "file:location-config.json",
+      "status": "pass",
+      "message": "File exists: location-config.json",
+      "details": null,
+      "timestamp": "2026-02-21T18:27:51.526Z"
+    },
+    {
+      "check": "file:README.md",
+      "status": "pass",
+      "message": "File exists: README.md",
+      "details": null,
+      "timestamp": "2026-02-21T18:27:51.528Z"
+    },
+    {
+      "check": "file:knowledge-hub/config.json",
+      "status": "pass",
+      "message": "File exists: knowledge-hub/config.json",
+      "details": null,
+      "timestamp": "2026-02-21T18:27:51.530Z"
+    },
+    {
+      "check": "file:knowledge-hub/golden-pages/index.json",
+      "status": "pass",
+      "message": "File exists: knowledge-hub/golden-pages/index.json",
+      "details": null,
+      "timestamp": "2026-02-21T18:27:51.530Z"
+    },
+    {
+      "check": "file:knowledge-hub/facts/index.json",
+      "status": "pass",
+      "message": "File exists: knowledge-hub/facts/index.json",
+      "details": null,
+      "timestamp": "2026-02-21T18:27:51.530Z"
+    },
+    {
+      "check": "file:knowledge-hub/brand-voice/profile.json",
+      "status": "pass",
+      "message": "File exists: knowledge-hub/brand-voice/profile.json",
+      "details": null,
+      "timestamp": "2026-02-21T18:27:51.530Z"
+    },
+    {
+      "check": "schema:location-config.json",
+      "status": "pass",
+      "message": "Valid schema: location-config.json",
+      "details": null,
+      "timestamp": "2026-02-21T18:27:51.530Z"
+    },
+    {
+      "check": "schema:knowledge-hub/config.json",
+      "status": "fail",
+      "message": "Missing required fields: clientSlug",
+      "details": null,
+      "timestamp": "2026-02-21T18:27:51.530Z"
+    },
+    {
+      "check": "schema:knowledge-hub/facts/index.json",
+      "status": "pass",
+      "message": "Valid schema: knowledge-hub/facts/index.json",
+      "details": null,
+      "timestamp": "2026-02-21T18:27:51.531Z"
+    },
+    {
+      "check": "schema:knowledge-hub/golden-pages/index.json",
+      "status": "pass",
+      "message": "Valid schema: knowledge-hub/golden-pages/index.json",
+      "details": null,
+      "timestamp": "2026-02-21T18:27:51.531Z"
+    },
+    {
+      "check": "location_config",
+      "status": "warning",
+      "message": "Location config missing fields: hasContactPhone",
+      "details": {
+        "hasLocationId": true,
+        "hasName": true,
+        "hasTimezone": true,
+        "hasContactEmail": true,
+        "hasContactPhone": false,
+        "hasWebsite": true,
+        "hasAddress": true
+      },
+      "timestamp": "2026-02-21T18:27:51.531Z"
+    },
+    {
+      "check": "ghl_connection",
+      "status": "fail",
+      "message": "GHL_API_KEY not configured",
+      "details": null,
+      "timestamp": "2026-02-21T18:27:51.531Z"
+    },
+    {
+      "check": "airtable_connection",
+      "status": "fail",
+      "message": "AIRTABLE_API_KEY not configured",
+      "details": null,
+      "timestamp": "2026-02-21T18:27:51.531Z"
+    },
+    {
+      "check": "openai_connection",
+      "status": "warning",
+      "message": "OPENAI_API_KEY not configured - AI features will be limited",
+      "details": null,
+      "timestamp": "2026-02-21T18:27:51.531Z"
+    },
+    {
+      "check": "website_crawlable",
+      "status": "pass",
+      "message": "Website accessible: https://www.maisonalbion.com",
+      "details": {
+        "url": "https://www.maisonalbion.com",
+        "status": 200,
+        "contentLength": 1576579
+      },
+      "timestamp": "2026-02-21T18:27:52.304Z"
+    },
+    {
+      "check": "knowledge_hub",
+      "status": "pass",
+      "message": "Knowledge Hub populated: 5 pages, 24 facts (5 verified)",
+      "details": {
+        "initialized": true,
+        "hasPages": true,
+        "hasFacts": true,
+        "pagesCount": 5,
+        "factsCount": 24,
+        "verifiedFacts": 5
+      },
+      "timestamp": "2026-02-21T18:27:52.306Z"
+    },
+    {
+      "check": "brand_voice",
+      "status": "pass",
+      "message": "Brand voice profile ready with 5 adjectives",
+      "details": {
+        "hasVoiceAdjectives": true,
+        "hasPersonality": true,
+        "hasDos": true,
+        "hasDonts": true,
+        "adjectivesCount": 5
+      },
+      "timestamp": "2026-02-21T18:27:52.307Z"
+    },
+    {
+      "check": "ai_extraction",
+      "status": "pass",
+      "message": "AI extraction successful: 1 facts extracted, 5 verified",
+      "details": {
+        "totalFacts": 6,
+        "aiExtracted": 1,
+        "verified": 5,
+        "needsVerification": 2
+      },
+      "timestamp": "2026-02-21T18:27:52.307Z"
+    },
+    {
+      "check": "api_responses",
+      "status": "pass",
+      "message": "All expected GHL API responses found",
+      "details": {
+        "found": 4,
+        "missing": 0,
+        "files": [
+          "location-data.json",
+          "pipelines-data.json",
+          "email-templates-data.json",
+          "sms-templates-data.json"
+        ]
+      },
+      "timestamp": "2026-02-21T18:27:52.308Z"
+    }
+  ],
+  "errors": [
+    {
+      "check": "schema:knowledge-hub/config.json",
+      "status": "fail",
+      "message": "Missing required fields: clientSlug",
+      "details": null,
+      "timestamp": "2026-02-21T18:27:51.530Z"
+    },
+    {
+      "check": "ghl_connection",
+      "status": "fail",
+      "message": "GHL_API_KEY not configured",
+      "details": null,
+      "timestamp": "2026-02-21T18:27:51.531Z"
+    },
+    {
+      "check": "airtable_connection",
+      "status": "fail",
+      "message": "AIRTABLE_API_KEY not configured",
+      "details": null,
+      "timestamp": "2026-02-21T18:27:51.531Z"
+    }
+  ],
+  "warnings": [
+    {
+      "check": "location_config",
+      "status": "warning",
+      "message": "Location config missing fields: hasContactPhone",
+      "details": {
+        "hasLocationId": true,
+        "hasName": true,
+        "hasTimezone": true,
+        "hasContactEmail": true,
+        "hasContactPhone": false,
+        "hasWebsite": true,
+        "hasAddress": true
+      },
+      "timestamp": "2026-02-21T18:27:51.531Z"
+    },
+    {
+      "check": "openai_connection",
+      "status": "warning",
+      "message": "OPENAI_API_KEY not configured - AI features will be limited",
+      "details": null,
+      "timestamp": "2026-02-21T18:27:51.531Z"
+    }
+  ],
+  "timestamp": "2026-02-21T18:27:52.309Z"
+}

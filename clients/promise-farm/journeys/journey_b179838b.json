@@ -1,0 +1,106 @@
+{
+  "id": "journey_b179838b",
+  "name": "Proposal Nurture",
+  "description": "4-touchpoint nurture sequence after proposal sent",
+  "category": "nurture",
+  "status": "Draft",
+  "client": "promise-farm",
+  "touchpoints": [
+    {
+      "id": "tp_e948736f",
+      "name": "Proposal Follow-Up - Day 3",
+      "type": "Email",
+      "order": 1,
+      "delay": 3,
+      "delayUnit": "days",
+      "content": {
+        "type": "email",
+        "subject": "Questions about your proposal?",
+        "greeting": "Hi {{contact.first_name}},",
+        "body": "I hope you've had a chance to review the personalized proposal I sent over.\n\nI know choosing your venue is a big decision, and I'm here to help with:\n- Package customization options\n- Date availability updates\n- Vendor recommendations\n- Payment plan details\n\nHave questions? Just reply to this email or give me a call.\n\nBest,\nThe {{company_name}} Team",
+        "cta": {
+          "text": "Schedule a Call",
+          "url": "{{calendar_link}}"
+        },
+        "templateType": "proposal_followup",
+        "compliance": {
+          "unsubscribeRequired": true,
+          "physicalAddressRequired": true,
+          "companyNameRequired": true
+        }
+      }
+    },
+    {
+      "id": "tp_fe453dc1",
+      "name": "Social Proof - Day 7",
+      "type": "Email",
+      "order": 2,
+      "delay": 7,
+      "delayUnit": "days",
+      "content": {
+        "type": "email",
+        "subject": "What couples say about {{company_name}}",
+        "greeting": "Hi {{contact.first_name}},",
+        "body": "As you consider your options, I thought you'd appreciate hearing from recent couples who celebrated with us:\n\n\"The team went above and beyond. Our wedding was absolutely perfect!\" - Jennifer & David\n\n\"Best decision we made! The venue was stunning and the service impeccable.\" - Amanda & Chris\n\n\"Our guests are still talking about how beautiful everything was.\" - Michelle & James\n\nWe'd love to add your story to our collection of happy memories.\n\nWarmly,\nThe {{company_name}} Team",
+        "cta": {
+          "text": "Read More Reviews",
+          "url": "{{reviews_link}}"
+        },
+        "templateType": "social_proof",
+        "compliance": {
+          "unsubscribeRequired": true,
+          "physicalAddressRequired": true,
+          "companyNameRequired": true
+        }
+      }
+    },
+    {
+      "id": "tp_9b52d64b",
+      "name": "Urgency - Day 10",
+      "type": "Email",
+      "order": 3,
+      "delay": 10,
+      "delayUnit": "days",
+      "content": {
+        "type": "email",
+        "subject": "Your date is still available (for now)",
+        "greeting": "Hi {{contact.first_name}},",
+        "body": "I wanted to give you a quick update on your preferred wedding date ({{wedding_date}}).\n\nCurrently, it's still available, but I've had several inquiries for that weekend recently.\n\nTo secure your date:\n1. Sign your proposal\n2. Submit the deposit\n3. We'll send your official booking confirmation\n\nI'd hate for you to miss out on your perfect date. Let me know if you have any questions!\n\nBest,\nThe {{company_name}} Team",
+        "cta": {
+          "text": "Secure Your Date",
+          "url": "{{proposal_link}}"
+        },
+        "templateType": "urgency",
+        "compliance": {
+          "unsubscribeRequired": true,
+          "physicalAddressRequired": true,
+          "companyNameRequired": true
+        }
+      }
+    },
+    {
+      "id": "tp_d47188cc",
+      "name": "Final Follow-Up - Day 14",
+      "type": "Email",
+      "order": 4,
+      "delay": 14,
+      "delayUnit": "days",
+      "content": {
+        "type": "email",
+        "subject": "One final question...",
+        "greeting": "Hi {{contact.first_name}},",
+        "body": "I haven't heard back about your proposal, so I wanted to check in one last time.\n\nI completely understand if:\n- You've chosen another venue (congrats!)\n- Your plans have changed\n- You need more time to decide\n\nIf {{company_name}} is still in the running, I'm happy to:\n- Adjust the proposal\n- Schedule another tour\n- Answer any remaining questions\n\nJust reply and let me know where you stand—no pressure either way!\n\nWishing you all the best,\nThe {{company_name}} Team",
+        "cta": {
+          "text": "Get in Touch",
+          "url": "mailto:{{email}}"
+        },
+        "templateType": "final_followup",
+        "compliance": {
+          "unsubscribeRequired": true,
+          "physicalAddressRequired": true,
+          "companyNameRequired": true
+        }
+      }
+    }
+  ]
+}

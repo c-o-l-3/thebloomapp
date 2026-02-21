@@ -1,0 +1,297 @@
+{
+  "version": 1,
+  "vertical": "wedding-venue",
+  "defaults": {
+    "timingPrinciples": [
+      "Optimize for the next milestone, not maximum information",
+      "Keep pricing details after the tour so staff can frame options",
+      "Each touchpoint has one primary CTA",
+      "Email and SMS must each stand alone if the other is opted out"
+    ],
+    "primaryTimezone": "America/New_York"
+  },
+  "journeys": [
+    {
+      "key": "inquiry_to_tour_booking",
+      "name": "Inquiry → Tour Booking",
+      "goal": "Book a venue tour",
+      "typicalWindowDays": 14,
+      "touchpoints": [
+        {
+          "key": "tp_00_email_welcome",
+          "type": "email",
+          "timing": {
+            "delay": 0,
+            "unit": "hours"
+          },
+          "objective": "Confirm inquiry and make tour booking feel easy",
+          "cta": {
+            "label": "Book a Tour",
+            "url": "{{tour_booking_link}}"
+          },
+          "contentBlocks": [
+            {
+              "type": "welcome",
+              "required": true
+            },
+            {
+              "type": "what_to_expect",
+              "required": true
+            },
+            {
+              "type": "social_proof",
+              "required": false
+            },
+            {
+              "type": "signature_spaces",
+              "required": false
+            }
+          ],
+          "infoGating": {
+            "pricing": "none",
+            "proposal": "none"
+          }
+        },
+        {
+          "key": "tp_00_sms_welcome",
+          "type": "sms",
+          "timing": {
+            "delay": 10,
+            "unit": "minutes"
+          },
+          "objective": "Nudge tour booking with minimal friction",
+          "cta": {
+            "label": "Book a Tour",
+            "url": "{{tour_booking_link}}"
+          },
+          "infoGating": {
+            "pricing": "none",
+            "proposal": "none"
+          }
+        },
+        {
+          "key": "tp_01_email_prepare",
+          "type": "email",
+          "timing": {
+            "delay": 24,
+            "unit": "hours"
+          },
+          "objective": "Help them feel confident choosing tours to compare",
+          "cta": {
+            "label": "See Tour Times",
+            "url": "{{tour_booking_link}}"
+          },
+          "contentBlocks": [
+            {
+              "type": "tour_prep_checklist",
+              "required": true
+            },
+            {
+              "type": "fit_signals",
+              "required": true
+            }
+          ],
+          "infoGating": {
+            "pricing": "light",
+            "proposal": "none"
+          }
+        },
+        {
+          "key": "tp_03_sms_barriers",
+          "type": "sms",
+          "timing": {
+            "delay": 72,
+            "unit": "hours"
+          },
+          "objective": "Remove barriers and invite questions",
+          "cta": {
+            "label": "Book a Tour",
+            "url": "{{tour_booking_link}}"
+          },
+          "infoGating": {
+            "pricing": "none",
+            "proposal": "none"
+          }
+        },
+        {
+          "key": "tp_07_email_close",
+          "type": "email",
+          "timing": {
+            "delay": 7,
+            "unit": "days"
+          },
+          "objective": "Offer a warm, low-pressure prompt to schedule",
+          "cta": {
+            "label": "Book a Tour",
+            "url": "{{tour_booking_link}}"
+          },
+          "contentBlocks": [
+            {
+              "type": "reassurance",
+              "required": true
+            },
+            {
+              "type": "faq_top",
+              "required": false
+            }
+          ],
+          "infoGating": {
+            "pricing": "none",
+            "proposal": "none"
+          }
+        }
+      ]
+    },
+    {
+      "key": "tour_booked_reminders",
+      "name": "Tour Booked Reminders",
+      "goal": "Maximize tour show rate and readiness",
+      "typicalWindowDays": 14,
+      "touchpoints": [
+        {
+          "key": "tp_confirm_email",
+          "type": "email",
+          "timing": {
+            "delay": 0,
+            "unit": "hours",
+            "relativeTo": "tour_booked"
+          },
+          "objective": "Confirm logistics and reduce no-shows",
+          "cta": {
+            "label": "Manage Your Tour",
+            "url": "{{manage_tour_link}}"
+          },
+          "contentBlocks": [
+            {
+              "type": "logistics",
+              "required": true
+            },
+            {
+              "type": "what_youll_see",
+              "required": true
+            }
+          ],
+          "infoGating": {
+            "pricing": "none",
+            "proposal": "none"
+          }
+        },
+        {
+          "key": "tp_confirm_sms",
+          "type": "sms",
+          "timing": {
+            "delay": 5,
+            "unit": "minutes",
+            "relativeTo": "tour_booked"
+          },
+          "objective": "Short confirmation and reschedule link",
+          "cta": {
+            "label": "Manage Tour",
+            "url": "{{manage_tour_link}}"
+          },
+          "infoGating": {
+            "pricing": "none",
+            "proposal": "none"
+          }
+        },
+        {
+          "key": "tp_72h_email_prep",
+          "type": "email",
+          "timing": {
+            "delay": 72,
+            "unit": "hours",
+            "relativeTo": "tour_start",
+            "direction": "before"
+          },
+          "objective": "Increase excitement and help them prepare",
+          "cta": {
+            "label": "View Your Tour Details",
+            "url": "{{manage_tour_link}}"
+          },
+          "contentBlocks": [
+            {
+              "type": "tour_prep_checklist",
+              "required": true
+            },
+            {
+              "type": "signature_spaces",
+              "required": false
+            }
+          ],
+          "infoGating": {
+            "pricing": "none",
+            "proposal": "none"
+          }
+        },
+        {
+          "key": "tp_24h_email_reminder",
+          "type": "email",
+          "timing": {
+            "delay": 24,
+            "unit": "hours",
+            "relativeTo": "tour_start",
+            "direction": "before"
+          },
+          "objective": "Confirm attendance and remove last-mile friction",
+          "cta": {
+            "label": "Confirm or Reschedule",
+            "url": "{{manage_tour_link}}"
+          },
+          "contentBlocks": [
+            {
+              "type": "logistics",
+              "required": true
+            }
+          ],
+          "infoGating": {
+            "pricing": "none",
+            "proposal": "none"
+          }
+        },
+        {
+          "key": "tp_24h_sms_confirm",
+          "type": "sms",
+          "timing": {
+            "delay": 24,
+            "unit": "hours",
+            "relativeTo": "tour_start",
+            "direction": "before"
+          },
+          "objective": "Get a lightweight confirmation reply",
+          "cta": {
+            "label": "Manage Tour",
+            "url": "{{manage_tour_link}}"
+          },
+          "infoGating": {
+            "pricing": "none",
+            "proposal": "none"
+          }
+        },
+        {
+          "key": "tp_2h_sms_last_mile",
+          "type": "sms",
+          "timing": {
+            "delay": 2,
+            "unit": "hours",
+            "relativeTo": "tour_start",
+            "direction": "before"
+          },
+          "objective": "Reduce day-of no-shows",
+          "cta": {
+            "label": "Manage Tour",
+            "url": "{{manage_tour_link}}"
+          },
+          "infoGating": {
+            "pricing": "none",
+            "proposal": "none"
+          }
+        }
+      ]
+    }
+  ],
+  "tokens": {
+    "company_name": "Maison Albion",
+    "tour_booking_link": "{{tour_booking_link}}",
+    "manage_tour_link": "{{manage_tour_link}}"
+  }
+}

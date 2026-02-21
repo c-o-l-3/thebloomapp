@@ -1,0 +1,18 @@
+{
+  "companyName": "Maison Albion",
+  "website": "https://www.maisonalbion.com",
+  "logoUrl": "https://msgsndr-private.storage.googleapis.com/locationPhotos/5ef1fcf4-5da1-40d2-9070-0c0168bc3d79.png",
+  "voiceAdjectives": [],
+  "doSay": [],
+  "dontSay": [],
+  "visualDirection": "",
+  "primaryColors": [],
+  "typography": {
+    "headingFont": "",
+    "bodyFont": ""
+  },
+  "homepageSignals": {
+    "title": "Maison Albion | Historic Wedding Venue in Western NY",
+    "metaDescription": "Historic 1878 Victorian mansion wedding venue serving Buffalo, Rochester & Western NY. Exclusive venue access, open vendor policy, packages from $5,000. Book your tour."
+  }
+}

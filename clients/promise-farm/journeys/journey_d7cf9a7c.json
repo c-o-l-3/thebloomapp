@@ -1,0 +1,43 @@
+{
+  "id": "journey_d7cf9a7c",
+  "name": "Tour Confirmation",
+  "description": "2-touchpoint tour confirmation and reminder",
+  "category": "confirmation",
+  "status": "Draft",
+  "client": "promise-farm",
+  "touchpoints": [
+    {
+      "id": "tp_69a366f7",
+      "name": "Confirmation Email",
+      "type": "Email",
+      "order": 1,
+      "delay": 0,
+      "delayUnit": "hours",
+      "content": {
+        "type": "email",
+        "subject": "Your {{company_name}} Tour is Confirmed!",
+        "greeting": "Hi {{contact.first_name}},",
+        "body": "Great news! Your tour of {{company_name}} is confirmed.\n\n📅 Date: {{appointment.date}}\n🕐 Time: {{appointment.time}}\n📍 Location: {{location}}\n\nWhat to expect:\n- 45-60 minute personalized tour\n- See ceremony and reception spaces\n- Discuss your vision and date preferences\n- Review package options\n- Get all your questions answered\n\nWhat to bring:\n- Your vision board or inspiration photos\n- Rough guest count\n- Any must-have questions\n\nCan't make it? Reschedule here: {{manage_tour_link}}\n\nLooking forward to meeting you!\n\nBest,\nThe {{company_name}} Team",
+        "cta": {
+          "text": "Add to Calendar",
+          "url": "{{calendar_link}}"
+        },
+        "templateType": "tour_confirmation",
+        "compliance": {
+          "unsubscribeRequired": true,
+          "physicalAddressRequired": true,
+          "companyNameRequired": true
+        }
+      }
+    },
+    {
+      "id": "tp_53a58665",
+      "name": "SMS Reminder - 24h",
+      "type": "SMS",
+      "order": 2,
+      "delay": 24,
+      "delayUnit": "hours",
+      "content": "Hi {{contact.first_name}}! Reminder: Your tour at {{company_name}} is tomorrow at {{appointment.time}}. See you soon! Questions? Call us at {{phone}}"
+    }
+  ]
+}

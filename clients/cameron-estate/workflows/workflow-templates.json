@@ -1,0 +1,310 @@
+{
+  "workflows": [
+    {
+      "id": "",
+      "name": "001 - New Inquiry - Customer Journey",
+      "status": "active",
+      "trigger": {
+        "type": "contactCreated",
+        "filters": {
+          "source": "website"
+        }
+      },
+      "actions": [
+        {
+          "type": "sendEmail",
+          "templateId": "001_e_day1_welcome",
+          "delay": 0,
+          "description": "001 E Day 1 - Welcome Email"
+        },
+        {
+          "type": "sendSMS",
+          "templateId": "001-t-day1-intro",
+          "delay": 0,
+          "description": "001 T Day 1 - Intro SMS"
+        },
+        {
+          "type": "addTag",
+          "tagId": "new-lead",
+          "delay": 0
+        }
+      ]
+    },
+    {
+      "id": "",
+      "name": "001 T Day 2 Nurture",
+      "status": "active",
+      "trigger": {
+        "type": "contactNoResponse",
+        "days": 1
+      },
+      "actions": [
+        {
+          "type": "sendSMS",
+          "templateId": "001-t-day2-morning",
+          "delay": 0,
+          "description": "001 T Day 2 - Morning Text"
+        },
+        {
+          "type": "sendEmail",
+          "templateId": "001_e_day2_what_to_look_for",
+          "delay": 120,
+          "description": "001 E Day 2 - Afternoon Email"
+        }
+      ]
+    },
+    {
+      "id": "",
+      "name": "001 T Day 3 Decision",
+      "status": "active",
+      "trigger": {
+        "type": "contactNoResponse",
+        "days": 3
+      },
+      "actions": [
+        {
+          "type": "sendEmail",
+          "templateId": "001_e_day3_stories",
+          "delay": 0,
+          "description": "001 E Day 3 - Morning Email (Testimonials)"
+        },
+        {
+          "type": "sendSMS",
+          "templateId": "001-t-day3-evening",
+          "delay": 480,
+          "description": "001 T Day 3 - Evening Text"
+        }
+      ]
+    },
+    {
+      "id": "",
+      "name": "001 T Day 4+ Extended Wait",
+      "status": "active",
+      "trigger": {
+        "type": "contactNoResponse",
+        "days": 4
+      },
+      "actions": [
+        {
+          "type": "wait",
+          "duration": 5760,
+          "durationUnit": "minutes",
+          "description": "4-day wait step - extends journey to ~21 days total"
+        },
+        {
+          "type": "sendSMS",
+          "templateId": "001-t-day4-text",
+          "delay": 0,
+          "description": "001 T Day 4 - Text with tour link"
+        },
+        {
+          "type": "sendEmail",
+          "templateId": "001_e_day5_vision",
+          "delay": 1440,
+          "description": "001 E Day 5 - Vision Email"
+        }
+      ]
+    },
+    {
+      "id": "",
+      "name": "001 T Day 7 Pinterest",
+      "status": "active",
+      "trigger": {
+        "type": "contactNoResponse",
+        "days": 7
+      },
+      "actions": [
+        {
+          "type": "sendEmail",
+          "templateId": "001_e_day7_pinterest",
+          "delay": 0,
+          "description": "001 E Day 7 - Pinterest Board Email"
+        }
+      ]
+    },
+    {
+      "id": "",
+      "name": "001 T Day 9 Check-in",
+      "status": "active",
+      "trigger": {
+        "type": "contactNoResponse",
+        "days": 9
+      },
+      "actions": [
+        {
+          "type": "sendSMS",
+          "templateId": "001-t-day9-pinterest",
+          "delay": 0,
+          "description": "001 T Day 9 - Pinterest Check-in"
+        }
+      ]
+    },
+    {
+      "id": "",
+      "name": "001 T Day 10 Inclusions",
+      "status": "active",
+      "trigger": {
+        "type": "contactNoResponse",
+        "days": 10
+      },
+      "actions": [
+        {
+          "type": "sendEmail",
+          "templateId": "001_e_day10_inclusions",
+          "delay": 0,
+          "description": "001 E Day 10 - What's Included Email"
+        }
+      ]
+    },
+    {
+      "id": "",
+      "name": "001 T Day 12 FAQ",
+      "status": "active",
+      "trigger": {
+        "type": "contactNoResponse",
+        "days": 12
+      },
+      "actions": [
+        {
+          "type": "sendEmail",
+          "templateId": "001_e_day12_faq",
+          "delay": 0,
+          "description": "001 E Day 12 - FAQ Email"
+        },
+        {
+          "type": "sendSMS",
+          "templateId": "001-t-day12-final",
+          "delay": 180,
+          "description": "001 T Day 12 - Final SMS"
+        }
+      ]
+    },
+    {
+      "id": "",
+      "name": "001 T Day 14 Close",
+      "status": "active",
+      "trigger": {
+        "type": "contactNoResponse",
+        "days": 14
+      },
+      "actions": [
+        {
+          "type": "sendEmail",
+          "templateId": "001_e_day14_close",
+          "delay": 0,
+          "description": "001 E Day 14 - Closing Email"
+        },
+        {
+          "type": "addTag",
+          "tagId": "nurture-complete",
+          "delay": 0
+        }
+      ]
+    },
+    {
+      "id": "",
+      "name": "002 - Site Tour Booked (24h)",
+      "status": "active",
+      "trigger": {
+        "type": "appointmentUpcoming",
+        "minutesBefore": 1440
+      },
+      "actions": [
+        {
+          "type": "sendSMS",
+          "templateId": "002-t-tour-24h-reminder",
+          "delay": 0,
+          "description": "24h confirmation request"
+        }
+      ]
+    },
+    {
+      "id": "",
+      "name": "002 - Site Tour Booked (2h)",
+      "status": "active",
+      "trigger": {
+        "type": "appointmentUpcoming",
+        "minutesBefore": 120
+      },
+      "actions": [
+        {
+          "type": "sendSMS",
+          "templateId": "002-t-tour-2h-reminder",
+          "delay": 0,
+          "description": "2h directions and meeting point"
+        }
+      ]
+    },
+    {
+      "id": "",
+      "name": "Post-Tour Follow-up",
+      "status": "active",
+      "trigger": {
+        "type": "appointmentCompleted",
+        "appointmentType": "tour"
+      },
+      "actions": [
+        {
+          "type": "sendEmail",
+          "templateId": "post-tour-email",
+          "delay": 0,
+          "description": "Immediate follow-up"
+        },
+        {
+          "type": "createTask",
+          "templateId": "send-proposal-task",
+          "delay": 2880,
+          "description": "Create task to send proposal in 2 days"
+        }
+      ]
+    },
+    {
+      "id": "",
+      "name": "Booking Confirmation",
+      "status": "active",
+      "trigger": {
+        "type": "opportunityStageChanged",
+        "toStage": "Booked/Won"
+      },
+      "actions": [
+        {
+          "type": "sendEmail",
+          "templateId": "booking-confirmation-email",
+          "delay": 0
+        },
+        {
+          "type": "addTag",
+          "tagId": "booked",
+          "delay": 0
+        },
+        {
+          "type": "createTask",
+          "templateId": "send-contract-task",
+          "delay": 0,
+          "description": "Send contract and deposit request"
+        }
+      ]
+    }
+  ],
+  "workflowNotes": {
+    "timingStrategy": "Extended 21-day journey with 4-day minimum wait after Day 4",
+    "waitStepCalculation": "5760 minutes = 4 days (Day 4+ actions)",
+    "totalJourneyLength": "21 days (14-day nurture + buffer)",
+    "keyDelays": {
+      "day1_email": 0,
+      "day1_sms": 0,
+      "day2_morning_sms": 0,
+      "day2_afternoon_email": "2 hours after SMS",
+      "day3_morning_email": 0,
+      "day3_evening_sms": "8 hours after email",
+      "day4_wait": "4 days (5760 minutes)",
+      "day5_vision_email": "1 day after day4 wait",
+      "day7_email": 0,
+      "day9_sms": 0,
+      "day10_email": 0,
+      "day12_email": 0,
+      "day12_sms": "3 hours after email",
+      "day14_close_email": 0
+    }
+  }
+}

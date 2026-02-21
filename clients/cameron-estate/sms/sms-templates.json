@@ -1,0 +1,44 @@
+[
+  {
+    "id": "001-t-day1-intro",
+    "name": "001 T Day 1 - Intro SMS",
+    "content": "{{contact.first_name}}, Hi! This is Lisa from Cameron Estate Inn. I just sent over our wedding information and pricing—everything should be in your inbox now. If texting is easier for questions, I'm happy to answer here. Congratulations again on your engagement! - Lisa",
+    "trigger": "Immediately after email sent",
+    "sendTime": "9am-7pm only"
+  },
+  {
+    "id": "001-t-day2-morning",
+    "name": "001 T Day 2 - Morning Text",
+    "content": "Hi {{contact.first_name}}, what questions can I answer about Cameron Estate? Most couples want to know about pricing, availability, or what's included in our all-inclusive packages. I'm here to help! - Lisa",
+    "trigger": "24 hours after Day 1, no response",
+    "sendTime": "10am-12pm"
+  },
+  {
+    "id": "001-t-day3-evening",
+    "name": "001 T Day 3 - Evening Text",
+    "content": "{{contact.first_name}}, I thought you might need some wedding inspo! I curated a Pinterest board with some of our favorite wedding inspiration at Cameron Estate. Hope this helps spark some ideas for your big day! - Lisa\n{{trigger_link.kI4aVPLShqovAveOSkbk}}",
+    "trigger": "Day 3, 6-8pm",
+    "sendTime": "6pm-8pm"
+  },
+  {
+    "id": "001-t-day4-text",
+    "name": "001 T Day 4 - Text",
+    "content": "Hi {{contact.first_name}}, what would make touring Cameron Estate easier for you? Weekend availability? Evening tours? Virtual walkthrough first? I’ll drop the link to book your perfect time below. Let me know how I can help. - Lisa https://calendly.com/cameron-estate/tour",
+    "trigger": "Day 6, 11am",
+    "sendTime": "11am-1pm"
+  },
+  {
+    "id": "001-t-day9-checkin",
+    "name": "001 T Day 9 - Pinterest Check-in",
+    "content": "{{contact.first_name}}, have you had a chance to check out our Pinterest board yet? {{trigger_link.kI4aVPLShqovAveOSkbk}} would love to hear more about your color palette! - Lisa",
+    "trigger": "Day 9, 11am",
+    "sendTime": "11am-3pm"
+  },
+  {
+    "id": "001-t-day12-final",
+    "name": "001 T Day 12 - Final SMS",
+    "content": "{{contact.first_name}}, this is my last note. If you'd like to see Cameron Estate, I'm here anytime. If you've chosen another direction, I wish you the very best. Congratulations on your wedding! - Lisa",
+    "trigger": "Day 12, 3pm",
+    "sendTime": "3pm-6pm"
+  }
+]

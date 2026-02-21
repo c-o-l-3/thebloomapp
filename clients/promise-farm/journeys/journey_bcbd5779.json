@@ -1,0 +1,130 @@
+{
+  "id": "journey_bcbd5779",
+  "name": "Welcome Series",
+  "description": "5-email welcome series for new {{company_name}} inquiries",
+  "category": "nurture",
+  "status": "Draft",
+  "client": "promise-farm",
+  "touchpoints": [
+    {
+      "id": "tp_48355e40",
+      "name": "Welcome - Immediate",
+      "type": "Email",
+      "order": 1,
+      "delay": 0,
+      "delayUnit": "hours",
+      "content": {
+        "type": "email",
+        "subject": "Welcome to {{company_name}}!",
+        "greeting": "Hi {{contact.first_name}},",
+        "body": "Welcome to {{company_name}}! We're thrilled you're considering us for your special day.\n\nLocated in {{location}}, offers a stunning setting for weddings of up to {{capacity}} guests.\n\nWhat makes us special:\n- Day-of coordination is included in all packages\n- Promise Farm offers an exceptional bridal suite with getting ready space\n- The venue includes a spacious main room\n\nReady to see it in person? I'd love to show you around.\n\nBest regards,\nThe {{company_name}} Team",
+        "cta": {
+          "text": "Book a Tour",
+          "url": "{{tour_booking_link}}"
+        },
+        "templateType": "welcome",
+        "compliance": {
+          "unsubscribeRequired": true,
+          "physicalAddressRequired": true,
+          "companyNameRequired": true
+        }
+      }
+    },
+    {
+      "id": "tp_492a05f9",
+      "name": "What to Look For - Day 2",
+      "type": "Email",
+      "order": 2,
+      "delay": 2,
+      "delayUnit": "days",
+      "content": {
+        "type": "email",
+        "subject": "What to look for in your venue tour",
+        "greeting": "Hi {{contact.first_name}},",
+        "body": "As you plan your venue tours, here are a few things to consider:\n\n✓ Flow between ceremony and reception spaces\n✓ Natural lighting for photography\n✓ Weather contingency plans\n✓ Vendor flexibility\n\nWhen you visit {{company_name}}, we'll walk through all of these together.\n\nQuestions before your tour? Just reply to this email.\n\nWarmly,\nThe {{company_name}} Team",
+        "cta": {
+          "text": "Schedule Your Tour",
+          "url": "{{tour_booking_link}}"
+        },
+        "templateType": "what_to_look_for",
+        "compliance": {
+          "unsubscribeRequired": true,
+          "physicalAddressRequired": true,
+          "companyNameRequired": true
+        }
+      }
+    },
+    {
+      "id": "tp_307afa7b",
+      "name": "Love Stories - Day 4",
+      "type": "Email",
+      "order": 3,
+      "delay": 4,
+      "delayUnit": "days",
+      "content": {
+        "type": "email",
+        "subject": "A recent love story at {{company_name}}",
+        "greeting": "Hi {{contact.first_name}},",
+        "body": "I wanted to share a recent wedding that might inspire you...\n\nSarah and Michael celebrated with us last spring. Their vision was an intimate garden ceremony followed by a lively reception under the stars.\n\n\"{{company_name}} exceeded every expectation. The team thought of details we hadn't even considered,\" Sarah shared.\n\nEvery couple's story is unique. We'd love to help write yours.\n\nWarmly,\nThe {{company_name}} Team",
+        "cta": {
+          "text": "See More Stories",
+          "url": "{{gallery_link}}"
+        },
+        "templateType": "stories",
+        "compliance": {
+          "unsubscribeRequired": true,
+          "physicalAddressRequired": true,
+          "companyNameRequired": true
+        }
+      }
+    },
+    {
+      "id": "tp_eba1384a",
+      "name": "Vision Planning - Day 7",
+      "type": "Email",
+      "order": 4,
+      "delay": 7,
+      "delayUnit": "days",
+      "content": {
+        "type": "email",
+        "subject": "Let's bring your vision to life",
+        "greeting": "Hi {{contact.first_name}},",
+        "body": "Planning a wedding involves countless decisions, but it all starts with your vision.\n\nAt {{company_name}}, we specialize in:\n- Intimate ceremonies (20-50 guests)\n- Grand celebrations (up to {{capacity}} guests)\n- Customizable spaces that reflect your style\n\nWhether you're dreaming of rustic elegance or modern sophistication, our flexible venue adapts to your vision.\n\nLet's talk about what matters most to you.\n\nBest,\nThe {{company_name}} Team",
+        "cta": {
+          "text": "Book a Consultation",
+          "url": "{{tour_booking_link}}"
+        },
+        "templateType": "vision",
+        "compliance": {
+          "unsubscribeRequired": true,
+          "physicalAddressRequired": true,
+          "companyNameRequired": true
+        }
+      }
+    },
+    {
+      "id": "tp_6259b54a",
+      "name": "Closing - Day 14",
+      "type": "Email",
+      "order": 5,
+      "delay": 14,
+      "delayUnit": "days",
+      "content": {
+        "type": "email",
+        "subject": "One week left for special pricing",
+        "greeting": "Hi {{contact.first_name}},",
+        "body": "I hope your wedding planning is going smoothly!\n\nI wanted to reach out one more time about {{company_name}}. We're currently booking 2027 dates, and prime weekends are filling quickly.\n\nIf you're still considering us, I'd love to:\n- Answer any remaining questions\n- Schedule a personalized tour\n- Discuss available dates and packages\n\nNo pressure either way—just want to make sure you have everything you need.\n\nWarmly,\nThe {{company_name}} Team\n\nP.S. Reply to this email or call us at {{phone}}",
+        "cta": {
+          "text": "Get in Touch",
+          "url": "mailto:{{email}}"
+        },
+        "templateType": "close",
+        "compliance": {
+          "unsubscribeRequired": true,
+          "physicalAddressRequired": true,
+          "companyNameRequired": true
+        }
+      }
+    }
+  ]
+}

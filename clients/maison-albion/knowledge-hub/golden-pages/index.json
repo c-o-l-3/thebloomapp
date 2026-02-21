@@ -1,0 +1,67 @@
+{
+  "$schema": "../schemas/golden-pages-schema.json",
+  "version": "1.0.0",
+  "lastUpdated": "2026-02-21T16:00:00Z",
+  "pages": [
+    {
+      "id": "homepage",
+      "url": "https://www.examplevenue.com",
+      "title": "Example Venue | Beautiful Wedding Venue in City",
+      "description": "Description from meta tags",
+      "importance": "critical",
+      "category": "about",
+      "lastCrawled": "2026-02-21T10:00:00Z",
+      "contentHash": "abc123def456",
+      "extractedFacts": ["fact-home-001", "fact-home-002"],
+      "embeddingId": "emb-page-home"
+    },
+    {
+      "id": "pricing",
+      "url": "https://www.examplevenue.com/pricing",
+      "title": "Wedding Packages & Pricing",
+      "description": "Complete pricing information for wedding packages",
+      "importance": "critical",
+      "category": "pricing",
+      "lastCrawled": "2026-02-21T10:05:00Z",
+      "contentHash": "def456ghi789",
+      "extractedFacts": ["fact-price-001", "fact-price-002", "fact-price-003"],
+      "embeddingId": "emb-page-pricing"
+    },
+    {
+      "id": "venue-spaces",
+      "url": "https://www.examplevenue.com/venues",
+      "title": "Wedding Venues & Spaces",
+      "description": "Explore our ceremony and reception spaces",
+      "importance": "critical",
+      "category": "venue",
+      "lastCrawled": "2026-02-21T10:10:00Z",
+      "contentHash": "ghi789jkl012",
+      "extractedFacts": ["fact-venue-001", "fact-venue-002"],
+      "embeddingId": "emb-page-venues"
+    },
+    {
+      "id": "accommodations",
+      "url": "https://www.examplevenue.com/accommodations",
+      "title": "Guest Accommodations",
+      "description": "Information about guest lodging options",
+      "importance": "high",
+      "category": "accommodations",
+      "lastCrawled": "2026-02-21T10:15:00Z",
+      "contentHash": "jkl012mno345",
+      "extractedFacts": ["fact-accom-001"],
+      "embeddingId": "emb-page-accom"
+    },
+    {
+      "id": "faq",
+      "url": "https://www.examplevenue.com/faq",
+      "title": "Frequently Asked Questions",
+      "description": "Answers to common wedding planning questions",
+      "importance": "high",
+      "category": "policies",
+      "lastCrawled": "2026-02-21T10:20:00Z",
+      "contentHash": "mno345pqr678",
+      "extractedFacts": ["fact-faq-001", "fact-faq-002", "fact-faq-003"],
+      "embeddingId": "emb-page-faq"
+    }
+  ]
+}

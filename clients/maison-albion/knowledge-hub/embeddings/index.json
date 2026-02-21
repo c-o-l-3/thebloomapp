@@ -1,0 +1,50 @@
+{
+  "$schema": "../schemas/embeddings-schema.json",
+  "version": "1.0.0",
+  "model": {
+    "name": "text-embedding-3-large",
+    "provider": "openai",
+    "dimensions": 3072,
+    "version": "2024-01"
+  },
+  "lastUpdated": "2026-02-21T16:00:00Z",
+  "totalEmbeddings": 47,
+  "vectors": [
+    {
+      "id": "emb-fact-price-001",
+      "type": "fact",
+      "sourceId": "fact-price-001",
+      "text": "Wedding packages start at $5,000",
+      "embedding": [],
+      "metadata": {
+        "category": "pricing",
+        "tags": ["pricing", "packages"],
+        "createdAt": "2026-02-21T10:00:00Z"
+      }
+    },
+    {
+      "id": "emb-doc-001-chunk-001",
+      "type": "document-chunk",
+      "sourceId": "doc-001",
+      "text": "Our wedding packages include ceremony space, reception venue, catering, and day-of coordination...",
+      "embedding": [],
+      "metadata": {
+        "category": "pricing",
+        "tags": ["packages", "inclusions"],
+        "createdAt": "2026-02-20T14:35:00Z"
+      }
+    },
+    {
+      "id": "emb-page-home",
+      "type": "page",
+      "sourceId": "homepage",
+      "text": "Example Venue is a beautiful wedding venue located in the heart of the city...",
+      "embedding": [],
+      "metadata": {
+        "category": "about",
+        "tags": ["homepage", "overview"],
+        "createdAt": "2026-02-21T10:00:00Z"
+      }
+    }
+  ]
+}

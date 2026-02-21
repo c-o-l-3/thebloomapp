@@ -1,0 +1,1083 @@
+{
+  "$schema": "../schemas/facts-schema.json",
+  "version": "1.0.0",
+  "lastUpdated": "2026-02-21T19:36:03.138Z",
+  "factCount": 36,
+  "verifiedCount": 4,
+  "categories": [
+    {
+      "id": "pricing",
+      "name": "Pricing & Packages",
+      "description": "All pricing-related facts",
+      "factCount": 3
+    },
+    {
+      "id": "capacity",
+      "name": "Capacity & Spaces",
+      "description": "Guest capacity and space information",
+      "factCount": 3
+    },
+    {
+      "id": "policies",
+      "name": "Policies",
+      "description": "Venue policies and rules",
+      "factCount": 3
+    },
+    {
+      "id": "amenities",
+      "name": "Amenities & Services",
+      "description": "Included services and amenities",
+      "factCount": 7
+    },
+    {
+      "id": "venue-details",
+      "name": "Venue Details",
+      "description": "Physical venue information",
+      "factCount": 4
+    }
+  ],
+  "facts": [
+    {
+      "id": "fact-price-001",
+      "category": "pricing",
+      "subcategory": "base-packages",
+      "type": "range",
+      "statement": "Wedding packages start at $5,000",
+      "value": {
+        "min": 5000,
+        "max": 15000
+      },
+      "unit": "USD",
+      "validFrom": "2026-01-01",
+      "source": {
+        "type": "website",
+        "reference": "homepage",
+        "url": "https://www.examplevenue.com",
+        "extractedAt": "2026-02-21T10:00:00Z"
+      },
+      "confidence": 0.95,
+      "verificationStatus": "verified",
+      "verifiedBy": "manager@venue.com",
+      "verifiedAt": "2026-02-21T12:00:00Z",
+      "tags": [
+        "pricing",
+        "packages",
+        "minimum",
+        "starting-price"
+      ],
+      "embeddingId": "emb-fact-price-001",
+      "usedIn": [
+        "email-welcome",
+        "email-pricing"
+      ]
+    },
+    {
+      "id": "fact-price-002",
+      "category": "pricing",
+      "subcategory": "payment-terms",
+      "type": "scalar",
+      "statement": "Initial deposit to secure date is $3,000",
+      "value": 3000,
+      "unit": "USD",
+      "validFrom": "2026-01-01",
+      "source": {
+        "type": "website",
+        "reference": "pricing",
+        "url": "https://www.examplevenue.com/pricing",
+        "extractedAt": "2026-02-21T10:05:00Z"
+      },
+      "confidence": 0.92,
+      "verificationStatus": "verified",
+      "verifiedBy": "manager@venue.com",
+      "verifiedAt": "2026-02-21T12:30:00Z",
+      "tags": [
+        "pricing",
+        "deposit",
+        "booking"
+      ],
+      "embeddingId": "emb-fact-price-002",
+      "usedIn": [
+        "email-faq",
+        "contract"
+      ]
+    },
+    {
+      "id": "fact-cap-001",
+      "category": "capacity",
+      "subcategory": "ceremony-spaces",
+      "type": "scalar",
+      "statement": "Garden ceremony space accommodates up to 200 guests",
+      "value": 200,
+      "unit": "guests",
+      "validFrom": "2026-01-01",
+      "source": {
+        "type": "website",
+        "reference": "venue-spaces",
+        "url": "https://www.examplevenue.com/venues",
+        "extractedAt": "2026-02-21T10:10:00Z"
+      },
+      "confidence": 0.88,
+      "verificationStatus": "ai-extracted",
+      "tags": [
+        "capacity",
+        "ceremony",
+        "garden",
+        "outdoor"
+      ],
+      "embeddingId": "emb-fact-cap-001",
+      "usedIn": []
+    },
+    {
+      "id": "fact-cap-002",
+      "category": "capacity",
+      "subcategory": "reception-venues",
+      "type": "scalar",
+      "statement": "Ballroom reception capacity is 250 guests for seated dinner",
+      "value": 250,
+      "unit": "guests",
+      "validFrom": "2026-01-01",
+      "source": {
+        "type": "website",
+        "reference": "venue-spaces",
+        "url": "https://www.examplevenue.com/venues",
+        "extractedAt": "2026-02-21T10:10:00Z"
+      },
+      "confidence": 0.91,
+      "verificationStatus": "verified",
+      "verifiedBy": "coordinator@venue.com",
+      "verifiedAt": "2026-02-21T14:00:00Z",
+      "tags": [
+        "capacity",
+        "reception",
+        "ballroom",
+        "seated"
+      ],
+      "embeddingId": "emb-fact-cap-002",
+      "usedIn": [
+        "email-welcome",
+        "brochure"
+      ]
+    },
+    {
+      "id": "fact-policy-001",
+      "category": "policies",
+      "subcategory": "vendor-policy",
+      "type": "boolean",
+      "statement": "Open vendor policy - couples can bring their own vendors",
+      "value": true,
+      "source": {
+        "type": "document",
+        "reference": "doc-002",
+        "extractedAt": "2026-02-19T10:30:00Z"
+      },
+      "confidence": 0.87,
+      "verificationStatus": "ai-extracted",
+      "tags": [
+        "policy",
+        "vendors",
+        "flexibility"
+      ],
+      "embeddingId": "emb-fact-policy-001",
+      "usedIn": []
+    },
+    {
+      "id": "fact-amenity-001",
+      "category": "amenities",
+      "subcategory": "included-services",
+      "type": "list",
+      "statement": "Day-of coordination is included in all packages",
+      "value": [
+        "day-of coordination",
+        "setup",
+        "cleanup",
+        "event manager"
+      ],
+      "source": {
+        "type": "document",
+        "reference": "doc-002",
+        "extractedAt": "2026-02-19T10:30:00Z"
+      },
+      "confidence": 0.89,
+      "verificationStatus": "verified",
+      "verifiedBy": "manager@venue.com",
+      "verifiedAt": "2026-02-20T09:00:00Z",
+      "tags": [
+        "amenities",
+        "services",
+        "coordination",
+        "included"
+      ],
+      "embeddingId": "emb-fact-amenity-001",
+      "usedIn": [
+        "email-welcome",
+        "email-inclusions"
+      ]
+    },
+    {
+      "id": "fact-5609171a",
+      "category": "capacity",
+      "subcategory": "capacity",
+      "type": "scalar",
+      "statement": "Up to 225 guests",
+      "value": 225,
+      "unit": "guests",
+      "validFrom": null,
+      "validUntil": null,
+      "source": {
+        "type": "website",
+        "reference": "https://promise-farm.com/venue-tour",
+        "url": "https://promise-farm.com/venue-tour",
+        "extractedAt": "2026-02-21T19:31:28.999Z"
+      },
+      "confidence": 0.8,
+      "verificationStatus": "ai-extracted",
+      "verifiedBy": null,
+      "verifiedAt": null,
+      "verificationNotes": null,
+      "tags": [
+        "capacity",
+        "capacity",
+        "auto-extracted"
+      ],
+      "embeddingId": null,
+      "usedIn": []
+    },
+    {
+      "id": "fact-41ea0391",
+      "category": "venue_details",
+      "subcategory": "location",
+      "type": "text",
+      "statement": "Promise Farm is located in Lancaster, Pennsylvania",
+      "value": "Lancaster, PA",
+      "unit": null,
+      "validFrom": null,
+      "validUntil": null,
+      "source": {
+        "type": "website",
+        "reference": "page-2427db79",
+        "url": "https://promise-farm.com/blog",
+        "extractedAt": "2026-02-21T19:33:25.698Z"
+      },
+      "confidence": 0.95,
+      "verificationStatus": "ai-extracted",
+      "verifiedBy": null,
+      "verifiedAt": null,
+      "verificationNotes": null,
+      "tags": [
+        "venue_details",
+        "location"
+      ],
+      "embeddingId": null,
+      "usedIn": []
+    },
+    {
+      "id": "fact-20d3551c",
+      "category": "venue_details",
+      "subcategory": "property_size",
+      "type": "number",
+      "statement": "Promise Farm is situated on a picturesque 55-acre property",
+      "value": 55,
+      "unit": null,
+      "validFrom": null,
+      "validUntil": null,
+      "source": {
+        "type": "website",
+        "reference": "page-2427db79",
+        "url": "https://promise-farm.com/blog",
+        "extractedAt": "2026-02-21T19:33:25.698Z"
+      },
+      "confidence": 0.9,
+      "verificationStatus": "ai-extracted",
+      "verifiedBy": null,
+      "verifiedAt": null,
+      "verificationNotes": null,
+      "tags": [
+        "venue_details",
+        "property_size"
+      ],
+      "embeddingId": null,
+      "usedIn": []
+    },
+    {
+      "id": "fact-9c1fb732",
+      "category": "venue_details",
+      "subcategory": "style",
+      "type": "list",
+      "statement": "Promise Farm offers a rustic, cozy, and intimate countryside setting",
+      "value": [
+        "rustic",
+        "countryside",
+        "intimate",
+        "cozy"
+      ],
+      "unit": null,
+      "validFrom": null,
+      "validUntil": null,
+      "source": {
+        "type": "website",
+        "reference": "page-2427db79",
+        "url": "https://promise-farm.com/blog",
+        "extractedAt": "2026-02-21T19:33:25.698Z"
+      },
+      "confidence": 0.9,
+      "verificationStatus": "ai-extracted",
+      "verifiedBy": null,
+      "verifiedAt": null,
+      "verificationNotes": null,
+      "tags": [
+        "venue_details",
+        "style"
+      ],
+      "embeddingId": null,
+      "usedIn": []
+    },
+    {
+      "id": "fact-7893ae13",
+      "category": "venue_details",
+      "subcategory": "setting_description",
+      "type": "text",
+      "statement": "The venue features picturesque landscapes in a beautiful, serene countryside location",
+      "value": "Picturesque landscapes and serene countryside",
+      "unit": null,
+      "validFrom": null,
+      "validUntil": null,
+      "source": {
+        "type": "website",
+        "reference": "page-2427db79",
+        "url": "https://promise-farm.com/blog",
+        "extractedAt": "2026-02-21T19:33:25.698Z"
+      },
+      "confidence": 0.85,
+      "verificationStatus": "pending-review",
+      "verifiedBy": null,
+      "verifiedAt": null,
+      "verificationNotes": null,
+      "tags": [
+        "venue_details",
+        "setting_description"
+      ],
+      "embeddingId": null,
+      "usedIn": []
+    },
+    {
+      "id": "fact-8cda95d4",
+      "category": "amenities",
+      "subcategory": "bridal_suite",
+      "type": "boolean",
+      "statement": "Promise Farm offers an exceptional bridal suite with getting ready space",
+      "value": true,
+      "unit": null,
+      "validFrom": null,
+      "validUntil": null,
+      "source": {
+        "type": "website",
+        "reference": "page-2427db79",
+        "url": "https://promise-farm.com/blog",
+        "extractedAt": "2026-02-21T19:33:25.698Z"
+      },
+      "confidence": 0.9,
+      "verificationStatus": "ai-extracted",
+      "verifiedBy": null,
+      "verifiedAt": null,
+      "verificationNotes": null,
+      "tags": [
+        "amenities",
+        "bridal_suite"
+      ],
+      "embeddingId": null,
+      "usedIn": []
+    },
+    {
+      "id": "fact-c1cc2cce",
+      "category": "amenities",
+      "subcategory": "preferred_vendor_program",
+      "type": "boolean",
+      "statement": "Promise Farm maintains a preferred vendors list",
+      "value": true,
+      "unit": null,
+      "validFrom": null,
+      "validUntil": null,
+      "source": {
+        "type": "website",
+        "reference": "page-2427db79",
+        "url": "https://promise-farm.com/blog",
+        "extractedAt": "2026-02-21T19:33:25.698Z"
+      },
+      "confidence": 0.75,
+      "verificationStatus": "pending-review",
+      "verifiedBy": null,
+      "verifiedAt": null,
+      "verificationNotes": null,
+      "tags": [
+        "amenities",
+        "preferred_vendor_program"
+      ],
+      "embeddingId": null,
+      "usedIn": []
+    },
+    {
+      "id": "fact-f6f0cfc2",
+      "category": "amenities",
+      "subcategory": "lodging_information",
+      "type": "boolean",
+      "statement": "Information about nearby lodging is available",
+      "value": true,
+      "unit": null,
+      "validFrom": null,
+      "validUntil": null,
+      "source": {
+        "type": "website",
+        "reference": "page-2427db79",
+        "url": "https://promise-farm.com/blog",
+        "extractedAt": "2026-02-21T19:33:25.698Z"
+      },
+      "confidence": 0.75,
+      "verificationStatus": "pending-review",
+      "verifiedBy": null,
+      "verifiedAt": null,
+      "verificationNotes": null,
+      "tags": [
+        "amenities",
+        "lodging_information"
+      ],
+      "embeddingId": null,
+      "usedIn": []
+    },
+    {
+      "id": "fact-dfa245f4",
+      "category": "services",
+      "subcategory": "planning_resources",
+      "type": "list",
+      "statement": "Promise Farm provides planning resources including a blog with wedding tips, real wedding stories, and planning guides",
+      "value": [
+        "blog",
+        "wedding tips",
+        "planning guides"
+      ],
+      "unit": null,
+      "validFrom": null,
+      "validUntil": null,
+      "source": {
+        "type": "website",
+        "reference": "page-2427db79",
+        "url": "https://promise-farm.com/blog",
+        "extractedAt": "2026-02-21T19:33:25.698Z"
+      },
+      "confidence": 0.9,
+      "verificationStatus": "ai-extracted",
+      "verifiedBy": null,
+      "verifiedAt": null,
+      "verificationNotes": null,
+      "tags": [
+        "services",
+        "planning_resources"
+      ],
+      "embeddingId": null,
+      "usedIn": []
+    },
+    {
+      "id": "fact-113e1e04",
+      "category": "venue_details",
+      "subcategory": "location",
+      "type": "text",
+      "statement": "Promise Farm is located in Lancaster, PA",
+      "value": "Lancaster, PA",
+      "unit": null,
+      "validFrom": null,
+      "validUntil": null,
+      "source": {
+        "type": "website",
+        "reference": "page-c14f7ba3",
+        "url": "https://promise-farm.com/blog/how-to-plan-a-rustic-wedding-in-lancaster",
+        "extractedAt": "2026-02-21T19:34:36.574Z"
+      },
+      "confidence": 0.95,
+      "verificationStatus": "ai-extracted",
+      "verifiedBy": null,
+      "verifiedAt": null,
+      "verificationNotes": null,
+      "tags": [
+        "venue_details",
+        "location"
+      ],
+      "embeddingId": null,
+      "usedIn": []
+    },
+    {
+      "id": "fact-44f7f559",
+      "category": "venue_details",
+      "subcategory": "property_size",
+      "type": "text",
+      "statement": "The venue features a 55-acre farm setting",
+      "value": "55 acres",
+      "unit": null,
+      "validFrom": null,
+      "validUntil": null,
+      "source": {
+        "type": "website",
+        "reference": "page-c14f7ba3",
+        "url": "https://promise-farm.com/blog/how-to-plan-a-rustic-wedding-in-lancaster",
+        "extractedAt": "2026-02-21T19:34:36.574Z"
+      },
+      "confidence": 0.95,
+      "verificationStatus": "ai-extracted",
+      "verifiedBy": null,
+      "verifiedAt": null,
+      "verificationNotes": null,
+      "tags": [
+        "venue_details",
+        "property_size"
+      ],
+      "embeddingId": null,
+      "usedIn": []
+    },
+    {
+      "id": "fact-968ae83d",
+      "category": "venue_details",
+      "subcategory": "setting_type",
+      "type": "text",
+      "statement": "The venue is a farm setting",
+      "value": "farm",
+      "unit": null,
+      "validFrom": null,
+      "validUntil": null,
+      "source": {
+        "type": "website",
+        "reference": "page-c14f7ba3",
+        "url": "https://promise-farm.com/blog/how-to-plan-a-rustic-wedding-in-lancaster",
+        "extractedAt": "2026-02-21T19:34:36.574Z"
+      },
+      "confidence": 0.95,
+      "verificationStatus": "ai-extracted",
+      "verifiedBy": null,
+      "verifiedAt": null,
+      "verificationNotes": null,
+      "tags": [
+        "venue_details",
+        "setting_type"
+      ],
+      "embeddingId": null,
+      "usedIn": []
+    },
+    {
+      "id": "fact-fd1bda79",
+      "category": "venue_details",
+      "subcategory": "style",
+      "type": "text",
+      "statement": "Promise Farm offers a rustic, cozy, intimate setting with a homespun but elegant vibe",
+      "value": "rustic, cozy, intimate, homespun but elegant",
+      "unit": null,
+      "validFrom": null,
+      "validUntil": null,
+      "source": {
+        "type": "website",
+        "reference": "page-c14f7ba3",
+        "url": "https://promise-farm.com/blog/how-to-plan-a-rustic-wedding-in-lancaster",
+        "extractedAt": "2026-02-21T19:34:36.574Z"
+      },
+      "confidence": 0.9,
+      "verificationStatus": "ai-extracted",
+      "verifiedBy": null,
+      "verifiedAt": null,
+      "verificationNotes": null,
+      "tags": [
+        "venue_details",
+        "style"
+      ],
+      "embeddingId": null,
+      "usedIn": []
+    },
+    {
+      "id": "fact-684206f9",
+      "category": "venue_details",
+      "subcategory": "design_flexibility",
+      "type": "text",
+      "statement": "The venue provides a blank canvas, allowing couples to design their wedding exactly as they envision it",
+      "value": "blank canvas",
+      "unit": null,
+      "validFrom": null,
+      "validUntil": null,
+      "source": {
+        "type": "website",
+        "reference": "page-c14f7ba3",
+        "url": "https://promise-farm.com/blog/how-to-plan-a-rustic-wedding-in-lancaster",
+        "extractedAt": "2026-02-21T19:34:36.574Z"
+      },
+      "confidence": 0.9,
+      "verificationStatus": "ai-extracted",
+      "verifiedBy": null,
+      "verifiedAt": null,
+      "verificationNotes": null,
+      "tags": [
+        "venue_details",
+        "design_flexibility"
+      ],
+      "embeddingId": null,
+      "usedIn": []
+    },
+    {
+      "id": "fact-6465193d",
+      "category": "policies",
+      "subcategory": "vendor_policy",
+      "type": "text",
+      "statement": "Promise Farm has a flexible vendor policy",
+      "value": "flexible",
+      "unit": null,
+      "validFrom": null,
+      "validUntil": null,
+      "source": {
+        "type": "website",
+        "reference": "page-c14f7ba3",
+        "url": "https://promise-farm.com/blog/how-to-plan-a-rustic-wedding-in-lancaster",
+        "extractedAt": "2026-02-21T19:34:36.574Z"
+      },
+      "confidence": 0.9,
+      "verificationStatus": "ai-extracted",
+      "verifiedBy": null,
+      "verifiedAt": null,
+      "verificationNotes": null,
+      "tags": [
+        "policies",
+        "vendor_policy",
+        "vendors"
+      ],
+      "embeddingId": null,
+      "usedIn": []
+    },
+    {
+      "id": "fact-f449e781",
+      "category": "venue_details",
+      "subcategory": "atmosphere",
+      "type": "text",
+      "statement": "The venue offers a relaxed, personal, and serene atmosphere",
+      "value": "relaxed, personal, serene",
+      "unit": null,
+      "validFrom": null,
+      "validUntil": null,
+      "source": {
+        "type": "website",
+        "reference": "page-c14f7ba3",
+        "url": "https://promise-farm.com/blog/how-to-plan-a-rustic-wedding-in-lancaster",
+        "extractedAt": "2026-02-21T19:34:36.574Z"
+      },
+      "confidence": 0.85,
+      "verificationStatus": "pending-review",
+      "verifiedBy": null,
+      "verifiedAt": null,
+      "verificationNotes": null,
+      "tags": [
+        "venue_details",
+        "atmosphere"
+      ],
+      "embeddingId": null,
+      "usedIn": []
+    },
+    {
+      "id": "fact-94183e6e",
+      "category": "venue_details",
+      "subcategory": "location",
+      "type": "text",
+      "statement": "Promise Farm is located in Lancaster",
+      "value": "Lancaster",
+      "unit": null,
+      "validFrom": null,
+      "validUntil": null,
+      "source": {
+        "type": "website",
+        "reference": "page-49d273aa",
+        "url": "https://promise-farm.com/blog/5-tips-to-plan-the-perfect-cocktail-hour-in-lancaster",
+        "extractedAt": "2026-02-21T19:36:03.133Z"
+      },
+      "confidence": 0.95,
+      "verificationStatus": "ai-extracted",
+      "verifiedBy": null,
+      "verifiedAt": null,
+      "verificationNotes": null,
+      "tags": [
+        "venue_details",
+        "location"
+      ],
+      "embeddingId": null,
+      "usedIn": []
+    },
+    {
+      "id": "fact-032d5d48",
+      "category": "venue_details",
+      "subcategory": "property_size",
+      "type": "text",
+      "statement": "The venue is set on a 55-acre farm",
+      "value": "55 acres",
+      "unit": null,
+      "validFrom": null,
+      "validUntil": null,
+      "source": {
+        "type": "website",
+        "reference": "page-91287958",
+        "url": "https://promise-farm.com/blog/lancaster-wedding-planning-tips",
+        "extractedAt": "2026-02-21T19:34:57.359Z"
+      },
+      "confidence": 0.95,
+      "verificationStatus": "ai-extracted",
+      "verifiedBy": null,
+      "verifiedAt": null,
+      "verificationNotes": null,
+      "tags": [
+        "venue_details",
+        "property_size"
+      ],
+      "embeddingId": null,
+      "usedIn": []
+    },
+    {
+      "id": "fact-b6cdd3e7",
+      "category": "venue_details",
+      "subcategory": "style",
+      "type": "text",
+      "statement": "The venue offers a rustic elegant vibe",
+      "value": "rustic elegant",
+      "unit": null,
+      "validFrom": null,
+      "validUntil": null,
+      "source": {
+        "type": "website",
+        "reference": "page-91287958",
+        "url": "https://promise-farm.com/blog/lancaster-wedding-planning-tips",
+        "extractedAt": "2026-02-21T19:34:57.359Z"
+      },
+      "confidence": 0.95,
+      "verificationStatus": "ai-extracted",
+      "verifiedBy": null,
+      "verifiedAt": null,
+      "verificationNotes": null,
+      "tags": [
+        "venue_details",
+        "style"
+      ],
+      "embeddingId": null,
+      "usedIn": []
+    },
+    {
+      "id": "fact-8ae70610",
+      "category": "venue_details",
+      "subcategory": "venue_type",
+      "type": "text",
+      "statement": "Promise Farm features a rustic barn setting",
+      "value": "rustic barn",
+      "unit": null,
+      "validFrom": null,
+      "validUntil": null,
+      "source": {
+        "type": "website",
+        "reference": "page-91287958",
+        "url": "https://promise-farm.com/blog/lancaster-wedding-planning-tips",
+        "extractedAt": "2026-02-21T19:34:57.359Z"
+      },
+      "confidence": 0.95,
+      "verificationStatus": "ai-extracted",
+      "verifiedBy": null,
+      "verifiedAt": null,
+      "verificationNotes": null,
+      "tags": [
+        "venue_details",
+        "venue_type"
+      ],
+      "embeddingId": null,
+      "usedIn": []
+    },
+    {
+      "id": "fact-4ced0857",
+      "category": "amenities",
+      "subcategory": "indoor_spaces",
+      "type": "list",
+      "statement": "The venue includes a spacious main room",
+      "value": [
+        "main room"
+      ],
+      "unit": null,
+      "validFrom": null,
+      "validUntil": null,
+      "source": {
+        "type": "website",
+        "reference": "page-91287958",
+        "url": "https://promise-farm.com/blog/lancaster-wedding-planning-tips",
+        "extractedAt": "2026-02-21T19:34:57.359Z"
+      },
+      "confidence": 0.9,
+      "verificationStatus": "ai-extracted",
+      "verifiedBy": null,
+      "verifiedAt": null,
+      "verificationNotes": null,
+      "tags": [
+        "amenities",
+        "indoor_spaces"
+      ],
+      "embeddingId": null,
+      "usedIn": []
+    },
+    {
+      "id": "fact-f4662a17",
+      "category": "amenities",
+      "subcategory": "outdoor_spaces",
+      "type": "list",
+      "statement": "The venue features an outdoor deck, scenic grounds, and 55-acre farm setting",
+      "value": [
+        "outdoor deck",
+        "scenic grounds",
+        "55-acre farm setting"
+      ],
+      "unit": null,
+      "validFrom": null,
+      "validUntil": null,
+      "source": {
+        "type": "website",
+        "reference": "page-91287958",
+        "url": "https://promise-farm.com/blog/lancaster-wedding-planning-tips",
+        "extractedAt": "2026-02-21T19:34:57.359Z"
+      },
+      "confidence": 0.9,
+      "verificationStatus": "ai-extracted",
+      "verifiedBy": null,
+      "verifiedAt": null,
+      "verificationNotes": null,
+      "tags": [
+        "amenities",
+        "outdoor_spaces"
+      ],
+      "embeddingId": null,
+      "usedIn": []
+    },
+    {
+      "id": "fact-564fba46",
+      "category": "pricing",
+      "subcategory": "discounted_days",
+      "type": "list",
+      "statement": "Promise Farm offers special rates for Friday and Sunday weddings",
+      "value": [
+        "Friday",
+        "Sunday"
+      ],
+      "unit": null,
+      "validFrom": null,
+      "validUntil": null,
+      "source": {
+        "type": "website",
+        "reference": "page-91287958",
+        "url": "https://promise-farm.com/blog/lancaster-wedding-planning-tips",
+        "extractedAt": "2026-02-21T19:34:57.359Z"
+      },
+      "confidence": 0.95,
+      "verificationStatus": "ai-extracted",
+      "verifiedBy": null,
+      "verifiedAt": null,
+      "verificationNotes": null,
+      "tags": [
+        "pricing",
+        "discounted_days"
+      ],
+      "embeddingId": null,
+      "usedIn": []
+    },
+    {
+      "id": "fact-4bec0d2c",
+      "category": "policies",
+      "subcategory": "decoration_policy",
+      "type": "text",
+      "statement": "Couples are allowed to decorate the venue to their heart's content",
+      "value": "flexible",
+      "unit": null,
+      "validFrom": null,
+      "validUntil": null,
+      "source": {
+        "type": "website",
+        "reference": "page-91287958",
+        "url": "https://promise-farm.com/blog/lancaster-wedding-planning-tips",
+        "extractedAt": "2026-02-21T19:34:57.359Z"
+      },
+      "confidence": 0.9,
+      "verificationStatus": "ai-extracted",
+      "verifiedBy": null,
+      "verifiedAt": null,
+      "verificationNotes": null,
+      "tags": [
+        "policies",
+        "decoration_policy"
+      ],
+      "embeddingId": null,
+      "usedIn": []
+    },
+    {
+      "id": "fact-d20c05c5",
+      "category": "services",
+      "subcategory": "tours_available",
+      "type": "boolean",
+      "statement": "Promise Farm offers venue tours for couples to visit the property in person",
+      "value": true,
+      "unit": null,
+      "validFrom": null,
+      "validUntil": null,
+      "source": {
+        "type": "website",
+        "reference": "page-91287958",
+        "url": "https://promise-farm.com/blog/lancaster-wedding-planning-tips",
+        "extractedAt": "2026-02-21T19:34:57.359Z"
+      },
+      "confidence": 0.95,
+      "verificationStatus": "ai-extracted",
+      "verifiedBy": null,
+      "verifiedAt": null,
+      "verificationNotes": null,
+      "tags": [
+        "services",
+        "tours_available"
+      ],
+      "embeddingId": null,
+      "usedIn": []
+    },
+    {
+      "id": "fact-f91ab24f",
+      "category": "venue_details",
+      "subcategory": "venue_name",
+      "type": "text",
+      "statement": "The venue is named Promise Farm",
+      "value": "Promise Farm",
+      "unit": null,
+      "validFrom": null,
+      "validUntil": null,
+      "source": {
+        "type": "website",
+        "reference": "page-49d273aa",
+        "url": "https://promise-farm.com/blog/5-tips-to-plan-the-perfect-cocktail-hour-in-lancaster",
+        "extractedAt": "2026-02-21T19:36:03.133Z"
+      },
+      "confidence": 1,
+      "verificationStatus": "ai-extracted",
+      "verifiedBy": null,
+      "verifiedAt": null,
+      "verificationNotes": null,
+      "tags": [
+        "venue_details",
+        "venue_name"
+      ],
+      "embeddingId": null,
+      "usedIn": []
+    },
+    {
+      "id": "fact-d6e96901",
+      "category": "venue_details",
+      "subcategory": "venue_description",
+      "type": "text",
+      "statement": "Promise Farm is described as Lancaster's premier event venue",
+      "value": "Lancaster's premier event venue",
+      "unit": null,
+      "validFrom": null,
+      "validUntil": null,
+      "source": {
+        "type": "website",
+        "reference": "page-49d273aa",
+        "url": "https://promise-farm.com/blog/5-tips-to-plan-the-perfect-cocktail-hour-in-lancaster",
+        "extractedAt": "2026-02-21T19:36:03.133Z"
+      },
+      "confidence": 0.85,
+      "verificationStatus": "pending-review",
+      "verifiedBy": null,
+      "verifiedAt": null,
+      "verificationNotes": null,
+      "tags": [
+        "venue_details",
+        "venue_description"
+      ],
+      "embeddingId": null,
+      "usedIn": []
+    },
+    {
+      "id": "fact-5a8b0e46",
+      "category": "venue_details",
+      "subcategory": "space_types",
+      "type": "list",
+      "statement": "The venue offers a variety of indoor and outdoor spaces",
+      "value": [
+        "indoor",
+        "outdoor"
+      ],
+      "unit": null,
+      "validFrom": null,
+      "validUntil": null,
+      "source": {
+        "type": "website",
+        "reference": "page-49d273aa",
+        "url": "https://promise-farm.com/blog/5-tips-to-plan-the-perfect-cocktail-hour-in-lancaster",
+        "extractedAt": "2026-02-21T19:36:03.133Z"
+      },
+      "confidence": 0.95,
+      "verificationStatus": "ai-extracted",
+      "verifiedBy": null,
+      "verifiedAt": null,
+      "verificationNotes": null,
+      "tags": [
+        "venue_details",
+        "space_types"
+      ],
+      "embeddingId": null,
+      "usedIn": []
+    },
+    {
+      "id": "fact-6ab66a27",
+      "category": "amenities",
+      "subcategory": "cocktail_hour_hosting",
+      "type": "boolean",
+      "statement": "The venue offers spaces suitable for hosting cocktail hours",
+      "value": true,
+      "unit": "hours",
+      "validFrom": null,
+      "validUntil": null,
+      "source": {
+        "type": "website",
+        "reference": "page-49d273aa",
+        "url": "https://promise-farm.com/blog/5-tips-to-plan-the-perfect-cocktail-hour-in-lancaster",
+        "extractedAt": "2026-02-21T19:36:03.133Z"
+      },
+      "confidence": 0.9,
+      "verificationStatus": "ai-extracted",
+      "verifiedBy": null,
+      "verifiedAt": null,
+      "verificationNotes": null,
+      "tags": [
+        "amenities",
+        "cocktail_hour_hosting"
+      ],
+      "embeddingId": null,
+      "usedIn": []
+    },
+    {
+      "id": "fact-aa665558",
+      "category": "venue_details",
+      "subcategory": "event_types",
+      "type": "list",
+      "statement": "Promise Farm hosts weddings and special events",
+      "value": [
+        "weddings",
+        "special events"
+      ],
+      "unit": null,
+      "validFrom": null,
+      "validUntil": null,
+      "source": {
+        "type": "website",
+        "reference": "page-49d273aa",
+        "url": "https://promise-farm.com/blog/5-tips-to-plan-the-perfect-cocktail-hour-in-lancaster",
+        "extractedAt": "2026-02-21T19:36:03.133Z"
+      },
+      "confidence": 0.9,
+      "verificationStatus": "ai-extracted",
+      "verifiedBy": null,
+      "verifiedAt": null,
+      "verificationNotes": null,
+      "tags": [
+        "venue_details",
+        "event_types"
+      ],
+      "embeddingId": null,
+      "usedIn": []
+    }
+  ]
+}

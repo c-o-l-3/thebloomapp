@@ -1,0 +1,20 @@
+{
+  "version": "1.0.0",
+  "lastCrawl": {
+    "startedAt": "2026-02-21T10:00:00Z",
+    "completedAt": "2026-02-21T10:30:00Z",
+    "url": "https://www.examplevenue.com",
+    "pagesCrawled": 25,
+    "pagesChanged": 3,
+    "newFactsExtracted": 12,
+    "status": "completed"
+  },
+  "crawlHistory": [
+    {
+      "date": "2026-02-14T10:00:00Z",
+      "pagesCrawled": 25,
+      "pagesChanged": 0,
+      "status": "completed"
+    }
+  ]
+}

@@ -1,0 +1,183 @@
+{
+  "id": "journey_new-leads-to-tour",
+  "name": "New Leads → Book a Tour",
+  "description": "7-touchpoint nurture sequence to convert new leads into booked tours. Features welcome, value propositions, FAQ, and strong CTAs.",
+  "category": "nurture",
+  "status": "Draft",
+  "client": "promise-farm",
+  "trigger": {
+    "type": "form_submission",
+    "form": "website_inquiry"
+  },
+  "goal": "Book a venue tour",
+  "touchpoints": [
+    {
+      "id": "tp_welcome_immediate",
+      "name": "Welcome - Immediate",
+      "type": "Email",
+      "order": 1,
+      "delay": 0,
+      "delayUnit": "hours",
+      "content": {
+        "type": "email",
+        "subject": "Welcome to Promise Farm! 🌿",
+        "greeting": "Hi {{contact.first_name}},",
+        "body": "Welcome to Promise Farm! We're absolutely thrilled that you're considering our Lancaster County barn venue for your special day.\n\nPicture this: exchanging vows surrounded by rolling hills, celebrating under crystal chandeliers in our climate-controlled barn, and creating memories that last a lifetime.\n\nHere's what makes Promise Farm special:\n✓ Flexible vendor policy - choose your own caterer, photographer, and more\n✓ Day-of coordination included with every package\n✓ Gorgeous bridal suite with plenty of getting-ready space\n✓ Both indoor and outdoor ceremony options\n✓ Affordable pricing without sacrificing elegance\n\nWe'd love to show you around in person. Our tours typically last about an hour, and you'll get to see all the spaces, ask questions, and start envisioning your day here.",
+        "cta": {
+          "text": "Schedule Your Tour",
+          "url": "https://promise-farm.com/contact"
+        },
+        "templateType": "welcome",
+        "compliance": {
+          "unsubscribeRequired": true,
+          "physicalAddressRequired": true,
+          "companyNameRequired": true
+        }
+      }
+    },
+    {
+      "id": "tp_value_props_day2",
+      "name": "Value Propositions - Day 2",
+      "type": "Email",
+      "order": 2,
+      "delay": 2,
+      "delayUnit": "days",
+      "content": {
+        "type": "email",
+        "subject": "Why couples choose Promise Farm",
+        "greeting": "Hi {{contact.first_name}},",
+        "body": "As you explore wedding venues, we wanted to share what makes Promise Farm different from the typical banquet hall experience:\n\n🌾 AUTHENTIC RUSTIC CHARM\nOur barn has been thoughtfully restored with modern amenities while keeping its historic character. Think exposed beams, warm wood tones, and that unmistakable cozy feeling.\n\n💰 TRANSPARENT, AFFORDABLE PRICING\nNo hidden fees, no surprises. We believe beautiful weddings shouldn't require breaking the bank. Our packages are designed to give you exceptional value.\n\n🎨 COMPLETE CREATIVE FREEDOM\nBring your own caterer (food trucks welcome!), choose your own florist, decorate however you'd like. This is YOUR canvas.\n\n📍 LANCASTER COUNTY LOCATION\nYour guests will love the scenic drive through Pennsylvania Dutch Country. Plus, plenty of accommodation options nearby for out-of-town guests.\n\nHave questions about any of these? Just hit reply.",
+        "cta": {
+          "text": "See Our Pricing",
+          "url": "https://promise-farm.com/pricing"
+        },
+        "templateType": "value_props",
+        "compliance": {
+          "unsubscribeRequired": true,
+          "physicalAddressRequired": true,
+          "companyNameRequired": true
+        }
+      }
+    },
+    {
+      "id": "tp_spaces_day4",
+      "name": "Our Spaces - Day 4",
+      "type": "Email",
+      "order": 3,
+      "delay": 4,
+      "delayUnit": "days",
+      "content": {
+        "type": "email",
+        "subject": "Take a peek at your ceremony options",
+        "greeting": "Hi {{contact.first_name}},",
+        "body": "One of the things couples love most about Promise Farm is having choices for their ceremony. Here's what you'll find:\n\n🌳 OUTDOOR CEREMONY AREA\nSay 'I do' with panoramic countryside views as your backdrop. Our outdoor space features natural landscaping, plenty of photo opportunities, and room for up to 200 guests. Weather backup? We've got you covered with our indoor option.\n\n🏛️ INDOOR CEREMONY OPTION\nOur climate-controlled barn creates an intimate, romantic atmosphere with stunning architectural details, beautiful lighting, and that cozy barn feel - perfect year-round.\n\n🥂 COCKTAIL HOUR SPACES\nGuests can mingle in multiple areas while you take photos. The wrap-around porch, landscaped gardens, and open lawn spaces give everyone room to relax and celebrate.\n\n💃 RECEPTION BARN\nDinner and dancing happen in our gorgeous main barn, complete with chandeliers, a spacious dance floor, and flexible layout options to match your vision.\n\nWant to see it all in person?",
+        "cta": {
+          "text": "Book a Tour",
+          "url": "https://promise-farm.com/contact"
+        },
+        "templateType": "spaces",
+        "compliance": {
+          "unsubscribeRequired": true,
+          "physicalAddressRequired": true,
+          "companyNameRequired": true
+        }
+      }
+    },
+    {
+      "id": "tp_faq_day6",
+      "name": "FAQ - Day 6",
+      "type": "Email",
+      "order": 4,
+      "delay": 6,
+      "delayUnit": "days",
+      "content": {
+        "type": "email",
+        "subject": "Questions other couples ask",
+        "greeting": "Hi {{contact.first_name}},",
+        "body": "We know wedding planning comes with lots of questions. Here are the ones we hear most often:\n\n❓ CAN WE BRING OUR OWN CATERER?\nAbsolutely! We have a flexible vendor policy. Bring your favorite caterer, food truck, or handle it yourself. We're here to accommodate YOUR vision.\n\n❓ WHAT'S INCLUDED IN THE PACKAGE?\nDay-of coordination, tables and chairs, bridal suite access, parking attendants, and use of our getting-ready spaces. Plus, you get our expertise and support throughout planning!\n\n❓ IS THERE A GUEST MINIMUM OR MAXIMUM?\nOur space comfortably accommodates weddings from 50 to 200 guests. Whether intimate or grand, we make it work beautifully.\n\n❓ WHAT ABOUT WEATHER FOR OUTDOOR CEREMONIES?\nWe always have a backup plan! Our indoor ceremony space is equally beautiful, and we make the call together based on the forecast.\n\n❓ HOW FAR IN ADVANCE SHOULD WE BOOK?\nPrime dates (Saturdays in spring and fall) book 12-18 months ahead. But don't worry - we often have Friday and Sunday availability with shorter notice.\n\nHave other questions? We're just an email away!",
+        "cta": {
+          "text": "Schedule a Call",
+          "url": "https://promise-farm.com/contact"
+        },
+        "templateType": "faq",
+        "compliance": {
+          "unsubscribeRequired": true,
+          "physicalAddressRequired": true,
+          "companyNameRequired": true
+        }
+      }
+    },
+    {
+      "id": "tp_social_proof_day9",
+      "name": "Social Proof - Day 9",
+      "type": "Email",
+      "order": 5,
+      "delay": 9,
+      "delayUnit": "days",
+      "content": {
+        "type": "email",
+        "subject": "What Sarah & Michael loved about their Promise Farm wedding",
+        "greeting": "Hi {{contact.first_name}},",
+        "body": "Don't just take our word for it. Here's what Sarah and Michael shared after their June wedding:\n\n💬 'From our first tour, we knew Promise Farm was perfect. The flexibility to bring our own food truck and decorate exactly how we wanted made it feel so personal. The team handled everything on the day-of, so we could actually enjoy our wedding!'\n\n💬 'Our guests are still talking about how beautiful the venue was. The photos with the rolling hills in the background are absolutely stunning.'\n\n💬 'Best decision we made! The value is incredible - we got the rustic barn wedding of our dreams without going over budget.'\n\nYour love story deserves a setting this special. Ready to see it for yourself?",
+        "cta": {
+          "text": "Book Your Tour Today",
+          "url": "https://promise-farm.com/contact"
+        },
+        "templateType": "social_proof",
+        "compliance": {
+          "unsubscribeRequired": true,
+          "physicalAddressRequired": true,
+          "companyNameRequired": true
+        }
+      }
+    },
+    {
+      "id": "tp_final_cta_day12",
+      "name": "Final CTA - Day 12",
+      "type": "Email",
+      "order": 6,
+      "delay": 12,
+      "delayUnit": "days",
+      "content": {
+        "type": "email",
+        "subject": "Let's make your wedding day unforgettable",
+        "greeting": "Hi {{contact.first_name}},",
+        "body": "I hope you've enjoyed learning about Promise Farm over the past couple of weeks. Wedding planning is such an exciting journey, and choosing your venue is one of the most important decisions you'll make.\n\nIf Promise Farm feels like it could be 'the one,' I'd love to show you around. There's nothing quite like experiencing the space in person - feeling the breeze on the ceremony lawn, walking through the barn as the chandeliers glow, and picturing your first dance.\n\nDuring your tour, we'll:\n✓ Walk through all the ceremony and reception spaces\n✓ Discuss your vision and how we can bring it to life\n✓ Review available dates and packages\n✓ Answer all your questions (seriously, ask us anything!)\n\nTours are free, no-pressure, and typically last about an hour. Bring your partner, your parents, or just come solo - whatever works for you.",
+        "cta": {
+          "text": "Claim Your Preferred Tour Date",
+          "url": "https://promise-farm.com/contact"
+        },
+        "templateType": "final_cta",
+        "compliance": {
+          "unsubscribeRequired": true,
+          "physicalAddressRequired": true,
+          "companyNameRequired": true
+        }
+      }
+    },
+    {
+      "id": "tp_breakup_day16",
+      "name": "Soft Breakup - Day 16",
+      "type": "Email",
+      "order": 7,
+      "delay": 16,
+      "delayUnit": "days",
+      "content": {
+        "type": "email",
+        "subject": "One last hello from Promise Farm",
+        "greeting": "Hi {{contact.first_name}},",
+        "body": "I haven't heard back, so I wanted to check in one final time.\n\nI know choosing a venue is a big decision, and Promise Farm might not be the right fit for everyone - and that's okay!\n\nIf you're still considering us:\n• Tours are always available - just reach out\n• I'm happy to answer any lingering questions\n• We can check date availability anytime\n\nIf you've chosen another venue, congratulations! Wishing you a beautiful wedding and a lifetime of happiness.\n\nAnd if your plans change down the road, we'll be here.\n\nWarmly,\nThe Promise Farm Team\n\nP.S. Follow us on Instagram @promisefarm to see real weddings and get inspired!",
+        "cta": {
+          "text": "Follow Us on Instagram",
+          "url": "https://instagram.com/promisefarm"
+        },
+        "templateType": "breakup",
+        "compliance": {
+          "unsubscribeRequired": true,
+          "physicalAddressRequired": true,
+          "companyNameRequired": true
+        }
+      }
+    }
+  ]
+}

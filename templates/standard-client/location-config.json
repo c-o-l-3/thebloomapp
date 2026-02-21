@@ -1,0 +1,38 @@
+{
+  "locationId": "",
+  "name": "",
+  "timezone": "",
+  "address": {
+    "street": "",
+    "city": "",
+    "state": "",
+    "postalCode": "",
+    "country": "US"
+  },
+  "contact": {
+    "email": "",
+    "phone": "",
+    "website": ""
+  },
+  "businessHours": {
+    "monday": { "start": "09:00", "end": "17:00" },
+    "tuesday": { "start": "09:00", "end": "17:00" },
+    "wednesday": { "start": "09:00", "end": "17:00" },
+    "thursday": { "start": "09:00", "end": "17:00" },
+    "friday": { "start": "09:00", "end": "17:00" },
+    "saturday": { "start": "10:00", "end": "14:00" },
+    "sunday": { "start": "", "end": "" }
+  },
+  "settings": {
+    "defaultCountry": "US",
+    "currency": "USD",
+    "dateFormat": "MM/DD/YYYY",
+    "timeFormat": "12h"
+  },
+  "socialAccounts": {
+    "facebook": "",
+    "instagram": "",
+    "twitter": "",
+    "linkedin": ""
+  }
+}

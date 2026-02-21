@@ -1,0 +1,54 @@
+{
+  "emailTemplates": [
+    {
+      "id": "",
+      "name": "Welcome Email",
+      "subject": "Welcome to [Client Name]!",
+      "category": "lead-nurturing",
+      "content": {
+        "html": "<h1>Welcome to [Client Name]</h1><p>Thank you for your interest in our venue...</p>",
+        "text": "Welcome to [Client Name]\n\nThank you for your interest in our venue..."
+      }
+    },
+    {
+      "id": "",
+      "name": "Tour Reminder",
+      "subject": "Your Venue Tour Tomorrow",
+      "category": "appointments",
+      "content": {
+        "html": "<h1>Your Tour is Tomorrow!</h1><p>We look forward to showing you our venue...</p>",
+        "text": "Your Tour is Tomorrow!\n\nWe look forward to showing you our venue..."
+      }
+    },
+    {
+      "id": "",
+      "name": "Post-Tour Follow-up",
+      "subject": "Thank You for Visiting [Client Name]",
+      "category": "follow-up",
+      "content": {
+        "html": "<h1>Thank You for Visiting</h1><p>We hope you enjoyed your tour...</p>",
+        "text": "Thank You for Visiting\n\nWe hope you enjoyed your tour..."
+      }
+    },
+    {
+      "id": "",
+      "name": "Proposal Sent",
+      "subject": "Your Custom Proposal from [Client Name]",
+      "category": "proposals",
+      "content": {
+        "html": "<h1>Your Custom Proposal</h1><p>Please find attached your personalized venue package...</p>",
+        "text": "Your Custom Proposal\n\nPlease find attached your personalized venue package..."
+      }
+    },
+    {
+      "id": "",
+      "name": "Booking Confirmation",
+      "subject": "You're Booked! [Event Date] at [Client Name]",
+      "category": "confirmations",
+      "content": {
+        "html": "<h1>Congratulations!</h1><p>We're thrilled to welcome you to our venue...</p>",
+        "text": "Congratulations!\n\nWe're thrilled to welcome you to our venue..."
+      }
+    }
+  ]
+}

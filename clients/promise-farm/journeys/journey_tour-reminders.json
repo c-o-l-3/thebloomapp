@@ -1,0 +1,106 @@
+{
+  "id": "journey_tour-reminders",
+  "name": "Booked Tours → Tour Reminders",
+  "description": "4-touchpoint reminder sequence for couples who have booked a tour. Builds excitement, provides logistics, and sends day-before reminder.",
+  "category": "confirmation",
+  "status": "Draft",
+  "client": "promise-farm",
+  "trigger": {
+    "type": "calendar_booking",
+    "event": "tour_scheduled"
+  },
+  "goal": "Ensure tour attendance and prepare couples for visit",
+  "touchpoints": [
+    {
+      "id": "tp_confirmation_immediate",
+      "name": "Tour Confirmation - Immediate",
+      "type": "Email",
+      "order": 1,
+      "delay": 0,
+      "delayUnit": "hours",
+      "content": {
+        "type": "email",
+        "subject": "You're all set! See you {{tour_date}} 🎉",
+        "greeting": "Hi {{contact.first_name}},",
+        "body": "Great news! Your tour at Promise Farm is confirmed.\n\n📅 DATE: {{tour_date}}\n⏰ TIME: {{tour_time}}\n📍 LOCATION: Promise Farm, Lancaster County, PA\n\nWe're so excited to show you around and help you envision your wedding day here! During your tour, you'll see:\n\n✓ Our gorgeous ceremony spaces (both indoor and outdoor options)\n✓ The climate-controlled reception barn with chandeliers\n✓ The bridal suite where you'll get ready\n✓ All the photo-worthy spots throughout the property\n\nWHAT TO EXPECT:\nYour tour will last about 60 minutes. We'll walk the property together, discuss your vision, answer questions, and check date availability. Bring your partner, your parents, or come just the two of you - whoever needs to see the space!\n\nWHAT TO BRING:\n• Any inspiration photos or Pinterest boards\n• Your approximate guest count\n• Questions! (We love questions)\n\nIf you need to reschedule, just reply to this email or call us. Life happens, and we totally understand.\n\nCan't wait to meet you!\nThe Promise Farm Team",
+        "cta": {
+          "text": "Add to Calendar",
+          "url": "{{calendar_invite_link}}"
+        },
+        "templateType": "confirmation",
+        "compliance": {
+          "unsubscribeRequired": true,
+          "physicalAddressRequired": true,
+          "companyNameRequired": true
+        }
+      }
+    },
+    {
+      "id": "tp_excitement_3days",
+      "name": "Excitement Builder - 3 Days Before",
+      "type": "Email",
+      "order": 2,
+      "delay": -3,
+      "delayUnit": "days",
+      "trigger": "before_event",
+      "content": {
+        "type": "email",
+        "subject": "3 days until your Promise Farm tour!",
+        "greeting": "Hi {{contact.first_name}},",
+        "body": "Your tour is just around the corner, and we can't wait to meet you!\n\nAs you prepare for your visit, here are a few things couples often tell us they appreciated most about Promise Farm:\n\n🌿 THE SETTING\nThere's something magical about standing on our ceremony lawn, feeling the breeze, and looking out at the rolling Lancaster County hills. It's the kind of moment that makes you say 'this is it.'\n\n🏛️ THE BARN\nOur restored barn strikes that perfect balance - rustic enough to feel authentic, elegant enough to feel special. Those chandeliers!\n\n💡 THE FLEXIBILITY\nEvery wedding here is unique because we let YOU make the choices. Your caterer, your style, your way.\n\n💰 THE VALUE\nCouples are consistently surprised (in a good way!) by our pricing. Beautiful weddings don't have to drain your savings.\n\nWe recommend arriving about 5 minutes early so we can start right on time. And don't worry about the weather - if it's raining, we'll adjust the tour route and show you how cozy the indoor spaces are!\n\nSee you soon!",
+        "cta": {
+          "text": "Get Directions",
+          "url": "https://maps.google.com/?q=Promise+Farm+Lancaster+PA"
+        },
+        "templateType": "excitement",
+        "compliance": {
+          "unsubscribeRequired": true,
+          "physicalAddressRequired": true,
+          "companyNameRequired": true
+        }
+      }
+    },
+    {
+      "id": "tp_logistics_day_before",
+      "name": "Logistics & Day-Before Reminder",
+      "type": "Email",
+      "order": 3,
+      "delay": -1,
+      "delayUnit": "days",
+      "trigger": "before_event",
+      "content": {
+        "type": "email",
+        "subject": "Tomorrow's the day! Final details for your tour",
+        "greeting": "Hi {{contact.first_name}},",
+        "body": "Just one more sleep until your Promise Farm tour! We wanted to send over a few final details to make tomorrow smooth and enjoyable.\n\n📍 DIRECTIONS & PARKING\nPromise Farm is located in Lancaster County, PA. When you arrive, you'll see a gravel parking area on the right. Park anywhere that's convenient - we'll meet you at the main entrance to the barn.\n\n⏰ TIMING\nYour tour starts at {{tour_time}} and will last about an hour. We'll walk the property together, so wear comfortable shoes you don't mind getting a little dusty (it is a farm, after all!).\n\n🌦️ WEATHER\nCurrent forecast: {{weather_forecast}}\n\nIf rain is expected, don't worry! We have umbrellas and we'll show you how the indoor spaces work beautifully as backup options. There's something romantic about a barn wedding on a rainy day.\n\n👥 BRINGING GUESTS?\nTotally fine! Just let us know how many people to expect so we can plan accordingly.\n\n❓ QUESTIONS TO CONSIDER\n• What's your estimated guest count?\n• Do you have a preferred season or specific dates in mind?\n• Are you thinking ceremony on-site or off-site?\n• Any must-haves for your venue?\n\nIf you need to reach us tomorrow, call or text: {{phone_number}}\n\nSee you tomorrow!\nThe Promise Farm Team",
+        "cta": {
+          "text": "View Directions on Map",
+          "url": "https://maps.google.com/?q=Promise+Farm+Lancaster+PA"
+        },
+        "templateType": "logistics",
+        "compliance": {
+          "unsubscribeRequired": true,
+          "physicalAddressRequired": true,
+          "companyNameRequired": true
+        }
+      }
+    },
+    {
+      "id": "tp_day_of_sms",
+      "name": "Day-Of SMS Reminder",
+      "type": "SMS",
+      "order": 4,
+      "delay": -2,
+      "delayUnit": "hours",
+      "trigger": "before_event",
+      "content": {
+        "type": "sms",
+        "body": "Hi {{contact.first_name}}! This is Promise Farm confirming your tour today at {{tour_time}}. We're excited to show you around! Drive safely - see you soon! 🌿 Reply STOP to opt out.",
+        "templateType": "reminder",
+        "compliance": {
+          "unsubscribeRequired": true
+        }
+      }
+    }
+  ]
+}

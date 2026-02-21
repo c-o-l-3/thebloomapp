@@ -1,0 +1,41 @@
+{
+  "calendars": [
+    {
+      "id": "",
+      "name": "Main Booking Calendar",
+      "type": "booking",
+      "availability": {
+        "monday": { "start": "09:00", "end": "17:00" },
+        "tuesday": { "start": "09:00", "end": "17:00" },
+        "wednesday": { "start": "09:00", "end": "17:00" },
+        "thursday": { "start": "09:00", "end": "17:00" },
+        "friday": { "start": "09:00", "end": "17:00" },
+        "saturday": { "start": "10:00", "end": "14:00" },
+        "sunday": { "start": "", "end": "" }
+      },
+      "appointmentTypes": [
+        {
+          "id": "",
+          "name": "Venue Tour",
+          "duration": 60,
+          "description": "In-person tour of the venue",
+          "color": "#36BFFA"
+        },
+        {
+          "id": "",
+          "name": "Consultation Call",
+          "duration": 30,
+          "description": "Phone or video consultation",
+          "color": "#69DB7C"
+        },
+        {
+          "id": "",
+          "name": "Vendor Meeting",
+          "duration": 60,
+          "description": "Meeting with wedding vendors",
+          "color": "#FFA94D"
+        }
+      ]
+    }
+  ]
+}

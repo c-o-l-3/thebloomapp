@@ -1,0 +1,47 @@
+<!-- ========================================== -->
+<!-- SMART GALLERY: 1-2-1 Layout (4 Images) -->
+<!-- Images: Hero → Options → Closer -->
+<!-- ========================================== -->
+
+<!-- IMAGE 0: The Hero (Full Width - Top) -->
+<mj-image 
+  src="{{images[0]}}" 
+  width="600px" 
+  padding="0" 
+  border-radius="4px 4px 0 0"
+  alt="Cameron Estate Inn" />
+
+<!-- IMAGES 1 & 2: The Options Grid (2-Column Side-by-Side) -->
+<!-- Mobile: fluid-on-mobile="false" keeps them side-by-side on phones -->
+<mj-section padding="10px 0" background-color="#FFFFFF">
+  <mj-column>
+    <mj-image 
+      src="{{images[1]}}" 
+      width="280px" 
+      height="280px" 
+      border-radius="4px"
+      alt="Ceremony Option 1"
+      padding="0 5px" />
+  </mj-column>
+  <mj-column>
+    <mj-image 
+      src="{{images[2]}}" 
+      width="280px" 
+      height="280px" 
+      border-radius="4px"
+      alt="Ceremony Option 2"
+      padding="0 5px" />
+  </mj-column>
+</mj-section>
+
+<!-- IMAGE 3: The Closer (Full Width - Bottom) -->
+<mj-image 
+  src="{{images[3]}}" 
+  width="600px" 
+  padding="0" 
+  border-radius="0 0 4px 4px"
+  alt="Cameron Estate Inn - Your Dream Wedding" />
+
+<!-- ========================================== -->
+<!-- END SMART GALLERY -->
+<!-- ========================================== -->

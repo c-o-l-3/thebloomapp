@@ -1,0 +1,82 @@
+{
+  "id": "journey_7e17da7f",
+  "name": "Post-Booking Welcome",
+  "description": "3-touchpoint welcome series for booked couples",
+  "category": "onboarding",
+  "status": "Draft",
+  "client": "promise-farm",
+  "touchpoints": [
+    {
+      "id": "tp_3bec0f6e",
+      "name": "Welcome to the Family!",
+      "type": "Email",
+      "order": 1,
+      "delay": 0,
+      "delayUnit": "hours",
+      "content": {
+        "type": "email",
+        "subject": "🎉 Welcome to the {{company_name}} Family!",
+        "greeting": "Hi {{contact.first_name}},",
+        "body": "Congratulations! We're absolutely thrilled that you've chosen {{company_name}} for your wedding day.\n\nYour date is officially reserved:\n📅 {{wedding_date}}\n👥 {{guest_count}} guests\n💍 {{ceremony_type}}\n\nWhat happens next:\n1. You'll receive your detailed planning timeline within 48 hours\n2. Your dedicated coordinator will reach out within one week\n3. We'll schedule your planning kickoff meeting for 6 months before your date\n\nIn the meantime, join our exclusive Facebook group for {{company_name}} couples: {{facebook_group}}\n\nWelcome to the family!\n\nWith excitement,\nThe {{company_name}} Team",
+        "cta": {
+          "text": "Join Couples Group",
+          "url": "{{facebook_group}}"
+        },
+        "templateType": "booking_welcome",
+        "compliance": {
+          "unsubscribeRequired": true,
+          "physicalAddressRequired": true,
+          "companyNameRequired": true
+        }
+      }
+    },
+    {
+      "id": "tp_caed7d1f",
+      "name": "Planning Timeline - 48h",
+      "type": "Email",
+      "order": 2,
+      "delay": 2,
+      "delayUnit": "days",
+      "content": {
+        "type": "email",
+        "subject": "Your wedding planning timeline",
+        "greeting": "Hi {{contact.first_name}},",
+        "body": "Now that your date is secured, here's what to expect over the coming months:\n\n12 Months Before:\n☑ Venue booked (that's us!) ✓\n☐ Finalize guest list\n☐ Choose wedding party\n\n9 Months Before:\n☐ Book photographer & videographer\n☐ Book caterer (if external)\n☐ Order save-the-dates\n\n6 Months Before:\n☐ Final menu tasting\n☐ Rehearsal walkthrough\n☐ Finalize décor details\n\nDon't worry—we'll send you timely reminders for each milestone.\n\nQuestions? Your coordinator is here to help!\n\nBest,\nThe {{company_name}} Team",
+        "cta": {
+          "text": "Download Full Timeline",
+          "url": "{{timeline_pdf}}"
+        },
+        "templateType": "planning_timeline",
+        "compliance": {
+          "unsubscribeRequired": true,
+          "physicalAddressRequired": true,
+          "companyNameRequired": true
+        }
+      }
+    },
+    {
+      "id": "tp_53a32eb4",
+      "name": "Vendor Recommendations - 1 week",
+      "type": "Email",
+      "order": 3,
+      "delay": 7,
+      "delayUnit": "days",
+      "content": {
+        "type": "email",
+        "subject": "Our favorite vendor partners",
+        "greeting": "Hi {{contact.first_name}},",
+        "body": "Over the years, we've worked with some amazing vendors who consistently deliver exceptional experiences for our couples.\n\nOur top recommendations:\n\n📸 Photography: {{photographer_recommendations}}\n🎥 Videography: {{videographer_recommendations}}\n💐 Florals: {{florist_recommendations}}\n🎵 Entertainment: {{dj_recommendations}}\n🎂 Cake: {{bakery_recommendations}}\n\nThese vendors know our venue well and will help make your day seamless.\n\nWant introductions? Just let us know!\n\nBest,\nThe {{company_name}} Team",
+        "cta": {
+          "text": "View All Vendors",
+          "url": "{{vendors_page}}"
+        },
+        "templateType": "vendor_recommendations",
+        "compliance": {
+          "unsubscribeRequired": true,
+          "physicalAddressRequired": true,
+          "companyNameRequired": true
+        }
+      }
+    }
+  ]
+}

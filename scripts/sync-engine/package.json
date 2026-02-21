@@ -1,0 +1,88 @@
+{
+  "name": "ghl-sync-engine",
+  "version": "1.0.0",
+  "description": "Airtable to GoHighLevel sync engine for Journey Builder",
+  "main": "src/cli.js",
+  "type": "module",
+  "scripts": {
+    "sync": "node src/cli.js",
+    "sync:dry": "node src/cli.js --dry-run",
+    "sync:client": "node src/cli.js --client",
+    "sync:journey": "node src/cli.js --journey",
+    "sync:airtable": "node src/cli.js sync:airtable",
+    "knowledge:init": "node src/cli.js knowledge:init",
+    "knowledge:crawl": "node src/cli.js knowledge:crawl",
+    "knowledge:import": "node src/cli.js knowledge:import",
+    "knowledge:facts": "node src/cli.js knowledge:facts",
+    "knowledge:verify": "node src/cli.js knowledge:verify",
+    "knowledge:stats": "node src/cli.js knowledge:stats",
+    "ai:extract": "node src/cli.js ai:extract",
+    "ai:voice": "node src/cli.js ai:voice",
+    "ai:search": "node src/cli.js ai:search",
+    "ai:embeddings": "node src/cli.js ai:embeddings",
+    "ai:enrich": "node src/cli.js ai:enrich",
+    "setup:ai": "node scripts/setup-ai.js",
+    "validate": "node src/cli.js validate",
+    "deploy": "node src/cli.js deploy",
+    "deploy:dry": "node src/cli.js deploy --dry-run",
+    "rollback": "node src/cli.js rollback",
+    "deploy:status": "node src/cli.js deploy:status",
+    "onboard": "node src/cli.js onboard",
+    "onboard:dry": "node src/cli.js onboard --dry-run",
+    "extract-ghl": "node src/cli.js extract-ghl",
+    "validate-setup": "node src/cli.js validate-setup",
+    "fix-setup": "node src/cli.js fix-setup",
+    "onboarding-report": "node src/cli.js onboarding-report",
+    "generate-journeys": "node src/cli.js generate-journeys",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "test:ai": "node scripts/test-ai-provider.js",
+    "lint": "eslint src/"
+  },
+  "keywords": [
+    "airtable",
+    "gohighlevel",
+    "sync",
+    "workflows",
+    "journey-builder"
+  ],
+  "author": "The Bloom App",
+  "license": "MIT",
+  "dependencies": {
+    "@google/generative-ai": "^0.2.0",
+    "@prisma/client": "^5.8.0",
+    "airtable": "^0.12.2",
+    "axios": "^1.6.2",
+    "chalk": "^5.3.0",
+    "commander": "^11.1.0",
+    "dotenv": "^16.3.1",
+    "globby": "^14.0.0",
+    "mammoth": "^1.6.0",
+    "openai": "^4.28.0",
+    "ora": "^8.2.0",
+    "pdf-parse": "^1.1.1",
+    "prisma": "^5.8.0",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.1",
+    "jest": "^29.7.0"
+  },
+  "eslintConfig": {
+    "env": {
+      "es2022": true,
+      "node": true,
+      "jest": true
+    },
+    "parserOptions": {
+      "ecmaVersion": 2022,
+      "sourceType": "module"
+    },
+    "ignorePatterns": [
+      "node_modules/"
+    ],
+    "rules": {}
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

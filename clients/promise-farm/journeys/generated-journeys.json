@@ -1,0 +1,36 @@
+{
+  "generatedAt": "2026-02-21T19:51:04.872Z",
+  "client": "promise-farm",
+  "journeys": [
+    {
+      "id": "journey_bcbd5779",
+      "name": "Welcome Series",
+      "category": "nurture",
+      "touchpointCount": 5
+    },
+    {
+      "id": "journey_6ccf178f",
+      "name": "Inquiry Follow-Up",
+      "category": "follow-up",
+      "touchpointCount": 3
+    },
+    {
+      "id": "journey_d7cf9a7c",
+      "name": "Tour Confirmation",
+      "category": "confirmation",
+      "touchpointCount": 2
+    },
+    {
+      "id": "journey_b179838b",
+      "name": "Proposal Nurture",
+      "category": "nurture",
+      "touchpointCount": 4
+    },
+    {
+      "id": "journey_7e17da7f",
+      "name": "Post-Booking Welcome",
+      "category": "onboarding",
+      "touchpointCount": 3
+    }
+  ]
+}

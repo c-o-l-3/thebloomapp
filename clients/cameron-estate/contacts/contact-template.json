@@ -1,0 +1,29 @@
+{
+  "firstName": "",
+  "lastName": "",
+  "email": "",
+  "phone": "",
+  "phoneExtension": "",
+  "address": {
+    "street": "",
+    "city": "",
+    "state": "",
+    "postalCode": "",
+    "country": ""
+  },
+  "website": "",
+  "company": "",
+  "jobTitle": "",
+  "dateOfBirth": "",
+  "source": "",
+  "tags": [],
+  "customFields": {},
+  "notes": "",
+  "status": "New",
+  "assignedTo": "",
+  "pipeline": "",
+  "stage": "",
+  "lastContacted": "",
+  "createdAt": "",
+  "updatedAt": ""
+}

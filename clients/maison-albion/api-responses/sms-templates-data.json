@@ -1,0 +1,306 @@
+{
+  "templates": [
+    {
+      "dateAdded": "2024-03-22T11:39:30.910Z",
+      "locationId": "HzttFvMOh41pAjozlxkS",
+      "name": "0 Promo - Fall In Love",
+      "template": {
+        "attachments": ["https://firebasestorage.googleapis.com/v0/b/highlevel-backend.appspot.com/o/location%2FHzttFvMOh41pAjozlxkS%2Ftemplates%2Fdc734738-55a4-4cbb-bbae-ddc4b3f7b8f3.jpg?alt=media&token=bcdbe67e-a72f-460e-bd24-591e00374351"],
+        "body": "Bonjour {{contact.first_name}}! We are hosting a Fall in Love Open House at 3pm at Maison Albion on Sunday, September 21st. 🍁 I wanted to personally invite you and your fiancé, your famlily and friends! \n\nWe would love to raise a glass to you, hear all about your wedding plans and show you around our beautiful venue. There will be delicious bites, sips, amazing vendors to meet and entertainment too! ✨\n\nShould I save you a spot?"
+      },
+      "type": "sms",
+      "urlAttachments": [],
+      "id": "gPw92YXDYo613mK0alRd"
+    },
+    {
+      "dateAdded": "2023-06-13T14:44:59.556Z",
+      "locationId": "HzttFvMOh41pAjozlxkS",
+      "name": "00 - T0 - After Hours Text ",
+      "template": {
+        "attachments": [],
+        "body": "Bonjour {{contact.first_name}} and congrats on your engagement! 💍\n\nI emailed over some information about Maison Albion - I put a link below as well, in case text is better!\n\nWe're out of the office right now, but I wanted to get this to you right away. TTYL! 👋\n\n{{trigger_link.jKYS5M7oGRXoMhAEKYeG}}"
+      },
+      "type": "sms",
+      "urlAttachments": [],
+      "id": "0uVl06ArBOOL53GQ4Lsa"
+    },
+    {
+      "dateAdded": "2023-05-24T19:52:02.603Z",
+      "locationId": "HzttFvMOh41pAjozlxkS",
+      "name": "00 - T1 - Hello Text & Brochure ",
+      "template": {
+        "attachments": [],
+        "body": "Bonjour {{contact.first_name}} and congrats on your engagement!\n\nI emailed over some information about Maison Albion - I also put a link below as well, in case text is better!  We are currently offering $2026 off of all our packages through January 31st to celebrate the new year!\n\nDid you have any specific questions I could answer about our venue?\n-Kerri, Maison Albion\n\n{{trigger_link.jKYS5M7oGRXoMhAEKYeG}}"
+      },
+      "type": "sms",
+      "urlAttachments": [],
+      "id": "LFgVoAl9E7HfWs3Fo5v0"
+    },
+    {
+      "dateAdded": "2023-06-21T21:12:35.022Z",
+      "locationId": "HzttFvMOh41pAjozlxkS",
+      "name": "00 - T2 - Offer Text",
+      "template": {
+        "attachments": [],
+        "body": "Bonjour {{contact.first_name}},\n\nMy name is Kerri, and I'm owner of Maison Albion!\n\nAre you ready to plan your dream wedding in luxurious historic elegance?\n\nAs your host, I want to ensure you have the wedding of your dreams here. For a limited time, we are currently offering a complimentary 6 day, 5 night stay in Paris when you reserve your wedding at Maison Albion!\n\nText or call me at your convenience to secure this special rate and schedule your tour - I look forward to showing you all the intricacies of Maison Albion and helping bring your wedding vision to life.\n\nI hope to speak with you soon,\nKerri\nMaison Albion\n{{trigger_link.JLmkxWuM63aiNVmYbrKo}}"
+      },
+      "type": "sms",
+      "urlAttachments": [],
+      "id": "jDUzq1mnvgB0li1Zqllo"
+    },
+    {
+      "dateAdded": "2023-05-24T19:53:43.263Z",
+      "locationId": "HzttFvMOh41pAjozlxkS",
+      "name": "00 - T3 - Pinterest",
+      "template": {
+        "attachments": [],
+        "body": "Bonjour {{contact.first_name}}!\n\nCheck out this incredible Pinterest board we've been working on at Maison Albion. I hope it will give you the feels like it did for me! ✨💗😄\n\n{{trigger_link.aJ39BPDHfG3m6RxA1W2D}}\n\n\nHave you decided on your color palette yet?"
+      },
+      "type": "sms",
+      "urlAttachments": [],
+      "id": "nnMNun7Y5NlzFUQkbYmI"
+    },
+    {
+      "dateAdded": "2023-05-24T19:57:33.807Z",
+      "locationId": "HzttFvMOh41pAjozlxkS",
+      "name": "00 - T4 - Selfie ",
+      "template": {
+        "attachments": ["https://firebasestorage.googleapis.com/v0/b/highlevel-backend.appspot.com/o/undefined92bc2f7c-216e-4c9d-bdf0-50cc7f7cbed4.png?alt=media&token=4c3d1914-37c6-44a6-ab99-dbe09d7668a0"],
+        "body": "{{contact.first_name}}, Just dropping a quick hello from the team at Maison Albion. We love the magic of wedding day and would love to hear all about your special plans :)\n\nHave you started touring venues yet? We can't wait to meet you!"
+      },
+      "type": "sms",
+      "urlAttachments": [],
+      "id": "ekVH1EZKp3ky4PYWCwAL"
+    },
+    {
+      "dateAdded": "2023-05-24T20:04:46.439Z",
+      "locationId": "HzttFvMOh41pAjozlxkS",
+      "name": "00 - T5 - Goodbye",
+      "template": {
+        "attachments": [],
+        "body": "Bonjour {{contact.first_name}},\n\nWere you still considering Maison Albion for your wedding?\n\nI've been saving a spot for your private tour and our team is so excited to meet you!\n\nLet's set a date and make it happen!\n\nHow does this week look for you?"
+      },
+      "type": "sms",
+      "urlAttachments": [],
+      "id": "7Yr9nu4I9DcJx7B9xvQd"
+    },
+    {
+      "dateAdded": "2023-06-24T21:20:10.263Z",
+      "locationId": "HzttFvMOh41pAjozlxkS",
+      "name": "01 - T1 - Appt Text Confirmation",
+      "template": {
+        "attachments": [],
+        "body": "YES!!\nYou are on your way to a magical wedding venue, Maison Albion! We can't wait to meet you on {{appointment.only_start_date}} at {{appointment.start_time}}.\n\nIf you need to change your appt, then please reply to this text. We can't wait to hear your love story!\n-The Maison Albion Team"
+      },
+      "type": "sms",
+      "urlAttachments": [],
+      "id": "ZuZsucdaUXjbphvM1Cua"
+    },
+    {
+      "dateAdded": "2023-06-24T21:22:30.493Z",
+      "locationId": "HzttFvMOh41pAjozlxkS",
+      "name": "01 - T2 - Excitement Text (Manager Videos)",
+      "template": {
+        "attachments": [],
+        "body": "We are chilling the champagne in preparation for your arrival! Check out these videos to see our venue manager, MacKenzie, letting you know what to expect when you arrive for your site tour at Maison Albion....\n{{trigger_link.S20oTpVpyE9KyCC5tIQQ}}"
+      },
+      "type": "sms",
+      "urlAttachments": [],
+      "id": "hqOU6zR2COV1oW09rUKU"
+    },
+    {
+      "dateAdded": "2023-06-24T21:18:54.070Z",
+      "locationId": "HzttFvMOh41pAjozlxkS",
+      "name": "01 - T3 - Tour Confirmation & Reminder",
+      "template": {
+        "attachments": [],
+        "body": "Hello {{contact.first_name}},\n\nWe are so looking forward to your visite at Maison Albion {{appointment.start_time}} at {{appointment.only_start_time}}. As a reminder, we are located at 13800 W County House Road in Albion, New York. Please park up front by the pillars and lions!\n\nIf anything should change, please reply to this email or confirmaiton text to reschedule. \n\nWe look forward to meeting you! \n\nMerci!"
+      },
+      "type": "sms",
+      "urlAttachments": [],
+      "id": "5z1Jl3oB9T2YcdrkNUr0"
+    },
+    {
+      "dateAdded": "2023-06-24T21:43:59.481Z",
+      "locationId": "HzttFvMOh41pAjozlxkS",
+      "name": "02 - T1 - Something Awesome In Your Inbox",
+      "template": {
+        "attachments": [],
+        "body": "Yippee!! There is something awesome in your email inbox!\n\nA proposal to host your wedding at Maison Albion is just waiting for your review.\n\nTake a peek and text us here with any questions you may have ;)"
+      },
+      "type": "sms",
+      "urlAttachments": [],
+      "id": "iyE16wq8ujkfRYn3j8Yy"
+    },
+    {
+      "dateAdded": "2023-06-24T21:45:24.540Z",
+      "locationId": "HzttFvMOh41pAjozlxkS",
+      "name": "02 - T2 - Any Questions?",
+      "template": {
+        "attachments": [],
+        "body": "Hi {{contact.first_name}},\nThis is Kerri from Maison Albion.\n\nI hope you are enjoying the proposal package I emailed you for your special day. I would love to discuss it further with you to answer any questions you may have.\n\nPlease let me know what works best for a quick call to go over details. I want to make sure everything meets your wedding vision. I'm excited to help you create lasting memories at Maison!\n\nFeel free to text or call me at anytime. I look forward to hearing from you soon!"
+      },
+      "type": "sms",
+      "urlAttachments": [],
+      "id": "g61nQarBZbQxzATjJExg"
+    },
+    {
+      "dateAdded": "2023-06-24T21:46:31.811Z",
+      "locationId": "HzttFvMOh41pAjozlxkS",
+      "name": "02 - T3 - Only a Few Days Left to Review Your Proposal",
+      "template": {
+        "attachments": [],
+        "body": "Good morning! This is Kerri from Maison Albion. I'm reaching out to remind you that the proposal we discussed for your wedding at Maison is expiring in a few days. If you have any questions about the proposal or would like to move forward with booking your special day at Maison, please don't hesitate to call or email me. I look forward to hearing from you soon!"
+      },
+      "type": "sms",
+      "urlAttachments": [],
+      "id": "qiM4e9cUsIeFMq3DlrsP"
+    },
+    {
+      "dateAdded": "2023-06-24T21:48:31.190Z",
+      "locationId": "HzttFvMOh41pAjozlxkS",
+      "name": "02 - T4 - Checkout Sample Budgets",
+      "template": {
+        "attachments": [],
+        "body": "Hey {{contact.first_name}}!\nHope you're still thinking of Maison Albion for your wedding day!\nWondering about costs? Click below to see sample budgets that should give you a good idea for planning.\n{{trigger_link.zPejDS4PhMubqDd1FFH8}}\nWe'd love to have you celebrate with us at Maison Albion! It'll be a party you'll never forget.\nLet me know if you have any questions!\nKerri, Maison Albion"
+      },
+      "type": "sms",
+      "urlAttachments": [],
+      "id": "Qjfeky8jGHIMUo3koPAb"
+    },
+    {
+      "dateAdded": "2023-06-24T21:52:26.677Z",
+      "locationId": "HzttFvMOh41pAjozlxkS",
+      "name": "02 - T5 - One Day Left",
+      "template": {
+        "attachments": [],
+        "body": "Eek! Only one day left until your proposal expires to host your wedding at Maison Albion! Don't miss out! \nLogin to review your contract, or let us know if you would like an extension;)\nMerci!"
+      },
+      "type": "sms",
+      "urlAttachments": [],
+      "id": "XSBixX3GaDuvzgpHJZPS"
+    },
+    {
+      "dateAdded": "2023-06-24T22:04:38.114Z",
+      "locationId": "HzttFvMOh41pAjozlxkS",
+      "name": "03 - T1 - No Proposal - Thanks for Visiting",
+      "template": {
+        "attachments": [],
+        "body": "Thank you for visiting Maison Albion! It was wonderful meeting you and hearing about your wedding plans. I know the venue would be perfect for your special day! Please let me know if you have any other questions. - Maison Albion"
+      },
+      "type": "sms",
+      "urlAttachments": [],
+      "id": "0AzqYPIRbcU6b0FrCm6R"
+    },
+    {
+      "dateAdded": "2023-06-24T22:05:56.833Z",
+      "locationId": "HzttFvMOh41pAjozlxkS",
+      "name": "03 - T2 - Link to FOH Team Video",
+      "template": {
+        "attachments": [],
+        "body": "I'm MacKenzie the venue manager here at Maison Albion. We'd love to host your wedding celebration here at the venue!\nOur experienced team will work to make your wedding day magical!\nWe would be honored to host your amazing wedding.\n{{trigger_link.ABKQPRCPjovuqxZTAUCp}}\nI think it will be a wonderful celebration!😁 Contact us with any questions, or if we can draft a proposal for your review!\n\nMacKenzie, Maison Albion"
+      },
+      "type": "sms",
+      "urlAttachments": [],
+      "id": "Quuul4z3pGspRtwS1oli"
+    },
+    {
+      "dateAdded": "2023-06-24T22:07:42.966Z",
+      "locationId": "HzttFvMOh41pAjozlxkS",
+      "name": "03 - T3 - Still Considering Us? Sample Budgets",
+      "template": {
+        "attachments": [],
+        "body": "Hey {{contact.first_name}}!\nHope you're still thinking of Maison Albion for your wedding day!\nWondering about costs? Click below to see sample budgets that should give you a good idea for planning!\n{{trigger_link.zPejDS4PhMubqDd1FFH8}}\nWe'd love to have you celebrate with us at Maison! It'll be a party you'll never forget.\nLet me know if you have any questions!\nKerri, Maison Albion"
+      },
+      "type": "sms",
+      "urlAttachments": [],
+      "id": "wQBp8ZuCIF6OpYCovl8v"
+    },
+    {
+      "dateAdded": "2023-06-24T22:40:58.381Z",
+      "locationId": "HzttFvMOh41pAjozlxkS",
+      "name": "04 - T1 - Time to Connect About Bar",
+      "template": {
+        "attachments": [],
+        "body": "We hope your planning is going well for your big day at Maison Albion! Just checking in to see if you've had a chance to connect with our Mixologie team? Please let u sknow if you are ready to set up a consult! We do offer a complimentary second bar set-up (a $350 value!) free of charge if you book your Mixologie package within 30 days of reserving your day at Maison Albion!"
+      },
+      "type": "sms",
+      "urlAttachments": [],
+      "id": "zIfkIMlppgKgyLlbgYdk"
+    },
+    {
+      "dateAdded": "2023-06-24T22:44:53.879Z",
+      "locationId": "HzttFvMOh41pAjozlxkS",
+      "name": "04 - T2 - Let's Connect & Upgrade your wedding!",
+      "template": {
+        "attachments": [],
+        "body": "Are you considering decor and entertinamemt details for your big day? Be sure to click below to see the more than 25 upgrades avialbe at Maison Albion for your wedding day!! XOXO Maison Besties! {{trigger_link.QOIyhhgaMdcQTWffMCIY}}"
+      },
+      "type": "sms",
+      "urlAttachments": [],
+      "id": "hHxgHGejTlPLalQXZIKg"
+    },
+    {
+      "dateAdded": "2023-06-24T22:45:08.279Z",
+      "locationId": "HzttFvMOh41pAjozlxkS",
+      "name": "04 - T3 - Time to Stay",
+      "template": {
+        "attachments": [],
+        "body": "If you have not already, it's time to consider adding an overnight stay to your wedding day at Maison Albion. Just imagine floating up to your honeymoon suie after wedding day! Bliss! Just reply to this text to find out more info!"
+      },
+      "type": "sms",
+      "urlAttachments": [],
+      "id": "RorW3M5I9YTiVV5J27mF"
+    },
+    {
+      "dateAdded": "2023-06-24T22:46:20.691Z",
+      "locationId": "HzttFvMOh41pAjozlxkS",
+      "name": "04 - T4 - Click to Connect to Self Care",
+      "template": {
+        "attachments": [],
+        "body": "Self Care on your wedding day is so important! If you've imagined starting your big day with yoga or a fresh shave, just reply to this text, and our event directors are happy to arrange additional services for your day at Maison Albion!"
+      },
+      "type": "sms",
+      "urlAttachments": [],
+      "id": "cBGThrtXDcROd1nDKURq"
+    },
+    {
+      "dateAdded": "2023-06-24T22:48:01.751Z",
+      "locationId": "HzttFvMOh41pAjozlxkS",
+      "name": "04 - T5 - Schedule Final Walkthrough w Vendors",
+      "template": {
+        "attachments": [],
+        "body": "Your wedding day countdown is on, and your Maison team wants to be in the know about your wedding details! \nIf you haven't already, it's time to schedule your final walkthrough with your event director - we can't wait to hear all of your beautiful plans.\n-The Maison Team"
+      },
+      "type": "sms",
+      "urlAttachments": [],
+      "id": "CDMnhXk3ev8Ak1rVm2e8"
+    },
+    {
+      "dateAdded": "2023-06-24T22:53:24.555Z",
+      "locationId": "HzttFvMOh41pAjozlxkS",
+      "name": "04 - T6 -  Have You Scheduled Your Rehearsal?",
+      "template": {
+        "attachments": [],
+        "body": "Time to practice your waltz down the aisle! If you haven't scheduled your one hour complimentary walkthrough, it's time! Just reply to this text or contact your event director for more details."
+      },
+      "type": "sms",
+      "urlAttachments": [],
+      "id": "nIyuds0ichQHUtTTKwkP"
+    },
+    {
+      "dateAdded": "2023-06-24T22:54:51.427Z",
+      "locationId": "HzttFvMOh41pAjozlxkS",
+      "name": "04 - T7 - Can't Wait! Text us 10 mins before you arrive!",
+      "template": {
+        "attachments": [],
+        "body": "Happy Wedding Week! Just a reminder to send us a text when you are on your way to Maison Albion for your wedding day. That way, our team can be ready to greet you when you arrive! We just can't wait!"
+      },
+      "type": "sms",
+      "urlAttachments": [],
+      "id": "Z82JuEV7CNBXUusyafZJ"
+    }
+  ],
+  "totalCount": 29,
+  "traceId": "02f7ef7c-cd46-47cc-8650-495e204e12ff"
+}

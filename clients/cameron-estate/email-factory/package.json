@@ -1,0 +1,43 @@
+{
+  "name": "cameron-estate-email-factory",
+  "version": "1.0.0",
+  "description": "Headless Email Factory for Cameron Estate Inn - MJML to GHL pipeline",
+  "main": "src/build.js",
+  "type": "module",
+  "scripts": {
+    "build": "node src/build.js",
+    "build:dry": "node src/build.js --dry-run",
+    "preview": "node scripts/preview.js",
+    "preview:day1": "node scripts/preview.js --email day1",
+    "preview:day3": "node scripts/preview.js --email day3",
+    "sync:links": "node scripts/sync-links.js",
+    "push": "node src/build.js --push",
+    "publish:sms": "node scripts/publish-sms.js",
+    "workflow": "node scripts/workflow.js",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
+  },
+  "keywords": [
+    "email",
+    "mjml",
+    "gohighlevel",
+    "cameron-estate",
+    "wedding-venue"
+  ],
+  "author": "The Bloom App",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.6.2",
+    "chalk": "^5.3.0",
+    "commander": "^11.1.0",
+    "dotenv": "^16.3.1",
+    "form-data": "^4.0.0",
+    "mjml": "^4.15.3",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

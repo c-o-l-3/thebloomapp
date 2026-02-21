@@ -1,0 +1,199 @@
+{
+  "pipelines": [
+    {
+      "id": "rVpogzbpywTxDq42kT03",
+      "name": "Wedding Venue Pipeline",
+      "isPrimary": true,
+      "showInFunnel": true,
+      "showInPieChart": true,
+      "dateAdded": "2023-05-15T16:27:47.280Z",
+      "dateUpdated": "2023-06-27T21:31:16.850Z",
+      "stages": [
+        {
+          "id": "3ffa873f-f175-408c-86be-2278def19535",
+          "name": "Inquiry",
+          "position": 0,
+          "showInFunnel": true,
+          "showInPieChart": true
+        },
+        {
+          "id": "cac490be-a1d4-4bf7-8d4b-f73442b9c83d",
+          "name": "No Response",
+          "position": 1,
+          "showInFunnel": true,
+          "showInPieChart": true
+        },
+        {
+          "id": "15bd004a-d4cf-47f3-b9fc-3338b7f884ad",
+          "name": "Responded",
+          "position": 2,
+          "showInFunnel": true,
+          "showInPieChart": true
+        },
+        {
+          "id": "3b3be622-e1c9-4b3c-ab72-5d7655bd132d",
+          "name": "Venue Tour",
+          "position": 3,
+          "showInFunnel": true,
+          "showInPieChart": true
+        },
+        {
+          "id": "5b24adde-8f4f-4482-8b8f-7701c110f030",
+          "name": "Request Proposal",
+          "position": 4,
+          "showInFunnel": true,
+          "showInPieChart": true
+        },
+        {
+          "id": "274d325e-6e7c-48b3-a537-84ff336d8f27",
+          "name": "Proposal Sent",
+          "position": 5,
+          "showInFunnel": true,
+          "showInPieChart": true
+        },
+        {
+          "id": "5f9971b7-5de3-46b6-816e-58c6f2e2766a",
+          "name": "No Request Proposal",
+          "position": 6,
+          "showInFunnel": true,
+          "showInPieChart": true
+        },
+        {
+          "id": "a9b0f805-d73d-4667-8388-d1b6fd80951d",
+          "name": "No Proposal Sent",
+          "position": 7,
+          "showInFunnel": true,
+          "showInPieChart": true
+        },
+        {
+          "id": "18195cfd-3a0d-45ff-b86b-4eadd513d52a",
+          "name": "Booked Client",
+          "position": 8,
+          "showInFunnel": true,
+          "showInPieChart": true
+        },
+        {
+          "id": "7c14ac98-d39a-4167-a3a7-7b0387779292",
+          "name": "Wedding Complete",
+          "position": 9,
+          "showInFunnel": true,
+          "showInPieChart": true
+        }
+      ]
+    },
+    {
+      "id": "U6DV4BQfK6CRjLaczWc1",
+      "name": "New Weddings",
+      "showInFunnel": true,
+      "showInPieChart": true,
+      "dateAdded": "2023-10-20T11:21:47.441Z",
+      "dateUpdated": "2023-10-31T15:00:32.165Z",
+      "stages": [
+        {
+          "id": "13f11e79-a745-4973-bf47-533891c685cc",
+          "name": "Lead",
+          "position": 0,
+          "showInFunnel": true,
+          "showInPieChart": true
+        },
+        {
+          "id": "2ca6c357-7988-4287-a51d-8c88d2d83b8e",
+          "name": "Booked Tour",
+          "position": 1,
+          "showInFunnel": true,
+          "showInPieChart": true
+        },
+        {
+          "id": "17f27b97-6a4d-4a9d-a6dd-df45374077de",
+          "name": "Proposal",
+          "position": 2,
+          "showInFunnel": true,
+          "showInPieChart": true
+        },
+        {
+          "id": "aed187a6-d817-408d-834f-4034263a3659",
+          "name": "Booked Client",
+          "position": 3,
+          "showInFunnel": true,
+          "showInPieChart": true
+        },
+        {
+          "id": "9d05467f-cd5a-4b1d-8be6-0014d9e152fd",
+          "name": "Completed",
+          "position": 4,
+          "showInFunnel": true,
+          "showInPieChart": true
+        }
+      ]
+    },
+    {
+      "id": "lR4nwJTsr2yriGjILccR",
+      "name": "Weddings (Post-Booking)",
+      "showInFunnel": true,
+      "showInPieChart": true,
+      "dateAdded": "2023-11-29T17:07:05.177Z",
+      "dateUpdated": "2023-11-29T17:07:05.177Z",
+      "stages": [
+        {
+          "id": "64c1ae4f-ef02-4789-bddd-14c94e24b201",
+          "name": "Booked Wedding",
+          "position": 0,
+          "showInFunnel": true,
+          "showInPieChart": true
+        },
+        {
+          "id": "475a6986-3556-4f88-b23a-027f43385677",
+          "name": "6 Months Out",
+          "position": 1,
+          "showInFunnel": true,
+          "showInPieChart": true
+        },
+        {
+          "id": "2e916a5b-23e6-4e9f-87ea-2bd49d54ab8f",
+          "name": "90 Days Out",
+          "position": 2,
+          "showInFunnel": true,
+          "showInPieChart": true
+        },
+        {
+          "id": "95bf5897-8595-4ca9-82ec-62957c986172",
+          "name": "Upcoming",
+          "position": 3,
+          "showInFunnel": true,
+          "showInPieChart": true
+        },
+        {
+          "id": "bd993c60-463d-4a11-b834-0632d1437064",
+          "name": "Wedding Complete",
+          "position": 4,
+          "showInFunnel": true,
+          "showInPieChart": true
+        }
+      ]
+    },
+    {
+      "id": "Quw7Eb5q1NGZkeqBbFKf",
+      "name": "Booked Client",
+      "showInFunnel": true,
+      "showInPieChart": true,
+      "dateAdded": "2023-07-28T11:04:51.596Z",
+      "dateUpdated": "2023-07-28T11:04:51.596Z",
+      "stages": [
+        {
+          "id": "c641dbf2-b2ad-4d21-8357-bcbcc1f9fa7c",
+          "name": "Proposal Signed",
+          "position": 0,
+          "showInFunnel": true,
+          "showInPieChart": true
+        },
+        {
+          "id": "7378f9bb-a57c-4b8d-9295-38cb7c2bffc7",
+          "name": "Payment Received",
+          "position": 1,
+          "showInFunnel": true,
+          "showInPieChart": true
+        }
+      ]
+    }
+  ]
+}

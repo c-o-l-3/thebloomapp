@@ -1,0 +1,319 @@
+{
+  "note": "Workflow automations from Maison Albion - extracted via GoHighLevel API v2",
+  "source": "https://services.leadconnectorhq.com/workflows/",
+  "total_workflows": 48,
+  "pipelines": {
+    "00 - Inquiry": {
+      "workflow_id": "47930249-6a6e-4fbd-b720-b2858b3faaf7",
+      "status": "published",
+      "version": 72,
+      "description": "Initial inquiry handling workflow"
+    },
+    "01 - Site Tour Booked": {
+      "workflow_id": "81b72fbd-7923-44fb-9e95-7d09d450d61b",
+      "status": "published",
+      "version": 43,
+      "description": "Site tour scheduling and follow-up"
+    },
+    "02 - Proposal Sent": {
+      "workflow_id": "14cf3730-1581-4edf-8351-036fdd1ce911",
+      "status": "published",
+      "version": 34,
+      "description": "Proposal follow-up workflow"
+    },
+    "03 - Proposal NOT Requested": {
+      "workflow_id": "45278274-08fc-4e18-81de-ac1ec17f2db3",
+      "status": "published",
+      "version": 20,
+      "description": "Nurture leads that haven't requested proposal"
+    },
+    "04 - Contract Signed": {
+      "workflows": [
+        {
+          "name": "Messages Before Wedding Date",
+          "workflow_id": "9ab75211-f1cf-4f16-b80f-58cb32ad5da5",
+          "status": "published",
+          "version": 10
+        },
+        {
+          "name": "Messages from Today",
+          "workflow_id": "290e9e1a-737a-4a36-a551-47f7b9437799",
+          "status": "published",
+          "version": 14
+        },
+        {
+          "name": "OLD DO NOT USE",
+          "workflow_id": "79b60b0e-f8a4-4725-9bc0-2321a72568d7",
+          "status": "published",
+          "version": 55
+        }
+      ]
+    },
+    "05 - Wedding Complete": {
+      "workflow_id": "b485b016-2cd8-4484-a54f-095378a6b6af",
+      "status": "published",
+      "version": 10,
+      "description": "Post-wedding follow-up"
+    }
+  },
+  "marketing_workflows": [
+    {
+      "name": "Maison Landing Page - General",
+      "workflow_id": "07350ae8-a1be-4846-bf3a-3fbc599e1c38",
+      "status": "published",
+      "version": 8
+    },
+    {
+      "name": "Maison Landing Page - Garden Wedding Venue",
+      "workflow_id": "80d8ee77-1676-4765-be65-1fb327af6529",
+      "status": "draft",
+      "version": 1
+    },
+    {
+      "name": "Maison Landing Page - Goth Wedding Venue",
+      "workflow_id": "76a7208a-ae0c-4b9b-93ea-a359d37397a3",
+      "status": "draft",
+      "version": 1
+    },
+    {
+      "name": "Maison Landing Page - Lesbian Wedding Venue",
+      "workflow_id": "0a254b33-4fd2-47fd-b813-e43ff2a3b86a",
+      "status": "draft",
+      "version": 1
+    },
+    {
+      "name": "Maison Landing Page - Victorian Wedding Venue",
+      "workflow_id": "59a7013d-f6fe-44b4-966f-409e5381f0a5",
+      "status": "draft",
+      "version": 1
+    }
+  ],
+  "integration_workflows": [
+    {
+      "name": "I Do Society - New Lead Workflow",
+      "workflow_id": "62874cdc-f95c-45be-96d3-1d42d9800dd4",
+      "status": "draft",
+      "version": 13
+    },
+    {
+      "name": "The Knot - Leads from Pipedream",
+      "workflow_id": "2c946b96-e5f3-48b0-a62e-c517c61fae06",
+      "status": "published",
+      "version": 5
+    },
+    {
+      "name": "Wedding Wire - Leads from Pipedream",
+      "workflow_id": "cebeca2f-a212-4fa8-ae4d-a4462cb39d46",
+      "status": "published",
+      "version": 5
+    },
+    {
+      "name": "PPC Leads - Leads from Pipedream",
+      "workflow_id": "fa0c2389-fb82-4282-ba74-a21e4f4fb0b6",
+      "status": "published",
+      "version": 5
+    }
+  ],
+  "tracking_workflows": [
+    {
+      "name": "Add Conversions to Google Ads",
+      "workflow_id": "9ecafa15-8c27-4c2d-92c8-57a8b23dccdc",
+      "status": "published",
+      "version": 3
+    },
+    {
+      "name": "Add Conversions to Google Analytics",
+      "workflow_id": "3d48941e-f8d0-4e67-8380-a61fef809e8d",
+      "status": "draft",
+      "version": 4
+    },
+    {
+      "name": "G. 01 - Track Booked Appointments - Google Analytics",
+      "workflow_id": "62d9b968-4489-43ca-ab83-363f198eedbf",
+      "status": "published",
+      "version": 5
+    },
+    {
+      "name": "Calculate Booking Window",
+      "workflow_id": "8ea718ea-b1c2-4295-a7bc-55f6b236bea6",
+      "status": "published",
+      "version": 4
+    },
+    {
+      "name": "Calculate Speed to Booking",
+      "workflow_id": "188a4471-69e2-4a87-82bd-b47632b462fa",
+      "status": "published",
+      "version": 5
+    },
+    {
+      "name": "New Contacts - Add Lead Created Date",
+      "workflow_id": "5f2bbb71-127d-4d3c-b9f4-86ce565d58a7",
+      "status": "published",
+      "version": 4
+    },
+    {
+      "name": "Tracking - Push Tours to Sheets",
+      "workflow_id": "7a541d17-ed08-4822-b99e-13037e7f809c",
+      "status": "published",
+      "version": 3
+    }
+  ],
+  "communication_workflows": [
+    {
+      "name": "Customer Replied || 00 - Inquiry",
+      "workflow_id": "caa007f2-5e8e-4b03-8966-afbe76f2cc8a",
+      "status": "published",
+      "version": 12
+    },
+    {
+      "name": "Customer Reply - Response",
+      "workflow_id": "703e61c4-3b26-4fce-a289-fb0fc01f4c9f",
+      "status": "draft",
+      "version": 5
+    },
+    {
+      "name": "Missed Call Text Back",
+      "workflow_id": "5c80044d-346f-4971-9a1f-e333f9e4a2a6",
+      "status": "published",
+      "version": 3
+    },
+    {
+      "name": "IVR Call Flow",
+      "workflow_id": "0201a996-d76b-47d7-a8a1-fdfbf2743cba",
+      "status": "published",
+      "version": 23
+    },
+    {
+      "name": "Instagram Reply in Comments",
+      "workflow_id": "1da01618-477a-49f9-8618-9af5519e808e",
+      "status": "draft",
+      "version": 5
+    },
+    {
+      "name": "\"DANCE\" Instagram/Facebook comment automation",
+      "workflow_id": "b77a6684-d1a3-4778-9673-28520353519a",
+      "status": "draft",
+      "version": 4
+    },
+    {
+      "name": "BURRO VOTE",
+      "workflow_id": "8f68b68d-cdac-4e72-a83e-3e5c5f9f2273",
+      "status": "published",
+      "version": 4
+    },
+    {
+      "name": "Sip & Celebrate Text Promo",
+      "workflow_id": "51afe79c-5e95-48a6-9b8d-2a033e8f2d13",
+      "status": "draft",
+      "version": 7
+    }
+  ],
+  "internal_workflows": [
+    {
+      "name": "Tour Complete - Internal Notification",
+      "workflow_id": "0c527ae9-ebd4-401f-9032-2e25b7ee9e94",
+      "status": "published",
+      "version": 4
+    },
+    {
+      "name": "Appointment Cancelled Notification",
+      "workflow_id": "f4986dce-9597-40a1-ba51-ab32fe02d097",
+      "status": "published",
+      "version": 5
+    },
+    {
+      "name": "Booked Tour - Remove from Workflows",
+      "workflow_id": "e8f48c32-7354-4f0f-92c8-16d822fec336",
+      "status": "draft",
+      "version": 14
+    },
+    {
+      "name": "Add Client to Workflow - I Do Society",
+      "workflow_id": "102860b7-19c7-4723-b048-0682ef59bfae",
+      "status": "draft",
+      "version": 6
+    },
+    {
+      "name": "Label I Do Society Leads",
+      "workflow_id": "0896a6fd-6ff6-420c-b880-0a341c7b45fc",
+      "status": "published",
+      "version": 2
+    },
+    {
+      "name": "Remove Owner Contacts",
+      "workflow_id": "a5d0ac47-75c9-484e-97f9-a95a024f7b1f",
+      "status": "published",
+      "version": 6
+    },
+    {
+      "name": "Remove Team Members as Contacts",
+      "workflow_id": "32081abe-71fc-48e7-8e68-7982756ecdd3",
+      "status": "draft",
+      "version": 1
+    },
+    {
+      "name": "Website Lead Form - New Lead Workflow",
+      "workflow_id": "8ac29aab-04c2-4990-a2c7-0d6a2086e028",
+      "status": "draft",
+      "version": 16
+    }
+  ],
+  "ghost_workflows": [
+    {
+      "name": "Ghost - Yes tag",
+      "workflow_id": "171501dc-7468-4c53-b558-8ecda9f9d94f",
+      "status": "published",
+      "version": 3
+    },
+    {
+      "name": "Ghost - Maybe tag",
+      "workflow_id": "dc24099a-7b96-4387-bb5a-9f5b050b57ba",
+      "status": "published",
+      "version": 3
+    },
+    {
+      "name": "Ghost - No thank you tag",
+      "workflow_id": "3dc5c792-9c21-441c-872b-cb125ce565d0",
+      "status": "published",
+      "version": 3
+    }
+  ],
+  "draft_workflows": [
+    {
+      "name": "New Workflow : 1702041757363",
+      "workflow_id": "54a4501c-9bfd-439c-9d50-0c3d8dae0ab6",
+      "status": "draft",
+      "version": 1
+    },
+    {
+      "name": "New Workflow : 1718113603319",
+      "workflow_id": "83e03ea8-579e-4079-8743-4fa7be8f8dbb",
+      "status": "draft",
+      "version": 1
+    },
+    {
+      "name": "New Workflow : 1726736683507",
+      "workflow_id": "7ba15150-c606-4fac-8435-aeca01819e0d",
+      "status": "draft",
+      "version": 1
+    },
+    {
+      "name": "New Workflow : 1729093195968",
+      "workflow_id": "55f11ae7-fecb-47f1-bdc8-4edad6550a58",
+      "status": "draft",
+      "version": 1
+    },
+    {
+      "name": "New Workflow : 1732638577426",
+      "workflow_id": "1f3be146-bf49-47ce-b28f-0421da3a74f0",
+      "status": "draft",
+      "version": 1
+    },
+    {
+      "name": "New Workflow : 1769212150892",
+      "workflow_id": "8086c420-e3a2-4ba8-9532-9171ba3260e8",
+      "status": "draft",
+      "version": 1
+    }
+  ]
+}

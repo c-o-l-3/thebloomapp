@@ -1,0 +1,62 @@
+/**
+ * JourneyEdge Component Styles
+ */
+
+.journey-edge {
+  stroke: #94a3b8;
+  stroke-width: 2;
+  fill: none;
+  transition: stroke 0.2s ease;
+}
+
+.journey-edge:hover {
+  stroke: #3b82f6;
+}
+
+.journey-edge--conditional {
+  stroke: #a855f7;
+  stroke-width: 2;
+  stroke-dasharray: 8 4;
+}
+
+.journey-edge--conditional:hover {
+  stroke: #7c3aed;
+}
+
+.journey-edge__label {
+  pointer-events: all;
+}
+
+.journey-edge__label-text {
+  display: inline-block;
+  padding: 4px 10px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 500;
+  color: #64748b;
+  white-space: nowrap;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.journey-edge__label-text--conditional {
+  background: #f3e8ff;
+  border-color: #d8b4fe;
+  color: #7c3aed;
+}
+
+.journey-edge__condition-badge {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 4px 10px;
+  background: #f3e8ff;
+  border: 1px solid #d8b4fe;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 600;
+  color: #7c3aed;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}

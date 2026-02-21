@@ -1,0 +1,518 @@
+/**
+ * TouchpointEditor Component Styles
+ */
+
+.touchpoint-editor {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+}
+
+/* Header */
+.touchpoint-editor__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid #e2e8f0;
+  background: #f8fafc;
+}
+
+.touchpoint-editor__header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: 1;
+}
+
+.touchpoint-editor__title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0;
+  white-space: nowrap;
+}
+
+.touchpoint-editor__name-input {
+  flex: 1;
+  max-width: 400px;
+  padding: 8px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 14px;
+  background: #ffffff;
+}
+
+.touchpoint-editor__name-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.touchpoint-editor__header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.touchpoint-editor__tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.touchpoint-editor__tab:hover {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.touchpoint-editor__tab--active {
+  background: #fef3c7;
+  border-color: #f59e0b;
+  color: #92400e;
+}
+
+.touchpoint-editor__button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.touchpoint-editor__button--primary {
+  background: #3b82f6;
+  color: #ffffff;
+}
+
+.touchpoint-editor__button--primary:hover {
+  background: #2563eb;
+}
+
+.touchpoint-editor__button--secondary {
+  background: #ffffff;
+  border-color: #cbd5e1;
+  color: #64748b;
+}
+
+.touchpoint-editor__button--secondary:hover {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.touchpoint-editor__button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Content Area */
+.touchpoint-editor__content {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* Editor Panel */
+.touchpoint-editor__editor-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.touchpoint-editor__editor-panel--with-ai {
+  flex: 0 0 60%;
+}
+
+/* Fields */
+.touchpoint-editor__fields {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.touchpoint-editor__field {
+  position: relative;
+}
+
+.touchpoint-editor__label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: #475569;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+
+.touchpoint-editor__input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 14px;
+  background: #ffffff;
+  transition: border-color 0.2s;
+}
+
+.touchpoint-editor__input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.touchpoint-editor__char-count {
+  position: absolute;
+  right: 12px;
+  bottom: -18px;
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+.touchpoint-editor__char-count--sms {
+  position: static;
+  display: block;
+  margin-top: 4px;
+}
+
+.touchpoint-editor__sms-warning {
+  color: #ef4444;
+  font-weight: 500;
+}
+
+/* Toolbar */
+.touchpoint-editor__toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  margin-bottom: 12px;
+  border-top: 1px solid #e2e8f0;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.touchpoint-editor__toolbar-section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.touchpoint-editor__toolbar-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.touchpoint-editor__toolbar-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 10px;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #64748b;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.touchpoint-editor__toolbar-btn:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+  color: #475569;
+}
+
+/* Token Dropdown */
+.touchpoint-editor__token-dropdown {
+  position: relative;
+}
+
+.touchpoint-editor__token-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 4px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  min-width: 220px;
+  z-index: 100;
+  padding: 4px;
+}
+
+.touchpoint-editor__token-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: #334155;
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.touchpoint-editor__token-item:hover {
+  background: #f1f5f9;
+}
+
+.touchpoint-editor__token-code {
+  margin-left: auto;
+  padding: 2px 6px;
+  background: #e2e8f0;
+  border-radius: 4px;
+  font-size: 10px;
+  color: #64748b;
+}
+
+/* Editor */
+.touchpoint-editor__editor {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 300px;
+}
+
+.touchpoint-editor__editor .quill {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.touchpoint-editor__editor .ql-toolbar {
+  border-color: #e2e8f0;
+  border-radius: 6px 6px 0 0;
+  background: #f8fafc;
+}
+
+.touchpoint-editor__editor .ql-container {
+  flex: 1;
+  border-color: #e2e8f0;
+  border-radius: 0 0 6px 6px;
+  font-size: 14px;
+}
+
+.touchpoint-editor__editor .ql-editor {
+  min-height: 250px;
+}
+
+.touchpoint-editor__source {
+  width: 100%  ;
+  flex: 1;
+  padding: 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-family: 'Monaco', 'Menlo', monospace;
+  font-size: 13px;
+  line-height: 1.5;
+  resize: none;
+}
+
+.touchpoint-editor__source:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* View Toggle */
+.touchpoint-editor__view-toggle {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.touchpoint-editor__view-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #64748b;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.touchpoint-editor__view-btn:hover {
+  background: #f1f5f9;
+}
+
+.touchpoint-editor__view-btn--active {
+  background: #eff6ff;
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+
+/* Preview Panel */
+.touchpoint-editor__preview-panel {
+  flex: 0 0 400px;
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid #e2e8f0;
+  background: #f8fafc;
+}
+
+.touchpoint-editor__preview-header {
+  padding: 12px 16px;
+  border-bottom: 1px solid #e2e8f0;
+  background: #ffffff;
+}
+
+.touchpoint-editor__preview-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #475569;
+}
+
+.touchpoint-editor__preview-content {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+/* Email Preview */
+.touchpoint-editor__email-preview {
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.touchpoint-editor__email-header {
+  padding: 16px;
+  background: #f1f5f9;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.touchpoint-editor__email-field {
+  font-size: 13px;
+  color: #475569;
+  margin-bottom: 4px;
+}
+
+.touchpoint-editor__email-field:last-child {
+  margin-bottom: 0;
+}
+
+.touchpoint-editor__email-body {
+  padding: 20px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #334155;
+}
+
+.touchpoint-editor__email-body img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+
+/* SMS Preview */
+.touchpoint-editor__sms-preview {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+}
+
+.touchpoint-editor__sms-phone {
+  width: 280px;
+  height: 500px;
+  background: #1f2937;
+  border-radius: 32px;
+  padding: 40px 16px;
+  position: relative;
+}
+
+.touchpoint-editor__sms-phone::before {
+  content: '';
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 4px;
+  background: #374151;
+  border-radius: 2px;
+}
+
+.touchpoint-editor__sms-message {
+  background: #3b82f6;
+  color: #ffffff;
+  padding: 12px 16px;
+  border-radius: 16px;
+  font-size: 14px;
+  line-height: 1.4;
+  max-width: 85%;
+  word-wrap: break-word;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .touchpoint-editor__preview-panel {
+    display: none;
+  }
+  
+  .touchpoint-editor__editor-panel--with-ai {
+    flex: 1;
+  }
+}
+
+/* Modal Overlay */
+.touchpoint-editor-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.touchpoint-editor-modal__content {
+  width: 100%;
+  max-width: 1400px;
+  height: 90vh;
+  background: #ffffff;
+  border-radius: 12px;
+  overflow: hidden;
+}

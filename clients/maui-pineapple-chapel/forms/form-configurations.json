@@ -1,0 +1,45 @@
+{
+  "forms": [
+    {
+      "id": "",
+      "name": "Contact Us Form",
+      "type": "contact",
+      "fields": [
+        { "name": "firstName", "label": "First Name", "required": true, "type": "text" },
+        { "name": "lastName", "label": "Last Name", "required": true, "type": "text" },
+        { "name": "email", "label": "Email", "required": true, "type": "email" },
+        { "name": "phone", "label": "Phone", "required": false, "type": "phone" },
+        { "name": "eventDate", "label": "Event Date", "required": false, "type": "date" },
+        { "name": "eventType", "label": "Event Type", "required": false, "type": "select", "options": ["Wedding", "Corporate", "Other"] },
+        { "name": "guestCount", "label": "Estimated Guest Count", "required": false, "type": "number" },
+        { "name": "message", "label": "Message", "required": false, "type": "textarea" }
+      ],
+      "settings": {
+        "autoResponder": true,
+        "addToPipeline": true,
+        "pipelineId": "",
+        "stageId": "Lead"
+      }
+    },
+    {
+      "id": "",
+      "name": "Tour Request Form",
+      "type": "appointment",
+      "fields": [
+        { "name": "firstName", "label": "First Name", "required": true, "type": "text" },
+        { "name": "lastName", "label": "Last Name", "required": true, "type": "text" },
+        { "name": "email", "label": "Email", "required": true, "type": "email" },
+        { "name": "phone", "label": "Phone", "required": true, "type": "phone" },
+        { "name": "preferredDate", "label": "Preferred Tour Date", "required": true, "type": "date" },
+        { "name": "preferredTime", "label": "Preferred Time", "required": true, "type": "select", "options": ["Morning", "Afternoon"] },
+        { "name": "guestCount", "label": "Number of Guests Attending", "required": false, "type": "number" }
+      ],
+      "settings": {
+        "autoResponder": true,
+        "addToPipeline": true,
+        "pipelineId": "",
+        "stageId": "Tour Scheduled"
+      }
+    }
+  ]
+}

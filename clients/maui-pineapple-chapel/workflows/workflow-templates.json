@@ -1,0 +1,129 @@
+{
+  "workflows": [
+    {
+      "id": "",
+      "name": "New Lead Welcome",
+      "status": "active",
+      "trigger": {
+        "type": "contactCreated",
+        "filters": {
+          "source": "website"
+        }
+      },
+      "actions": [
+        {
+          "type": "sendEmail",
+          "templateId": "welcome-email",
+          "delay": 0
+        },
+        {
+          "type": "addTag",
+          "tagId": "new-lead",
+          "delay": 0
+        },
+        {
+          "type": "createTask",
+          "title": "Follow up with new lead",
+          "assignee": "",
+          "dueIn": 1,
+          "delay": 60
+        }
+      ]
+    },
+    {
+      "id": "",
+      "name": "Tour Reminder",
+      "status": "active",
+      "trigger": {
+        "type": "appointmentUpcoming",
+        "minutesBefore": 60
+      },
+      "actions": [
+        {
+          "type": "sendEmail",
+          "templateId": "tour-reminder",
+          "delay": 0
+        },
+        {
+          "type": "sendSMS",
+          "templateId": "tour-reminder-sms",
+          "delay": 0
+        }
+      ]
+    },
+    {
+      "id": "",
+      "name": "Post-Tour Follow-up",
+      "status": "active",
+      "trigger": {
+        "type": "appointmentCompleted",
+        "appointmentType": "tour"
+      },
+      "actions": [
+        {
+          "type": "sendEmail",
+          "templateId": "post-tour-followup",
+          "delay": 1440
+        },
+        {
+          "type": "createTask",
+          "title": "Send proposal to tour attendee",
+          "assignee": "",
+          "dueIn": 2,
+          "delay": 2880
+        }
+      ]
+    },
+    {
+      "id": "",
+      "name": "No Response Follow-up",
+      "status": "active",
+      "trigger": {
+        "type": "contactNoResponse",
+        "days": 7
+      },
+      "actions": [
+        {
+          "type": "sendEmail",
+          "templateId": "follow-up-email",
+          "delay": 0
+        },
+        {
+          "type": "createTask",
+          "title": "Manual follow-up needed",
+          "assignee": "",
+          "dueIn": 1,
+          "delay": 4320
+        }
+      ]
+    },
+    {
+      "id": "",
+      "name": "Booking Confirmation",
+      "status": "active",
+      "trigger": {
+        "type": "opportunityStageChanged",
+        "toStage": "Booked/Won"
+      },
+      "actions": [
+        {
+          "type": "sendEmail",
+          "templateId": "booking-confirmation",
+          "delay": 0
+        },
+        {
+          "type": "addTag",
+          "tagId": "booked",
+          "delay": 0
+        },
+        {
+          "type": "createTask",
+          "title": "Send contract and deposit request",
+          "assignee": "",
+          "dueIn": 0,
+          "delay": 0
+        }
+      ]
+    }
+  ]
+}

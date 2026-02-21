@@ -1,0 +1,96 @@
+{
+  "customFields": [
+    {
+      "id": "",
+      "name": "Event Type",
+      "type": "DROPDOWN",
+      "options": [
+        "Wedding",
+        "Corporate Event",
+        "Private Party",
+        "Photoshoot",
+        "Other"
+      ],
+      "required": false,
+      "hidden": false
+    },
+    {
+      "id": "",
+      "name": "Event Date",
+      "type": "DATE",
+      "required": false,
+      "hidden": false
+    },
+    {
+      "id": "",
+      "name": "Guest Count",
+      "type": "TEXT",
+      "required": false,
+      "hidden": false
+    },
+    {
+      "id": "",
+      "name": "Budget",
+      "type": "TEXT",
+      "required": false,
+      "hidden": false
+    },
+    {
+      "id": "",
+      "name": "Venue Selection Status",
+      "type": "DROPDOWN",
+      "options": [
+        "Not Started",
+        "Researching",
+        "Touring",
+        "Decision Pending",
+        "Booked"
+      ],
+      "required": false,
+      "hidden": false
+    },
+    {
+      "id": "",
+      "name": "How Did You Hear About Us",
+      "type": "TEXT",
+      "required": false,
+      "hidden": false
+    },
+    {
+      "id": "",
+      "name": "Lead Source",
+      "type": "DROPDOWN",
+      "options": [
+        "Website",
+        "Referral",
+        "Social Media",
+        "Google Search",
+        "Wedding Fair",
+        "Other"
+      ],
+      "required": false,
+      "hidden": false
+    },
+    {
+      "id": "",
+      "name": "Contract Value",
+      "type": "TEXT",
+      "required": false,
+      "hidden": false
+    },
+    {
+      "id": "",
+      "name": "Wedding Coordinator Name",
+      "type": "TEXT",
+      "required": false,
+      "hidden": false
+    },
+    {
+      "id": "",
+      "name": "Ceremony Time",
+      "type": "TEXT",
+      "required": false,
+      "hidden": false
+    }
+  ]
+}

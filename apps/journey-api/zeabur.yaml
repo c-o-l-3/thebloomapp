@@ -1,0 +1,34 @@
+# Zeabur Deployment Configuration for Journey API
+# https://zeabur.com/docs
+
+name: journey-api
+icon: https://cdn-icons-png.flaticon.com/512/2920/2920347.png
+
+# Service configuration
+services:
+  - name: journey-api
+    type: nodejs
+    build:
+      dockerfile: Dockerfile
+    ports:
+      - port: 3001
+        protocol: http
+    
+# Required environment variables (set in Zeabur dashboard):
+# DATABASE_URL - PostgreSQL connection string (Zeabur provides this automatically if you bind a PostgreSQL service)
+# JWT_SECRET - Secret key for JWT signing
+# JWT_EXPIRES_IN - JWT expiration time (e.g., "24h")
+# CORS_ORIGIN - Frontend URL (e.g., "https://journey-visualizer.zeabur.app")
+# GHL_API_KEY - GoHighLevel API key
+# GHL_BASE_URL - GoHighLevel API base URL
+
+# Optional environment variables:
+# PORT - Server port (default: 3001)
+# NODE_ENV - Environment (production)
+# RATE_LIMIT_WINDOW_MS - Rate limiting window
+# RATE_LIMIT_MAX_REQUESTS - Max requests per window
+
+# Health check
+healthcheck:
+  path: /health
+  port: 3001

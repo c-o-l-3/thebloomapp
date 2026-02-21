@@ -1,0 +1,43 @@
+{
+  "$schema": "../schemas/documents-schema.json",
+  "version": "1.0.0",
+  "lastUpdated": "2026-02-21T16:00:00Z",
+  "documents": [
+    {
+      "id": "doc-001",
+      "filename": "venue-guide-2026.pdf",
+      "originalName": "Wedding Venue Guide 2026.pdf",
+      "type": "pdf",
+      "category": "pricing",
+      "uploadedAt": "2026-02-20T14:30:00Z",
+      "uploadedBy": "coordinator@venue.com",
+      "fileSize": 2456789,
+      "pages": 12,
+      "ocrStatus": "completed",
+      "ocrTextPath": "documents/extracted/venue-guide-2026.txt",
+      "wordCount": 3450,
+      "chunkCount": 15,
+      "embeddingIds": ["emb-doc-001-chunk-001", "emb-doc-001-chunk-002"],
+      "extractedFacts": ["fact-price-004", "fact-price-005"],
+      "tags": ["pricing", "packages", "2026", "brochure"]
+    },
+    {
+      "id": "doc-002",
+      "filename": "wedding-packet.docx",
+      "originalName": "Wedding Information Packet.docx",
+      "type": "docx",
+      "category": "brochure",
+      "uploadedAt": "2026-02-19T10:00:00Z",
+      "uploadedBy": "manager@venue.com",
+      "fileSize": 1250000,
+      "pages": 8,
+      "ocrStatus": "completed",
+      "ocrTextPath": "documents/extracted/wedding-packet.txt",
+      "wordCount": 2100,
+      "chunkCount": 10,
+      "embeddingIds": ["emb-doc-002-chunk-001"],
+      "extractedFacts": ["fact-policy-001", "fact-amenity-001"],
+      "tags": ["information", "policies", "amenities"]
+    }
+  ]
+}

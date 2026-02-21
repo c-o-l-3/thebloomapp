@@ -1,0 +1,118 @@
+[2026-02-21T16:34:18.877Z] [INFO] Initializing Knowledge Hub for maison-albion
+[2026-02-21T16:34:18.884Z] [SUCCESS] Knowledge Hub initialized at /Users/cole/Dev/TheBloomApp/clients/maison-albion/knowledge-hub
+[2026-02-21T16:48:53.550Z] [SUCCESS] Verified fact: fact-cap-001 (verified)
+[2026-02-21T17:11:29.236Z] [INFO] Generating embeddings for facts
+[2026-02-21T17:11:29.238Z] [WARN] Using simple fallback embedding (OpenAI not configured)
+[2026-02-21T17:11:29.239Z] [WARN] Using simple fallback embedding (OpenAI not configured)
+[2026-02-21T17:11:29.239Z] [WARN] Using simple fallback embedding (OpenAI not configured)
+[2026-02-21T17:11:29.240Z] [WARN] Using simple fallback embedding (OpenAI not configured)
+[2026-02-21T17:11:29.240Z] [WARN] Using simple fallback embedding (OpenAI not configured)
+[2026-02-21T17:11:29.240Z] [WARN] Using simple fallback embedding (OpenAI not configured)
+[2026-02-21T17:11:29.240Z] [SUCCESS] Generated 6 fact embeddings (0 skipped)
+[2026-02-21T17:15:42.078Z] [INFO] Searching: "wedding packages"
+[2026-02-21T17:15:42.081Z] [SUCCESS] Found 1 results (from 1 matches)
+[2026-02-21T17:17:28.855Z] [INFO] Searching: "guest capacity ceremony"
+[2026-02-21T17:17:28.857Z] [SUCCESS] Found 0 results (from 0 matches)
+[2026-02-21T17:17:36.826Z] [INFO] Generating embeddings for facts
+[2026-02-21T17:17:36.828Z] [WARN] Using simple fallback embedding (OpenAI not configured)
+[2026-02-21T17:17:36.828Z] [WARN] Using simple fallback embedding (OpenAI not configured)
+[2026-02-21T17:17:36.828Z] [WARN] Using simple fallback embedding (OpenAI not configured)
+[2026-02-21T17:17:36.828Z] [WARN] Using simple fallback embedding (OpenAI not configured)
+[2026-02-21T17:17:36.828Z] [WARN] Using simple fallback embedding (OpenAI not configured)
+[2026-02-21T17:17:36.829Z] [WARN] Using simple fallback embedding (OpenAI not configured)
+[2026-02-21T17:17:36.829Z] [SUCCESS] Generated 6 fact embeddings (0 skipped)
+[2026-02-21T17:17:36.833Z] [INFO] Generating embeddings for golden pages
+[2026-02-21T17:17:36.834Z] [SUCCESS] Generated 0 page embeddings (5 skipped)
+[2026-02-21T17:17:47.952Z] [INFO] Searching: "deposit"
+[2026-02-21T17:17:47.955Z] [SUCCESS] Found 1 results (from 1 matches)
+[2026-02-21T18:27:51.525Z] [INFO] Running setup validation for maison-albion
+[2026-02-21T18:27:52.308Z] [INFO] Validation complete: 15 passed, 3 failed, 2 warnings
+[2026-02-21T18:27:52.308Z] [INFO] Validation complete: 15 passed, 3 failed, 2 warnings
+[2026-02-21T18:27:52.309Z] [INFO] Validation complete: 15 passed, 3 failed, 2 warnings
+[2026-02-21T18:27:52.310Z] [SUCCESS] Validation report saved: /Users/cole/Dev/TheBloomApp/clients/maison-albion/setup-validation-report.json
+[2026-02-21T18:29:17.337Z] [INFO] Generating onboarding report for maison-albion
+[2026-02-21T18:29:17.355Z] [SUCCESS] Markdown report saved: /Users/cole/Dev/TheBloomApp/clients/maison-albion/ONBOARDING-REPORT.md
+[2026-02-21T18:29:17.356Z] [SUCCESS] HTML report saved: /Users/cole/Dev/TheBloomApp/clients/maison-albion/ONBOARDING-REPORT.html
+[2026-02-21T18:42:37.980Z] [INFO] Initializing AI provider: openrouter
+[2026-02-21T18:42:52.388Z] [INFO] Initializing AI provider: openrouter
+[2026-02-21T18:43:09.142Z] [INFO] Initializing AI provider: openrouter
+[2026-02-21T18:44:04.984Z] [INFO] Initializing AI provider: openrouter
+[2026-02-21T18:44:04.985Z] [SUCCESS] OpenRouter provider initialized
+[2026-02-21T18:45:13.845Z] [ERROR] Gemini embedding generation failed {"error":"[GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1/models/text-embedding-004:embedContent: [404 Not Found] models/text-embedding-004 is not found for API version v1, or is not supported for embedContent. Call ListModels to see the list of available models and their supported methods."}
+[2026-02-21T18:45:33.677Z] [INFO] Initializing AI provider: openrouter
+[2026-02-21T18:45:33.678Z] [SUCCESS] OpenRouter provider initialized
+[2026-02-21T18:47:33.136Z] [ERROR] Gemini embedding generation failed {"error":"[GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1/models/embedding-001:embedContent: [404 Not Found] models/embedding-001 is not found for API version v1, or is not supported for embedContent. Call ListModels to see the list of available models and their supported methods."}
+[2026-02-21T19:13:12.491Z] [INFO] Initializing AI provider: openrouter
+[2026-02-21T19:13:12.492Z] [SUCCESS] OpenRouter provider initialized
+[2026-02-21T19:14:59.555Z] [ERROR] Gemini embedding generation failed {"error":"[GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1/models/embedding-001:embedContent: [404 Not Found] models/embedding-001 is not found for API version v1, or is not supported for embedContent. Call ListModels to see the list of available models and their supported methods."}
+[2026-02-21T19:19:19.877Z] [INFO] Initializing AI provider: openrouter
+[2026-02-21T19:19:19.878Z] [SUCCESS] OpenRouter provider initialized
+[2026-02-21T19:20:30.179Z] [ERROR] Gemini embedding generation failed {"error":"[GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1/models/embedding-001:embedContent: [404 Not Found] models/embedding-001 is not found for API version v1, or is not supported for embedContent. Call ListModels to see the list of available models and their supported methods."}
+[2026-02-21T19:29:33.690Z] [ERROR] GHL API request failed {"method":"GET","endpoint":"/locations/Ys6TV8qbSBcSRdgrPnpv","error":"Request failed with status code 400","status":400}
+[2026-02-21T19:29:53.961Z] [ERROR] GHL API request failed {"method":"GET","endpoint":"/locations/Ys6TV8qbSBcSRdgrPnpv","error":"Request failed with status code 400","status":400}
+[2026-02-21T19:30:07.417Z] [INFO] Initializing Knowledge Hub for promise-farm
+[2026-02-21T19:30:07.426Z] [SUCCESS] Knowledge Hub initialized at /Users/cole/Dev/TheBloomApp/clients/promise-farm/knowledge-hub
+[2026-02-21T19:30:15.541Z] [INFO] Starting crawl for promise-farm: https://promise-farm.com/
+[2026-02-21T19:30:15.541Z] [INFO] Options: maxPages=40, maxDepth=3
+[2026-02-21T19:31:28.965Z] [INFO] Crawled 40 pages
+[2026-02-21T19:31:29.023Z] [SUCCESS] Crawl complete: 40 added, 0 updated, 4 facts extracted
+[2026-02-21T19:32:58.577Z] [INFO] Initializing AI provider: openrouter
+[2026-02-21T19:32:58.578Z] [SUCCESS] OpenRouter provider initialized
+[2026-02-21T19:32:58.588Z] [INFO] Starting fact extraction for 15 pages
+[2026-02-21T19:32:58.589Z] [INFO] Extracting facts from page: https://promise-farm.com/blog
+[2026-02-21T19:33:25.698Z] [SUCCESS] Extracted 8 facts from https://promise-farm.com/blog
+[2026-02-21T19:33:25.711Z] [INFO] Extracting facts from page: https://promise-farm.com/blog/how-to-plan-a-rustic-wedding-in-lancaster
+[2026-02-21T19:34:36.574Z] [SUCCESS] Extracted 7 facts from https://promise-farm.com/blog/how-to-plan-a-rustic-wedding-in-lancaster
+[2026-02-21T19:34:36.585Z] [INFO] Extracting facts from page: https://promise-farm.com/blog/lancaster-wedding-planning-tips
+[2026-02-21T19:34:57.359Z] [SUCCESS] Extracted 9 facts from https://promise-farm.com/blog/lancaster-wedding-planning-tips
+[2026-02-21T19:34:57.368Z] [INFO] Extracting facts from page: https://promise-farm.com/blog/5-tips-to-plan-the-perfect-cocktail-hour-in-lancaster
+[2026-02-21T19:36:03.133Z] [SUCCESS] Extracted 6 facts from https://promise-farm.com/blog/5-tips-to-plan-the-perfect-cocktail-hour-in-lancaster
+[2026-02-21T19:36:03.140Z] [INFO] Extracting facts from page: https://promise-farm.com/blog/things-guests-know-before-your-wedding
+[2026-02-21T19:36:21.962Z] [ERROR] OpenRouter fact extraction failed {"error":"Invalid response body while trying to fetch https://openrouter.ai/api/v1/chat/completions: read ETIMEDOUT"}
+[2026-02-21T19:36:21.963Z] [ERROR] Failed to extract facts from https://promise-farm.com/blog/things-guests-know-before-your-wedding {"error":"Invalid response body while trying to fetch https://openrouter.ai/api/v1/chat/completions: read ETIMEDOUT"}
+[2026-02-21T19:36:21.963Z] [WARN] Falling back to OpenAI provider
+[2026-02-21T19:36:21.964Z] [SUCCESS] OpenAI provider initialized
+[2026-02-21T19:36:21.964Z] [INFO] Retrying with fallback provider...
+[2026-02-21T19:36:21.965Z] [INFO] Extracting facts from page: https://promise-farm.com/blog/things-guests-know-before-your-wedding
+[2026-02-21T19:36:22.295Z] [ERROR] OpenAI fact extraction failed {"error":"401 Incorrect API key provided: sk-or-v1*************************************************************f890. You can find your API key at https://platform.openai.com/account/api-keys."}
+[2026-02-21T19:36:22.296Z] [ERROR] Failed to extract facts from https://promise-farm.com/blog/things-guests-know-before-your-wedding {"error":"401 Incorrect API key provided: sk-or-v1*************************************************************f890. You can find your API key at https://platform.openai.com/account/api-keys."}
+[2026-02-21T19:36:22.296Z] [WARN] Falling back to Google Gemini provider
+[2026-02-21T19:36:22.296Z] [SUCCESS] Google Gemini provider initialized
+[2026-02-21T19:36:22.296Z] [INFO] Retrying with fallback provider...
+[2026-02-21T19:36:22.297Z] [INFO] Extracting facts from page: https://promise-farm.com/blog/things-guests-know-before-your-wedding
+[2026-02-21T19:36:23.616Z] [ERROR] Gemini fact extraction failed {"error":"[GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent: [400 Bad Request] Invalid JSON payload received. Unknown name \"responseMimeType\" at 'generation_config': Cannot find field. [{\"@type\":\"type.googleapis.com/google.rpc.BadRequest\",\"fieldViolations\":[{\"field\":\"generation_config\",\"description\":\"Invalid JSON payload received. Unknown name \\\"responseMimeType\\\" at 'generation_config': Cannot find field.\"}]}]"}
+[2026-02-21T19:36:23.617Z] [ERROR] Failed to extract facts from https://promise-farm.com/blog/things-guests-know-before-your-wedding {"error":"[GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent: [400 Bad Request] Invalid JSON payload received. Unknown name \"responseMimeType\" at 'generation_config': Cannot find field. [{\"@type\":\"type.googleapis.com/google.rpc.BadRequest\",\"fieldViolations\":[{\"field\":\"generation_config\",\"description\":\"Invalid JSON payload received. Unknown name \\\"responseMimeType\\\" at 'generation_config': Cannot find field.\"}]}]"}
+[2026-02-21T19:36:23.617Z] [ERROR] Failed to process page: https://promise-farm.com/blog/things-guests-know-before-your-wedding {"error":"[GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent: [400 Bad Request] Invalid JSON payload received. Unknown name \"responseMimeType\" at 'generation_config': Cannot find field. [{\"@type\":\"type.googleapis.com/google.rpc.BadRequest\",\"fieldViolations\":[{\"field\":\"generation_config\",\"description\":\"Invalid JSON payload received. Unknown name \\\"responseMimeType\\\" at 'generation_config': Cannot find field.\"}]}]"}
+[2026-02-21T19:36:23.617Z] [INFO] Extracting facts from page: https://promise-farm.com/blog/how-to-schedule-your-wedding-timeline-in-four-easy-steps
+[2026-02-21T19:36:24.062Z] [ERROR] Gemini fact extraction failed {"error":"[GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent: [400 Bad Request] Invalid JSON payload received. Unknown name \"responseMimeType\" at 'generation_config': Cannot find field. [{\"@type\":\"type.googleapis.com/google.rpc.BadRequest\",\"fieldViolations\":[{\"field\":\"generation_config\",\"description\":\"Invalid JSON payload received. Unknown name \\\"responseMimeType\\\" at 'generation_config': Cannot find field.\"}]}]"}
+[2026-02-21T19:36:24.062Z] [ERROR] Failed to extract facts from https://promise-farm.com/blog/how-to-schedule-your-wedding-timeline-in-four-easy-steps {"error":"[GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent: [400 Bad Request] Invalid JSON payload received. Unknown name \"responseMimeType\" at 'generation_config': Cannot find field. [{\"@type\":\"type.googleapis.com/google.rpc.BadRequest\",\"fieldViolations\":[{\"field\":\"generation_config\",\"description\":\"Invalid JSON payload received. Unknown name \\\"responseMimeType\\\" at 'generation_config': Cannot find field.\"}]}]"}
+[2026-02-21T19:36:24.062Z] [ERROR] Failed to process page: https://promise-farm.com/blog/how-to-schedule-your-wedding-timeline-in-four-easy-steps {"error":"[GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent: [400 Bad Request] Invalid JSON payload received. Unknown name \"responseMimeType\" at 'generation_config': Cannot find field. [{\"@type\":\"type.googleapis.com/google.rpc.BadRequest\",\"fieldViolations\":[{\"field\":\"generation_config\",\"description\":\"Invalid JSON payload received. Unknown name \\\"responseMimeType\\\" at 'generation_config': Cannot find field.\"}]}]"}
+[2026-02-21T19:36:24.063Z] [INFO] Extracting facts from page: https://promise-farm.com/cdn-cgi/l/email-protection
+[2026-02-21T19:36:25.060Z] [ERROR] Gemini fact extraction failed {"error":"[GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent: [400 Bad Request] Invalid JSON payload received. Unknown name \"responseMimeType\" at 'generation_config': Cannot find field. [{\"@type\":\"type.googleapis.com/google.rpc.BadRequest\",\"fieldViolations\":[{\"field\":\"generation_config\",\"description\":\"Invalid JSON payload received. Unknown name \\\"responseMimeType\\\" at 'generation_config': Cannot find field.\"}]}]"}
+[2026-02-21T19:36:25.061Z] [ERROR] Failed to extract facts from https://promise-farm.com/cdn-cgi/l/email-protection {"error":"[GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent: [400 Bad Request] Invalid JSON payload received. Unknown name \"responseMimeType\" at 'generation_config': Cannot find field. [{\"@type\":\"type.googleapis.com/google.rpc.BadRequest\",\"fieldViolations\":[{\"field\":\"generation_config\",\"description\":\"Invalid JSON payload received. Unknown name \\\"responseMimeType\\\" at 'generation_config': Cannot find field.\"}]}]"}
+[2026-02-21T19:36:25.061Z] [ERROR] Failed to process page: https://promise-farm.com/cdn-cgi/l/email-protection {"error":"[GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent: [400 Bad Request] Invalid JSON payload received. Unknown name \"responseMimeType\" at 'generation_config': Cannot find field. [{\"@type\":\"type.googleapis.com/google.rpc.BadRequest\",\"fieldViolations\":[{\"field\":\"generation_config\",\"description\":\"Invalid JSON payload received. Unknown name \\\"responseMimeType\\\" at 'generation_config': Cannot find field.\"}]}]"}
+[2026-02-21T19:36:25.061Z] [SUCCESS] Fact extraction complete: 30 facts from 4 pages
+[2026-02-21T19:36:49.026Z] [INFO] Initializing AI provider: openrouter
+[2026-02-21T19:36:49.027Z] [SUCCESS] OpenRouter provider initialized
+[2026-02-21T19:36:49.027Z] [INFO] Running full brand voice analysis for promise-farm
+[2026-02-21T19:36:49.027Z] [INFO] Starting brand voice analysis for promise-farm
+[2026-02-21T19:36:49.029Z] [INFO] Analyzing 30 pages for brand voice
+[2026-02-21T19:37:56.906Z] [SUCCESS] Brand voice analysis complete
+[2026-02-21T19:37:56.908Z] [INFO] Updating brand voice profile
+[2026-02-21T19:37:56.910Z] [SUCCESS] Updated brand voice profile
+[2026-02-21T19:37:56.910Z] [SUCCESS] Brand voice profile updated
+[2026-02-21T19:51:04.862Z] [INFO] Running journey generation for promise-farm
+[2026-02-21T19:51:04.863Z] [INFO] Generating default journeys for promise-farm
+[2026-02-21T19:51:04.864Z] [WARN] Failed to get location config {"error":"ENOENT: no such file or directory, open '/Users/cole/Dev/TheBloomApp/clients/promise-farm/location-config.json'"}
+[2026-02-21T19:51:04.868Z] [SUCCESS] Generated 5 journeys with 17 touchpoints
+[2026-02-21T19:51:04.872Z] [INFO] Creating journeys in Airtable...
+[2026-02-21T19:51:04.872Z] [ERROR] Failed to connect to Airtable {"error":"An API key is required to connect to Airtable"}
+[2026-02-21T19:51:04.872Z] [ERROR] Failed to create journey in Airtable: Welcome Series {"error":"airtableService.base is not a function"}
+[2026-02-21T19:51:04.873Z] [ERROR] Failed to create journey in Airtable: Inquiry Follow-Up {"error":"airtableService.base is not a function"}
+[2026-02-21T19:51:04.873Z] [ERROR] Failed to create journey in Airtable: Tour Confirmation {"error":"airtableService.base is not a function"}
+[2026-02-21T19:51:04.873Z] [ERROR] Failed to create journey in Airtable: Proposal Nurture {"error":"airtableService.base is not a function"}
+[2026-02-21T19:51:04.873Z] [ERROR] Failed to create journey in Airtable: Post-Booking Welcome {"error":"airtableService.base is not a function"}
+[2026-02-21T20:16:22.995Z] [ERROR] Failed to connect to Airtable {"error":"Could not find what you are looking for"}
+[2026-02-21T20:16:22.996Z] [ERROR] Sync failed {"error":"Failed to connect to Airtable"}
+[2026-02-21T20:17:18.656Z] [ERROR] Failed to connect to Airtable {"error":"Could not find what you are looking for"}
+[2026-02-21T20:17:18.657Z] [ERROR] Sync failed {"error":"Failed to connect to Airtable"}
