@@ -22,7 +22,8 @@ import {
   User,
   Building,
   Calendar,
-  Mail
+  Mail,
+  Download
 } from 'lucide-react';
 import './TouchpointEditor.css';
 
@@ -140,6 +141,39 @@ export function TouchpointEditor({
       setIsSaving(false);
     }
   }, [formData, touchpoint, onSave]);
+
+  // Export as HTML file
+  const handleExportHtml = useCallback(() => {
+    const content = formData.body || '';
+    const blob = new Blob([content], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    const typeLabel = isEmail ? 'email' : 'sms';
+    const name = formData.name?.replace(/\s+/g, '-').toLowerCase() || 'touchpoint';
+    a.download = `${name}-${typeLabel}.html`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }, [formData.body, formData.name, isEmail]);
+
+  // Export as plain text file
+  const handleExportText = useCallback(() => {
+    // Strip HTML tags for plain text
+    const content = (formData.body || '').replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim();
+    const blob = new Blob([content], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    const typeLabel = isSMS ? 'sms' : 'text';
+    const name = formData.name?.replace(/\s+/g, '-').toLowerCase() || 'touchpoint';
+    a.download = `${name}-${typeLabel}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }, [formData.body, formData.name, isSMS]);
 
   // Render preview with personalization tokens replaced
   const renderPreview = () => {
@@ -361,7 +395,7 @@ export function TouchpointEditor({
             )}
           </div>
 
-          {/* View Toggle */}
+          {/* View Toggle & Export */}
           <div className="touchpoint-editor__view-toggle">
             <button
               className={`touchpoint-editor__view-btn ${!showSource ? 'touchpoint-editor__view-btn--active' : ''}`}
@@ -377,6 +411,24 @@ export function TouchpointEditor({
               <Code size={14} />
               Source
             </button>
+            <div className="touchpoint-editor__export-group">
+              <button
+                className="touchpoint-editor__view-btn"
+                onClick={handleExportHtml}
+                title="Export as HTML file"
+              >
+                <Download size={14} />
+                Export HTML
+              </button>
+              <button
+                className="touchpoint-editor__view-btn"
+                onClick={handleExportText}
+                title="Export as plain text file"
+              >
+                <Download size={14} />
+                Export Text
+              </button>
+            </div>
           </div>
         </div>
 

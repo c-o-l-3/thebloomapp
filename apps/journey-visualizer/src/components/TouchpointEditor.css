@@ -376,6 +376,17 @@
   color: #3b82f6;
 }
 
+/* Export Group */
+.touchpoint-editor__export-group {
+  display: flex;
+  gap: 4px;
+  margin-left: auto;
+}
+
+.touchpoint-editor__export-group .touchpoint-editor__view-btn {
+  background: #f8fafc;
+}
+
 /* Preview Panel */
 .touchpoint-editor__preview-panel {
   flex: 0 0 400px;
