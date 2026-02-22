@@ -90,9 +90,10 @@ process.on('SIGINT', async () => {
   process.exit(0);
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Journey API server running on port ${PORT}`);
   console.log(`📚 API Documentation: http://localhost:${PORT}/health`);
+  console.log(`🔌 Listening on 0.0.0.0:${PORT}`);
 });
 
 export { prisma };
