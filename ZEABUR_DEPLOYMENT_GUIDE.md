@@ -61,21 +61,34 @@ VITE_DATA_SOURCE=api
 
 ---
 
+## Which URL Do Users Access?
+
+**Users access the `journey-visualizer` (frontend) URL in their browser.**
+
+The `journey-api` is only the backend - users never visit it directly. It only handles API requests from the frontend.
+
+```
+┌─────────────────┐         ┌──────────────────┐         ┌─────────────────┐
+│   User Browser  │────────▶│ journey-visualizer│────────▶│   journey-api   │
+│                 │  visits │   (frontend)      │  API    │   (backend)     │
+│                 │         │   URL you share   │ calls   │   Internal only │
+└─────────────────┘         └──────────────────┘         └─────────────────┘
+```
+
 ## URL Configuration Flow
 
-```
-journey-api (backend)        journey-visualizer (frontend)
-    |                                |
-    |  CORS_ORIGIN=*          |  VITE_API_URL=https://api...
-    |  (allows all origins)   |
-    |<------------------------------|
-    |         API calls              |
-```
+1. **Deploy journey-api first** - it gets an internal URL like `https://journey-api-abc123.zeabur.app`
+   - Users never see this URL
+   - It's only for the frontend to make API calls
 
-1. **Deploy journey-api first** - it will get a URL like `https://journey-api-abc123.zeabur.app`
 2. **Copy that URL** and add `/api` to it: `https://journey-api-abc123.zeabur.app/api`
+
 3. **Set VITE_API_URL** in journey-visualizer service to that URL
-4. **Deploy journey-visualizer** - it will get its own URL like `https://journey-visualizer-xyz789.zeabur.app`
+
+4. **Deploy journey-visualizer** - it gets the public URL like `https://journey-visualizer-xyz789.zeabur.app`
+   - **This is the URL you share with users**
+   - **This is what you bookmark**
+   - **This is your app's frontend**
 
 ---
 
