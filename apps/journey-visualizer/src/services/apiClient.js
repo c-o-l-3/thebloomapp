@@ -6,7 +6,8 @@
 
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+// Use production API URL by default, fallback to localhost for development
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://bloom-backend.zeabur.app/api';
 
 /**
  * Custom error class for 409 Conflict responses
