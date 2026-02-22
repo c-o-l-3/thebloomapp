@@ -49,7 +49,14 @@ export function ClientSelector({ onClientChange, selectedClientId, clients: prop
         try {
           setLoading(true);
           const apiClient = getApiClient();
+          console.log('[ClientSelector] Fetching clients from API...');
           const clientsData = await apiClient.getClients();
+          console.log('[ClientSelector] API Response:', clientsData, 'Type:', typeof clientsData);
+          
+          if (!Array.isArray(clientsData)) {
+            console.error('[ClientSelector] API response is not an array:', clientsData);
+            throw new Error('API response is not an array');
+          }
           
           // Transform API response to match component format
           const transformedClients = clientsData.map(client => ({
@@ -62,9 +69,10 @@ export function ClientSelector({ onClientChange, selectedClientId, clients: prop
             status: client.status
           }));
           
+          console.log('[ClientSelector] Transformed clients:', transformedClients);
           setLocalClients(transformedClients);
         } catch (error) {
-          console.error('Error fetching clients from API:', error);
+          console.error('[ClientSelector] Error fetching clients from API:', error);
           // Fallback to prop clients or mock
           setLocalClients(propClients || mockClients);
         } finally {
