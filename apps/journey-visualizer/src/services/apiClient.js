@@ -90,7 +90,10 @@ export class ApiClient {
     if (status) params.append('status', status);
     if (search) params.append('search', search);
 
-    const response = await this.client.get(`/clients?${params}`);
+    const queryString = params.toString();
+    const endpoint = queryString ? `/clients?${queryString}` : '/clients';
+    
+    const response = await this.client.get(endpoint);
     return response.data;
   }
 
