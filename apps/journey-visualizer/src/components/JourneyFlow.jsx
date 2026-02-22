@@ -14,6 +14,7 @@ import ReactFlow, {
   Panel,
   MarkerType
 } from 'reactflow';
+import { useNavigate } from 'react-router-dom';
 import 'reactflow/dist/style.css';
 import { JourneyNode } from './JourneyNode';
 import { JourneyEdge } from './JourneyEdge';
@@ -30,7 +31,8 @@ import {
   MessageSquare,
   Clock,
   GitBranch,
-  MousePointer2
+  MousePointer2,
+  Printer
 } from 'lucide-react';
 import './JourneyFlow.css';
 
@@ -53,6 +55,7 @@ export function JourneyFlow({
   onUpdateJourney,
   readOnly = false 
 }) {
+  const navigate = useNavigate();
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [selectedNode, setSelectedNode] = useState(null);
@@ -348,16 +351,24 @@ export function JourneyFlow({
           </div>
         </Panel>
 
-        {/* Selection Info */}
-        {selectedNode && (
-          <Panel position="top-right" className="journey-flow__panel">
+        {/* Print Button - Always visible */}
+        <Panel position="top-right" className="journey-flow__panel">
+          {selectedNode && (
             <div className="journey-flow__selection">
               <span className="journey-flow__selection-label">Selected:</span>
               <span className="journey-flow__selection-name">{selectedNode.data?.label}</span>
               <span className="journey-flow__selection-type">({selectedNode.data?.touchpointType})</span>
             </div>
-          </Panel>
-        )}
+          )}
+          <button
+            className="journey-flow__tool-btn"
+            onClick={() => navigate(`/journeys/${journey.id}/print`)}
+            title="Print entire journey"
+          >
+            <Printer size={16} />
+            Print Journey
+          </button>
+        </Panel>
       </ReactFlow>
 
       {/* Template Library Modal */}

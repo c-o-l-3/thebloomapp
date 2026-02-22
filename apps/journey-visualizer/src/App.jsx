@@ -11,6 +11,7 @@ import { ApprovalPanel } from './components/ApprovalPanel';
 import { StatusBadge } from './components/StatusBadge';
 import { TouchpointList } from './components/TouchpointList';
 import { TouchpointPrintView } from './components/TouchpointPrintView';
+import { JourneyPrintView } from './components/JourneyPrintView';
 import { HTMLEditor } from './components/HTMLEditor';
 import { JOURNEY_STATUS } from './types';
 import { useJourneys } from './hooks/useJourneys';
@@ -345,6 +346,7 @@ function App() {
         <Route path="/" element={<JourneyBuilder />} />
         <Route path="/touchpoints" element={<TouchpointList />} />
         <Route path="/touchpoints/:id/print" element={<TouchpointPrintView />} />
+        <Route path="/journeys/:id/print" element={<JourneyPrintView />} />
         <Route path="/touchpoints/:id/edit" element={<HTMLEditor />} />
       </Routes>
     </BrowserRouter>
