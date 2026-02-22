@@ -13,6 +13,7 @@ import {
   updateLocalJourney, 
   deleteLocalJourney 
 } from '../services/localJourneys';
+import { ConflictError } from '../services/apiClient';
 
 const DATA_SOURCE = import.meta.env.VITE_DATA_SOURCE || 'airtable';
 
@@ -25,6 +26,10 @@ export function useJourneys(airtableClient, clientId = null) {
   const [journeys, setJourneys] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  
+  // Conflict resolution state
+  const [conflict, setConflict] = useState(null);
+  const [pendingChanges, setPendingChanges] = useState(null);
 
   const usingLocalMode = isLocalMode();
 
@@ -136,14 +141,138 @@ export function useJourneys(airtableClient, clientId = null) {
     }
 
     try {
-      await airtableClient.updateJourney(journeyId, journeyData);
+      // Include version for optimistic locking if available
+      const currentJourney = journeys.find(j => j.id === journeyId);
+      const dataWithVersion = {
+        ...journeyData,
+        version: journeyData.version ?? currentJourney?.version ?? 1
+      };
+      
+      const result = await airtableClient.updateJourney(journeyId, dataWithVersion);
       setJourneys(prev => prev.map(j => 
-        j.id === journeyId ? { ...j, ...journeyData, updatedAt: new Date().toISOString() } : j
+        j.id === journeyId ? { ...j, ...result, updatedAt: new Date().toISOString() } : j
       ));
+      // Clear any previous conflict
+      setConflict(null);
+      setPendingChanges(null);
+      return result;
     } catch (err) {
+      // Handle conflict error
+      if (err instanceof ConflictError) {
+        setConflict({
+          journeyId,
+          serverData: err.serverData,
+          currentVersion: err.currentVersion,
+          submittedVersion: err.submittedVersion
+        });
+        setPendingChanges(journeyData);
+        setError(null); // Don't set generic error for conflicts
+        throw err;
+      }
       setError(err.message);
       throw err;
     }
+  };
+
+  /**
+   * Retry update with fresh server data (merge strategy)
+   * @param {Object} mergedData - User's merged changes
+   */
+  const retryUpdateWithMerge = async (mergedData) => {
+    if (!conflict) return;
+    
+    const { journeyId, serverData } = conflict;
+    
+    try {
+      const dataWithVersion = {
+        ...mergedData,
+        version: serverData.version
+      };
+      
+      const result = await airtableClient.updateJourney(journeyId, dataWithVersion);
+      setJourneys(prev => prev.map(j => 
+        j.id === journeyId ? { ...j, ...result, updatedAt: new Date().toISOString() } : j
+      ));
+      setConflict(null);
+      setPendingChanges(null);
+      return result;
+    } catch (err) {
+      if (err instanceof ConflictError) {
+        // Another conflict occurred, update state
+        setConflict({
+          journeyId,
+          serverData: err.serverData,
+          currentVersion: err.currentVersion,
+          submittedVersion: err.submittedVersion
+        });
+        setPendingChanges(mergedData);
+        throw err;
+      }
+      setError(err.message);
+      throw err;
+    }
+  };
+
+  /**
+   * Force overwrite server data with user's changes
+   */
+  const forceOverwrite = async () => {
+    if (!conflict || !pendingChanges) return;
+    
+    const { journeyId, serverData } = conflict;
+    
+    try {
+      // Use current server version to force update
+      const dataWithVersion = {
+        ...pendingChanges,
+        version: serverData.version
+      };
+      
+      const result = await airtableClient.updateJourney(journeyId, dataWithVersion);
+      setJourneys(prev => prev.map(j => 
+        j.id === journeyId ? { ...j, ...result, updatedAt: new Date().toISOString() } : j
+      ));
+      setConflict(null);
+      setPendingChanges(null);
+      return result;
+    } catch (err) {
+      if (err instanceof ConflictError) {
+        setConflict({
+          journeyId,
+          serverData: err.serverData,
+          currentVersion: err.currentVersion,
+          submittedVersion: err.submittedVersion
+        });
+        throw err;
+      }
+      setError(err.message);
+      throw err;
+    }
+  };
+
+  /**
+   * Cancel conflict resolution and discard changes
+   */
+  const cancelConflict = () => {
+    setConflict(null);
+    setPendingChanges(null);
+    setError(null);
+  };
+
+  /**
+   * Refresh journey data from server and clear conflict
+   */
+  const refreshAndAcceptServerVersion = async () => {
+    if (!conflict) return;
+    
+    const { journeyId, serverData } = conflict;
+    
+    // Update local state with server data
+    setJourneys(prev => prev.map(j => 
+      j.id === journeyId ? { ...j, ...serverData } : j
+    ));
+    setConflict(null);
+    setPendingChanges(null);
   };
 
   const deleteJourney = async (journeyId) => {
@@ -182,7 +311,14 @@ export function useJourneys(airtableClient, clientId = null) {
     createJourney,
     updateJourney,
     deleteJourney,
-    isLocalMode: usingLocalMode
+    isLocalMode: usingLocalMode,
+    // Conflict resolution
+    conflict,
+    pendingChanges,
+    retryUpdateWithMerge,
+    forceOverwrite,
+    cancelConflict,
+    refreshAndAcceptServerVersion
   };
 }
 

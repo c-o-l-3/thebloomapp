@@ -4,20 +4,22 @@
 name: journey-visualizer
 icon: https://cdn-icons-png.flaticon.com/512/2920/2920277.png
 
-# Service configuration
+# Service configuration - Using Docker for custom build
 services:
   - name: journey-visualizer
-    type: static
+    type: docker
     build:
       dockerfile: Dockerfile
     ports:
       - port: 80
         protocol: http
     
-# Environment variables (set these in Zeabur dashboard)
-# VITE_AIRTABLE_API_KEY - Airtable API key
-# VITE_AIRTABLE_BASE_ID - Airtable base ID
-# VITE_API_BASE_URL - API base URL (if needed)
+# Build environment variables (set these in Zeabur dashboard)
+# VITE_API_URL - API base URL (e.g., "https://journey-api.zeabur.app/api")
+# VITE_DATA_SOURCE - Set to "api" for production
+
+# Optional:
+# VITE_GHL_API_KEY - GoHighLevel API key (if needed at build time)
 
 # Health check
 healthcheck:

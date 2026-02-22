@@ -8,6 +8,7 @@ import ghlService from './ghl.js';
 import mapper from '../utils/mapper.js';
 import conflictDetector from '../utils/conflict.js';
 import logger from '../utils/logger.js';
+import rateLimiter from '../utils/rate-limiter.js';
 
 export class SyncStatus {
   static PENDING = 'Pending';
@@ -273,7 +274,10 @@ class SyncOrchestration {
   async createJourney(journey) {
     try {
       const workflowData = mapper.journeyToGHLWorkflow(journey);
-      const workflow = await ghlService.createWorkflow(workflowData);
+      const workflow = await rateLimiter.execute(
+        () => ghlService.createWorkflow(workflowData),
+        `createWorkflow:${journey.name}`
+      );
 
       // Store GHL workflow ID in database
       await databaseService.updateJourneyGHLId(journey.id, workflow.id);
@@ -303,7 +307,10 @@ class SyncOrchestration {
   async updateJourney(journey, existingWorkflow) {
     try {
       const workflowData = mapper.journeyToGHLWorkflow(journey);
-      const workflow = await ghlService.updateWorkflow(journey.ghlWorkflowId, workflowData);
+      const workflow = await rateLimiter.execute(
+        () => ghlService.updateWorkflow(journey.ghlWorkflowId, workflowData),
+        `updateWorkflow:${journey.name}`
+      );
 
       logger.success('Updated GHL workflow', {
         journeyId: journey.id,
@@ -378,7 +385,10 @@ class SyncOrchestration {
     logger.warn('Initiating rollback', { journeyId, ghlWorkflowId });
 
     try {
-      await ghlService.deleteWorkflow(ghlWorkflowId);
+      await rateLimiter.execute(
+        () => ghlService.deleteWorkflow(ghlWorkflowId),
+        `deleteWorkflow:${ghlWorkflowId}`
+      );
       await this.updateSyncStatus(journeyId, SyncStatus.FAILED);
       
       logger.success('Rollback successful', { journeyId, ghlWorkflowId });

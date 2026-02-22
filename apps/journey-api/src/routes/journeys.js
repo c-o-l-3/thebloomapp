@@ -129,11 +129,63 @@ router.post('/', async (req, res, next) => {
 router.put('/:id', async (req, res, next) => {
   try {
     const { id } = req.params;
-    const data = journeySchema.partial().parse(req.body);
+    const { version, ...updateData } = req.body;
     
+    // Validate update data (excluding version)
+    const data = journeySchema.partial().parse(updateData);
+    
+    // Fetch current journey to check version
+    const currentJourney = await prisma.journey.findUnique({
+      where: { id },
+      include: {
+        client: {
+          select: { id: true, name: true, slug: true }
+        },
+        pipeline: {
+          select: { id: true, name: true }
+        },
+        touchpoints: {
+          orderBy: { orderIndex: 'asc' }
+        },
+        _count: {
+          select: { touchpoints: true }
+        }
+      }
+    });
+
+    if (!currentJourney) {
+      return res.status(404).json({ error: 'Journey not found' });
+    }
+
+    // Optimistic locking: check version match
+    if (version !== undefined && currentJourney.version !== version) {
+      return res.status(409).json({
+        error: 'Conflict detected',
+        message: 'The journey has been modified by another user',
+        currentVersion: currentJourney.version,
+        submittedVersion: version,
+        journey: currentJourney
+      });
+    }
+
+    // Increment version on successful update
     const journey = await prisma.journey.update({
       where: { id },
-      data
+      data: {
+        ...data,
+        version: { increment: 1 }
+      },
+      include: {
+        client: {
+          select: { id: true, name: true, slug: true }
+        },
+        pipeline: {
+          select: { id: true, name: true }
+        },
+        _count: {
+          select: { touchpoints: true }
+        }
+      }
     });
 
     res.json(journey);

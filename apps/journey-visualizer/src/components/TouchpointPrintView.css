@@ -1,0 +1,526 @@
+/**
+ * TouchpointPrintView Styles
+ * Print-optimized layout for touchpoint review
+ */
+
+.touchpoint-print {
+  min-height: 100vh;
+  background: #f1f5f9;
+}
+
+/* Header - Hidden when printing */
+.touchpoint-print__header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: white;
+  border-bottom: 1px solid #e2e8f0;
+  padding: 16px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.touchpoint-print__back {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #475569;
+  transition: all 0.2s;
+}
+
+.touchpoint-print__back:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+}
+
+.touchpoint-print__actions {
+  display: flex;
+  gap: 12px;
+}
+
+.touchpoint-print__print-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+
+.touchpoint-print__print-btn:hover {
+  background: #2563eb;
+}
+
+/* Content Area */
+.touchpoint-print__content {
+  max-width: 210mm;
+  margin: 0 auto;
+  padding: 24px;
+  background: white;
+  min-height: calc(100vh - 80px);
+}
+
+/* Document Header */
+.touchpoint-print__doc-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #e2e8f0;
+  margin-bottom: 32px;
+}
+
+.touchpoint-print__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.touchpoint-print__doc-type {
+  font-size: 12px;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.touchpoint-print__doc-date {
+  font-size: 13px;
+  color: #94a3b8;
+}
+
+.touchpoint-print__status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  border: 1px solid;
+}
+
+/* Sections */
+.touchpoint-print__section {
+  margin-bottom: 32px;
+  page-break-inside: avoid;
+}
+
+.touchpoint-print__section--page-break {
+  page-break-before: always;
+}
+
+.touchpoint-print__section--review {
+  page-break-inside: auto;
+}
+
+.touchpoint-print__section-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0 0 16px 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+/* Title */
+.touchpoint-print__title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 24px 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.touchpoint-print__title svg {
+  color: #3b82f6;
+}
+
+/* Info Grid */
+.touchpoint-print__info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  background: #f8fafc;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.touchpoint-print__info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.touchpoint-print__info-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.touchpoint-print__info-value {
+  font-size: 14px;
+  font-weight: 500;
+  color: #1e293b;
+}
+
+/* Fields */
+.touchpoint-print__field {
+  margin-bottom: 20px;
+}
+
+.touchpoint-print__field-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 500;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.touchpoint-print__field-value {
+  font-size: 14px;
+  color: #334155;
+  line-height: 1.6;
+  padding: 12px;
+  background: #f8fafc;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+}
+
+.touchpoint-print__field-value--highlight {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1e293b;
+  background: #eff6ff;
+  border-color: #bfdbfe;
+}
+
+/* Content Preview */
+.touchpoint-print__content-preview {
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+  background: white;
+}
+
+.touchpoint-print__rendered-content {
+  padding: 24px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #334155;
+}
+
+/* Ensure email content renders properly */
+.touchpoint-print__rendered-content img {
+  max-width: 100%;
+  height: auto;
+}
+
+.touchpoint-print__rendered-content a {
+  color: #3b82f6;
+}
+
+.touchpoint-print__rendered-content table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.touchpoint-print__rendered-content p {
+  margin: 0 0 12px 0;
+}
+
+.touchpoint-print__rendered-content p:last-child {
+  margin-bottom: 0;
+}
+
+.touchpoint-print__empty-content {
+  padding: 40px;
+  text-align: center;
+  color: #94a3b8;
+  font-style: italic;
+  margin: 0;
+}
+
+/* HTML Source */
+.touchpoint-print__source-container {
+  background: #1e293b;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.touchpoint-print__source {
+  margin: 0;
+  padding: 20px;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 12px;
+  line-height: 1.6;
+  color: #e2e8f0;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.touchpoint-print__source code {
+  font-family: inherit;
+  color: inherit;
+}
+
+/* Config */
+.touchpoint-print__config {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.touchpoint-print__config-code {
+  margin: 0;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 12px;
+  line-height: 1.6;
+  color: #475569;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+/* Review Section */
+.touchpoint-print__review-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.touchpoint-print__review-line {
+  height: 0;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+/* Approval Section */
+.touchpoint-print__approval-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.touchpoint-print__approval-box {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.touchpoint-print__approval-box label {
+  font-size: 12px;
+  font-weight: 500;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.touchpoint-print__approval-line {
+  height: 40px;
+  border-bottom: 1px solid #cbd5e1;
+}
+
+.touchpoint-print__approval-checks {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.touchpoint-print__check-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  color: #475569;
+}
+
+.touchpoint-print__checkbox {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #cbd5e1;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+/* Footer */
+.touchpoint-print__footer {
+  margin-top: 48px;
+  padding-top: 16px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.touchpoint-print__footer-content {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+/* Loading State */
+.touchpoint-print__loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  gap: 16px;
+  color: #64748b;
+}
+
+.touchpoint-print__spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #e2e8f0;
+  border-top-color: #3b82f6;
+  border-radius: 50%;
+  animation: touchpoint-print-spin 1s linear infinite;
+}
+
+@keyframes touchpoint-print-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Error State */
+.touchpoint-print__error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  gap: 16px;
+  color: #dc2626;
+  text-align: center;
+  padding: 24px;
+}
+
+.touchpoint-print__error h2 {
+  margin: 0;
+  color: #1e293b;
+}
+
+.touchpoint-print__error p {
+  margin: 0;
+  color: #64748b;
+}
+
+.touchpoint-print__back-btn {
+  padding: 10px 20px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-top: 8px;
+}
+
+/* Print Styles */
+@media print {
+  @page {
+    size: A4;
+    margin: 15mm 20mm;
+  }
+  
+  .touchpoint-print {
+    background: white;
+  }
+  
+  .touchpoint-print__header {
+    display: none !important;
+  }
+  
+  .touchpoint-print__content {
+    max-width: none;
+    padding: 0;
+    margin: 0;
+    min-height: auto;
+  }
+  
+  .touchpoint-print__section {
+    page-break-inside: avoid;
+  }
+  
+  .touchpoint-print__section--review {
+    page-break-inside: auto;
+  }
+  
+  .touchpoint-print__section--page-break {
+    page-break-before: always;
+  }
+  
+  .touchpoint-print__source {
+    max-height: none;
+    overflow: visible;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-size: 10px;
+  }
+  
+  .touchpoint-print__footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin-top: 0;
+  }
+}
+
+/* US Letter Size Support */
+@media print and (width: 8.5in) {
+  @page {
+    size: letter;
+    margin: 0.5in;
+  }
+}
+
+/* Responsive for smaller screens */
+@media screen and (max-width: 768px) {
+  .touchpoint-print__header {
+    padding: 12px 16px;
+  }
+  
+  .touchpoint-print__content {
+    padding: 16px;
+  }
+  
+  .touchpoint-print__title {
+    font-size: 22px;
+  }
+  
+  .touchpoint-print__info-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .touchpoint-print__approval-grid {
+    grid-template-columns: 1fr;
+  }
+}

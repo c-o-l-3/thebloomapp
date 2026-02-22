@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { PrismaClient } from '@prisma/client';
 import { z } from 'zod';
+import { touchpointPublisher } from '../../../scripts/sync-engine/src/services/touchpoint-publisher.js';
 
 const router = Router();
 const prisma = new PrismaClient();
@@ -145,6 +146,80 @@ router.delete('/:id', async (req, res, next) => {
     });
 
     res.status(204).send();
+  } catch (error) {
+    next(error);
+  }
+});
+
+// POST /api/touchpoints/:id/publish - Publish touchpoint to GHL
+router.post('/:id/publish', async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    
+    // Fetch touchpoint with journey and client info
+    const touchpoint = await prisma.touchpoint.findUnique({
+      where: { id },
+      include: {
+        journey: {
+          include: {
+            client: true
+          }
+        }
+      }
+    });
+
+    if (!touchpoint) {
+      return res.status(404).json({ error: 'Touchpoint not found' });
+    }
+
+    // Get GHL location ID from client or environment
+    const locationId = touchpoint.journey?.client?.ghlLocationId || process.env.GHL_LOCATION_ID;
+    
+    if (!locationId) {
+      return res.status(400).json({ 
+        error: 'No GHL location ID configured',
+        details: 'Client must have a ghlLocationId set or GHL_LOCATION_ID environment variable must be defined'
+      });
+    }
+
+    // Check if touchpoint type is publishable
+    const publishableTypes = ['email', 'sms'];
+    if (!publishableTypes.includes(touchpoint.type?.toLowerCase())) {
+      return res.status(400).json({
+        error: `Touchpoint type '${touchpoint.type}' cannot be published`,
+        details: 'Only email and SMS touchpoints can be published to GHL'
+      });
+    }
+
+    // Publish to GHL
+    const result = await touchpointPublisher.publishTouchpoint(touchpoint, locationId);
+
+    if (!result.success) {
+      return res.status(422).json({
+        error: 'Publish failed',
+        details: result.error,
+        fullError: result.details
+      });
+    }
+
+    // Update touchpoint with GHL template ID and status
+    const updatedTouchpoint = await prisma.touchpoint.update({
+      where: { id },
+      data: {
+        ghlTemplateId: result.ghlTemplateId,
+        status: 'published'
+      }
+    });
+
+    res.json({
+      message: 'Touchpoint published successfully',
+      touchpoint: updatedTouchpoint,
+      publishResult: {
+        ghlTemplateId: result.ghlTemplateId,
+        action: result.action,
+        type: touchpoint.type
+      }
+    });
   } catch (error) {
     next(error);
   }

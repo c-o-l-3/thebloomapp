@@ -24,7 +24,7 @@ import { processDocument } from './utils/document-processor.js';
 import { FactExtractionService } from './services/ai-extraction.js';
 import { BrandVoiceAnalyzer } from './services/brand-voice-analyzer.js';
 import { SemanticSearchService } from './services/semantic-search.js';
-import { OnboardingWizard } from './cli-onboarding.js';
+import { InteractiveOnboardingWizard, OnboardingWizard } from './cli-onboarding.js';
 import { GHLAutoExtractionService } from './services/ghl-auto-extract.js';
 import { JourneyGenerator } from './services/journey-generator.js';
 import { SetupValidator } from './utils/setup-validator.js';
@@ -1322,21 +1322,35 @@ function getStatusColor(status) {
 
 // ==================== ONBOARDING COMMANDS ====================
 
-// Main onboarding wizard
+// Main onboarding wizard - BLOOM-205: Improved with interactive wizard
 program
   .command('onboard')
-  .description('Run full client onboarding wizard')
-  .requiredOption('--client <slug>', 'Client folder slug')
-  .requiredOption('--website <url>', 'Client website URL')
-  .requiredOption('--ghl-location-id <id>', 'GoHighLevel location ID')
+  .description('Run full client onboarding wizard (interactive or non-interactive mode)')
+  .option('--client <slug>', 'Client folder slug (for non-interactive mode)')
+  .option('--website <url>', 'Client website URL (for non-interactive mode)')
+  .option('--ghl-location-id <id>', 'GoHighLevel location ID (for non-interactive mode)')
   .option('--industry <type>', 'Industry type', 'wedding-venue')
   .option('--dry-run', 'Show what would be done without making changes', false)
   .option('--skip-crawl', 'Skip website crawling', false)
   .option('--skip-ai', 'Skip AI extraction and analysis', false)
   .option('--skip-ghl', 'Skip GHL data extraction', false)
   .option('--skip-journeys', 'Skip journey generation', false)
+  .option('--skip-validation', 'Skip validation steps for faster iteration (dev only)', false)
+  .option('--resume', 'Resume from saved progress', false)
+  .option('--non-interactive', 'Run in non-interactive mode (requires --client, --website, --ghl-location-id)', false)
   .action(async (options) => {
-    const wizard = new OnboardingWizard(options);
+    // Determine if we should run in interactive or non-interactive mode
+    const hasAllRequired = options.client && options.website && options.ghlLocationId;
+    
+    if (options.nonInteractive && !hasAllRequired) {
+      console.error(chalk.red('Error: --client, --website, and --ghl-location-id are required in non-interactive mode'));
+      process.exit(1);
+    }
+
+    const wizard = new InteractiveOnboardingWizard({
+      ...options,
+      nonInteractive: options.nonInteractive || hasAllRequired
+    });
     
     try {
       const result = await wizard.run();
@@ -1345,6 +1359,99 @@ program
       console.error(chalk.red(`\nFatal error: ${error.message}`));
       process.exit(1);
     }
+  });
+
+// Quick start command - alias for interactive mode
+program
+  .command('onboard:interactive')
+  .description('Start interactive onboarding wizard')
+  .option('--resume', 'Resume from saved progress', false)
+  .action(async (options) => {
+    const wizard = new InteractiveOnboardingWizard({
+      resume: options.resume,
+      nonInteractive: false
+    });
+    
+    try {
+      const result = await wizard.run();
+      process.exit(result.success ? 0 : 1);
+    } catch (error) {
+      console.error(chalk.red(`\nFatal error: ${error.message}`));
+      process.exit(1);
+    }
+  });
+
+// Resume command - explicit resume functionality
+program
+  .command('onboard:resume')
+  .description('Resume interrupted onboarding from saved progress')
+  .action(async () => {
+    const wizard = new InteractiveOnboardingWizard({
+      resume: true,
+      nonInteractive: false
+    });
+    
+    try {
+      const result = await wizard.run();
+      process.exit(result.success ? 0 : 1);
+    } catch (error) {
+      console.error(chalk.red(`\nFatal error: ${error.message}`));
+      process.exit(1);
+    }
+  });
+
+// Clear progress command
+program
+  .command('onboard:clear')
+  .description('Clear saved onboarding progress')
+  .action(async () => {
+    const { OnboardingStateManager } = await import('./cli-onboarding.js');
+    const stateManager = new OnboardingStateManager();
+    
+    if (await stateManager.hasProgress()) {
+      await stateManager.clear();
+      console.log(chalk.green('✓ Saved progress cleared'));
+    } else {
+      console.log(chalk.yellow('No saved progress found'));
+    }
+    process.exit(0);
+  });
+
+// Status command for onboarding
+program
+  .command('onboard:status')
+  .description('Show onboarding progress status')
+  .action(async () => {
+    const { OnboardingStateManager } = await import('./cli-onboarding.js');
+    const stateManager = new OnboardingStateManager();
+    
+    if (!(await stateManager.hasProgress())) {
+      console.log(chalk.yellow('No saved onboarding progress found'));
+      console.log(chalk.gray('Run: npm run onboard:interactive to start'));
+      process.exit(0);
+    }
+    
+    const state = await stateManager.load();
+    const age = await stateManager.getProgressAge();
+    
+    console.log(chalk.cyan('\n╔════════════════════════════════════════════════╗'));
+    console.log(chalk.cyan('║       Onboarding Progress Status               ║'));
+    console.log(chalk.cyan('╚════════════════════════════════════════════════╝\n'));
+    
+    console.log(`Client: ${chalk.white(state.clientSlug || 'Not set')}`);
+    console.log(`Current Step: ${chalk.white(state.currentStep || 'Not started')}`);
+    console.log(`Last Saved: ${chalk.gray(age ? `${age} minutes ago` : 'unknown')}`);
+    console.log(`Completed Steps: ${chalk.green(state.completedSteps?.length || 0)}`);
+    
+    if (state.error) {
+      console.log(chalk.red(`\nLast Error: ${state.error}`));
+    }
+    
+    console.log(chalk.cyan('\nResume with:'));
+    console.log('  npm run onboard:resume');
+    console.log('  or: npm run onboard -- --resume\n');
+    
+    process.exit(0);
   });
 
 // Extract GHL data only

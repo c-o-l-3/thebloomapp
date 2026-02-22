@@ -63,18 +63,26 @@ export class KnowledgeHubClient {
   /**
    * Fetch verified facts for the client
    * @param {string} category - Optional category filter
+   * @param {AbortSignal} signal - AbortController signal for cancellation
    * @returns {Promise<Array>} Array of fact objects
    */
-  async fetchFacts(category = null) {
+  async fetchFacts(category = null, signal = null) {
     if (this.usingLocalMode) {
       return this.fetchLocalFacts(this.clientSlug, category);
     }
 
     try {
       const params = category ? { category } : {};
-      const response = await this.client.get(`/clients/${this.clientSlug}/facts`, { params });
+      const config = { params };
+      if (signal) {
+        config.signal = signal;
+      }
+      const response = await this.client.get(`/clients/${this.clientSlug}/facts`, config);
       return response.data?.facts || [];
     } catch (error) {
+      if (error.name === 'AbortError' || error.code === 'ERR_CANCELED') {
+        throw error; // Re-throw abort errors
+      }
       console.warn('Failed to fetch facts, using mock data:', error.message);
       return this.getMockFacts(category);
     }
@@ -83,9 +91,10 @@ export class KnowledgeHubClient {
   /**
    * Search facts using semantic search
    * @param {string} query - Search query
+   * @param {AbortSignal} signal - AbortController signal for cancellation
    * @returns {Promise<Array>} Array of search results with facts
    */
-  async searchFacts(query) {
+  async searchFacts(query, signal = null) {
     if (this.usingLocalMode) {
       // In local mode, do simple text search on facts
       const facts = await this.fetchLocalFacts(this.clientSlug);
@@ -103,13 +112,20 @@ export class KnowledgeHubClient {
     }
 
     try {
+      const config = {};
+      if (signal) {
+        config.signal = signal;
+      }
       const response = await this.client.post(`/clients/${this.clientSlug}/search`, {
         query,
         type: 'fact',
         limit: 10
-      });
+      }, config);
       return response.data?.results || [];
     } catch (error) {
+      if (error.name === 'AbortError' || error.code === 'ERR_CANCELED') {
+        throw error; // Re-throw abort errors
+      }
       console.warn('Failed to search facts, using mock data:', error.message);
       return this.getMockSearchResults(query);
     }
@@ -117,17 +133,25 @@ export class KnowledgeHubClient {
 
   /**
    * Fetch brand voice profile for the client
+   * @param {AbortSignal} signal - AbortController signal for cancellation
    * @returns {Promise<Object>} Brand voice profile
    */
-  async fetchBrandVoice() {
+  async fetchBrandVoice(signal = null) {
     if (this.usingLocalMode) {
       return this.fetchLocalBrandVoice(this.clientSlug);
     }
 
     try {
-      const response = await this.client.get(`/clients/${this.clientSlug}/brand-voice`);
+      const config = {};
+      if (signal) {
+        config.signal = signal;
+      }
+      const response = await this.client.get(`/clients/${this.clientSlug}/brand-voice`, config);
       return response.data;
     } catch (error) {
+      if (error.name === 'AbortError' || error.code === 'ERR_CANCELED') {
+        throw error; // Re-throw abort errors
+      }
       console.warn('Failed to fetch brand voice, using mock data:', error.message);
       return this.getMockBrandVoice();
     }
@@ -155,23 +179,31 @@ export class KnowledgeHubClient {
    * Generate AI copy suggestions
    * @param {string} context - The context/prompt for generation
    * @param {Object} options - Generation options
+   * @param {AbortSignal} signal - AbortController signal for cancellation
    * @returns {Promise<Array>} Array of AI suggestions
    */
-  async generateSuggestions(context, options = {}) {
+  async generateSuggestions(context, options = {}, signal = null) {
     if (this.usingLocalMode) {
       // In local mode, return mock suggestions based on brand voice
       return this.getMockSuggestions(context);
     }
 
     try {
+      const config = {};
+      if (signal) {
+        config.signal = signal;
+      }
       const response = await this.client.post(`/clients/${this.clientSlug}/ai-suggest`, {
         context,
         tone: options.tone || 'friendly',
         maxLength: options.maxLength || 200,
         count: options.count || 3
-      });
+      }, config);
       return response.data?.suggestions || [];
     } catch (error) {
+      if (error.name === 'AbortError' || error.code === 'ERR_CANCELED') {
+        throw error; // Re-throw abort errors
+      }
       console.warn('Failed to generate suggestions, using mock data:', error.message);
       return this.getMockSuggestions(context);
     }

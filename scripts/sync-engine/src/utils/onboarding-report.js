@@ -1,6 +1,12 @@
 /**
- * Onboarding Report Generator
+ * Onboarding Report Generator - BLOOM-205 Improvements
  * Generates comprehensive HTML/Markdown reports for client onboarding
+ *
+ * Improvements:
+ * - Time tracking per step
+ * - Performance metrics
+ * - Before/after comparison
+ * - Setup time reduction tracking
  */
 
 import fs from 'fs/promises';
@@ -13,6 +19,9 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const repoRoot = path.resolve(__dirname, '../../../..');
 
+// Baseline time from before BLOOM-205 (25 minutes average)
+const BASELINE_ONBOARDING_TIME_MINUTES = 25;
+
 export class OnboardingReportGenerator {
   constructor(clientSlug) {
     this.clientSlug = clientSlug;
@@ -23,7 +32,72 @@ export class OnboardingReportGenerator {
       steps: {},
       extractedData: {},
       journeys: [],
-      nextSteps: []
+      nextSteps: [],
+      performance: {
+        startTime: null,
+        endTime: null,
+        stepTimings: {}
+      }
+    };
+  }
+
+  /**
+   * Start timing
+   */
+  startTiming() {
+    this.data.performance.startTime = Date.now();
+  }
+
+  /**
+   * End timing
+   */
+  endTiming() {
+    this.data.performance.endTime = Date.now();
+  }
+
+  /**
+   * Record step timing
+   */
+  recordStepTiming(stepName, durationMs) {
+    this.data.performance.stepTimings[stepName] = durationMs;
+  }
+
+  /**
+   * Get total duration in seconds
+   */
+  getTotalDuration() {
+    if (!this.data.performance.startTime) return 0;
+    const end = this.data.performance.endTime || Date.now();
+    return Math.round((end - this.data.performance.startTime) / 1000);
+  }
+
+  /**
+   * Format duration
+   */
+  formatDuration(seconds) {
+    if (seconds < 60) return `${seconds}s`;
+    if (seconds < 3600) {
+      const mins = Math.floor(seconds / 60);
+      const secs = seconds % 60;
+      return `${mins}m ${secs}s`;
+    }
+    const hours = Math.floor(seconds / 3600);
+    const mins = Math.floor((seconds % 3600) / 60);
+    return `${hours}h ${mins}m`;
+  }
+
+  /**
+   * Calculate time saved vs baseline
+   */
+  getTimeSaved() {
+    const actualMinutes = this.getTotalDuration() / 60;
+    const saved = BASELINE_ONBOARDING_TIME_MINUTES - actualMinutes;
+    const percentage = Math.round((saved / BASELINE_ONBOARDING_TIME_MINUTES) * 100);
+    return {
+      baselineMinutes: BASELINE_ONBOARDING_TIME_MINUTES,
+      actualMinutes: Math.round(actualMinutes * 10) / 10,
+      savedMinutes: Math.round(saved * 10) / 10,
+      percentage: Math.max(0, percentage)
     };
   }
 
@@ -183,17 +257,29 @@ export class OnboardingReportGenerator {
     ]);
 
     const title = locationConfig.name || this.clientSlug;
+    const duration = this.getTotalDuration();
+    const timeSaved = this.getTimeSaved();
     
     let markdown = `# Onboarding Report: ${title}
 
 Generated: ${new Date().toLocaleString()}
 Client: ${this.clientSlug}
+Setup Duration: ${this.formatDuration(duration)}
 
 ---
 
 ## Summary
 
 `;
+
+    // Performance metrics
+    markdown += `### Performance Metrics\n\n`;
+    markdown += `- **Total Setup Time**: ${this.formatDuration(duration)}\n`;
+    markdown += `- **Baseline Time**: ${timeSaved.baselineMinutes} minutes\n`;
+    if (timeSaved.savedMinutes > 0) {
+      markdown += `- **Time Saved**: ${timeSaved.savedMinutes} minutes (${timeSaved.percentage}% faster) 🎉\n`;
+    }
+    markdown += `\n`;
 
     // Step statuses
     Object.entries(this.data.steps).forEach(([step, info]) => {
@@ -557,17 +643,27 @@ Client: ${this.clientSlug}
       this.getLocationConfigSummary()
     ]);
 
+    const duration = this.getTotalDuration();
+    const timeSaved = this.getTimeSaved();
+
     console.log('\n╔════════════════════════════════════════════════╗');
     console.log('║       Onboarding Complete!                     ║');
     console.log('╚════════════════════════════════════════════════╝\n');
 
     console.log(`Client: ${locationConfig.name || this.clientSlug}`);
-    console.log(`Location: ${locationConfig.address?.city}, ${locationConfig.address?.state}\n`);
+    console.log(`Location: ${locationConfig.address?.city}, ${locationConfig.address?.state}`);
+    console.log(`Setup Time: ${this.formatDuration(duration)}`);
+    
+    if (timeSaved.savedMinutes > 0) {
+      console.log(chalk.green(`Time Saved: ${timeSaved.savedMinutes} minutes (${timeSaved.percentage}% faster than baseline) 🎉`));
+    }
+    console.log('');
 
     console.log('✅ Completed Steps:');
     Object.entries(this.data.steps).forEach(([step, info]) => {
       const icon = info.status === 'success' ? '✅' : info.status === 'warning' ? '⚠️' : '❌';
-      console.log(`  ${icon} ${this.formatStepName(step)}`);
+      const durationStr = info.duration ? chalk.gray(` (${info.duration}s)`) : '';
+      console.log(`  ${icon} ${this.formatStepName(step)}${durationStr}`);
     });
 
     console.log('\n📊 Knowledge Hub:');

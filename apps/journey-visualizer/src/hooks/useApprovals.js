@@ -3,7 +3,7 @@
  * Manages approval workflow state and actions
  */
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { JOURNEY_STATUS } from '../types';
 import { format } from 'date-fns';
 
@@ -15,22 +15,52 @@ export function useApprovals(airtableClient) {
   const [approvals, setApprovals] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  
+  // Refs for cleanup
+  const isMountedRef = useRef(true);
+  const abortControllerRef = useRef(null);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      isMountedRef.current = false;
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+    };
+  }, []);
 
   const fetchApprovals = useCallback(async (journeyId) => {
+    // Abort any pending request
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+    abortControllerRef.current = new AbortController();
+
     if (!airtableClient) {
-      setApprovals(getMockApprovals(journeyId));
+      if (isMountedRef.current) {
+        setApprovals(getMockApprovals(journeyId));
+      }
       return;
     }
 
     try {
-      setLoading(true);
-      const records = await airtableClient.getApprovals(journeyId);
-      const formattedApprovals = records.map(formatApprovalRecord);
-      setApprovals(formattedApprovals);
+      if (isMountedRef.current) {
+        setLoading(true);
+      }
+      const records = await airtableClient.getApprovals(journeyId, abortControllerRef.current.signal);
+      if (isMountedRef.current) {
+        const formattedApprovals = records.map(formatApprovalRecord);
+        setApprovals(formattedApprovals);
+      }
     } catch (err) {
-      setError(err.message);
+      if (err.name !== 'AbortError' && isMountedRef.current) {
+        setError(err.message);
+      }
     } finally {
-      setLoading(false);
+      if (isMountedRef.current) {
+        setLoading(false);
+      }
     }
   }, [airtableClient]);
 

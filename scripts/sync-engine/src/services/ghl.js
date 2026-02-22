@@ -35,8 +35,9 @@ class GHLService {
     }
   }
 
-  async request(method, endpoint, data = null, retries = 0) {
+  async request(method, endpoint, data = null, options = {}) {
     const url = `${this.baseUrl}${endpoint}`;
+    const { skipRateLimiter = false } = options;
     
     try {
       await this.throttle();
@@ -50,10 +51,10 @@ class GHLService {
 
       return response.data;
     } catch (error) {
-      if (error.response?.status === 429 && retries < this.maxRetries) {
-        logger.warn('Rate limit hit, retrying', { endpoint, retry: retries + 1 });
-        await this.sleep(this.retryDelay * (retries + 1));
-        return this.request(method, endpoint, data, retries + 1);
+      // Enhance error with status code for rate limiter detection
+      if (error.response) {
+        error.status = error.response.status;
+        error.statusCode = error.response.status;
       }
 
       if (error.response?.status === 404 && method === 'GET') {
@@ -68,6 +69,32 @@ class GHLService {
       });
       throw error;
     }
+  }
+
+  /**
+   * Check if error is a rate limit error (429)
+   * @param {Error} error - Error to check
+   * @returns {boolean} True if rate limited
+   */
+  isRateLimitError(error) {
+    return error.status === 429 || error.response?.status === 429;
+  }
+
+  /**
+   * Extract Retry-After header from error response
+   * @param {Error} error - Error containing response
+   * @returns {number|null} Retry-After value in seconds
+   */
+  getRetryAfter(error) {
+    if (error.response?.headers) {
+      const retryAfter = error.response.headers['retry-after'] || 
+                         error.response.headers['Retry-After'];
+      if (retryAfter) {
+        const parsed = parseInt(retryAfter, 10);
+        return isNaN(parsed) ? null : parsed;
+      }
+    }
+    return null;
   }
 
   throttle() {

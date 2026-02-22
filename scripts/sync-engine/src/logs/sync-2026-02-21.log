@@ -116,3 +116,11 @@
 [2026-02-21T20:16:22.996Z] [ERROR] Sync failed {"error":"Failed to connect to Airtable"}
 [2026-02-21T20:17:18.656Z] [ERROR] Failed to connect to Airtable {"error":"Could not find what you are looking for"}
 [2026-02-21T20:17:18.657Z] [ERROR] Sync failed {"error":"Failed to connect to Airtable"}
+[2026-02-21T23:42:55.619Z] [WARN] Rate limited [test], retry 1/5 after 1969ms {"context":"test","attempt":1,"maxRetries":5,"delay":1969,"retryAfter":null}
+[2026-02-21T23:42:55.670Z] [WARN] Rate limited [test], retry 2/5 after 2564ms {"context":"test","attempt":2,"maxRetries":5,"delay":2564,"retryAfter":null}
+[2026-02-21T23:42:55.679Z] [WARN] Rate limited [test], retry 1/5 after 1954ms {"context":"test","attempt":1,"maxRetries":5,"delay":1954,"retryAfter":null}
+[2026-02-21T23:42:55.681Z] [WARN] Rate limited [test], retry 2/5 after 2326ms {"context":"test","attempt":2,"maxRetries":5,"delay":2326,"retryAfter":null}
+[2026-02-21T23:42:55.681Z] [WARN] Rate limited [test], retry 3/5 after 4843ms {"context":"test","attempt":3,"maxRetries":5,"delay":4843,"retryAfter":null}
+[2026-02-21T23:42:55.682Z] [WARN] Rate limited [test], retry 4/5 after 8469ms {"context":"test","attempt":4,"maxRetries":5,"delay":8469,"retryAfter":null}
+[2026-02-21T23:42:55.691Z] [WARN] Rate limited [test], retry 1/3 after 159ms {"context":"test","attempt":1,"maxRetries":3,"delay":159,"retryAfter":null}
+[2026-02-21T23:42:55.693Z] [WARN] Rate limited [test], retry 2/3 after 250ms {"context":"test","attempt":2,"maxRetries":3,"delay":250,"retryAfter":null}

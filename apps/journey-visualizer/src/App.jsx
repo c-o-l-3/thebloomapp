@@ -4,14 +4,19 @@
  */
 
 import React, { useState, useMemo } from 'react';
+import { BrowserRouter, Routes, Route, Link, useLocation, Navigate } from 'react-router-dom';
 import { ClientSelector } from './components/ClientSelector';
 import { JourneyFlow } from './components/JourneyFlow';
 import { ApprovalPanel } from './components/ApprovalPanel';
 import { StatusBadge } from './components/StatusBadge';
+import { TouchpointList } from './components/TouchpointList';
+import { TouchpointPrintView } from './components/TouchpointPrintView';
+import { HTMLEditor } from './components/HTMLEditor';
 import { JOURNEY_STATUS } from './types';
 import { useJourneys } from './hooks/useJourneys';
 import { useApprovals } from './hooks/useApprovals';
 import { isLocalMode } from './services/localJourneys';
+import { Mail, LayoutDashboard, GitBranch } from 'lucide-react';
 import './App.css';
 
 const DATA_SOURCE = import.meta.env.VITE_DATA_SOURCE || 'airtable';
@@ -26,9 +31,42 @@ const getDefaultClient = () => {
 };
 
 /**
- * Main App component
+ * Navigation Component
  */
-function App() {
+function Navigation() {
+  const location = useLocation();
+  
+  const isActive = (path) => {
+    if (path === '/') {
+      return location.pathname === '/';
+    }
+    return location.pathname.startsWith(path);
+  };
+
+  return (
+    <nav className="app__nav">
+      <Link 
+        to="/" 
+        className={`app__nav-link ${isActive('/') && !isActive('/touchpoints') ? 'app__nav-link--active' : ''}`}
+      >
+        <GitBranch size={18} />
+        <span>Journeys</span>
+      </Link>
+      <Link 
+        to="/touchpoints" 
+        className={`app__nav-link ${isActive('/touchpoints') ? 'app__nav-link--active' : ''}`}
+      >
+        <Mail size={18} />
+        <span>Touchpoints</span>
+      </Link>
+    </nav>
+  );
+}
+
+/**
+ * Main Journey Builder View
+ */
+function JourneyBuilder() {
   const [selectedClientId, setSelectedClientId] = useState(getDefaultClient());
   const [selectedJourneyId, setSelectedJourneyId] = useState('journey-1');
   const [showApprovalPanel, setShowApprovalPanel] = useState(true);
@@ -97,15 +135,18 @@ function App() {
   };
 
   return (
-    <div className="app">
+    <div className="app__container">
       {/* Header */}
       <header className="app__header">
-        <div className="app__logo">
-          <span className="app__logo-icon">🌸</span>
-          <h1 className="app__title">Journey Builder</h1>
-          {isEditMode && (
-            <span className="app__edit-indicator">Editing</span>
-          )}
+        <div className="app__header-left">
+          <div className="app__logo">
+            <span className="app__logo-icon">🌸</span>
+            <h1 className="app__title">Journey Builder</h1>
+            {isEditMode && (
+              <span className="app__edit-indicator">Editing</span>
+            )}
+          </div>
+          <Navigation />
         </div>
         <div className="app__header-right">
           <ClientSelector
@@ -202,6 +243,111 @@ function App() {
         </p>
       </footer>
     </div>
+  );
+}
+
+/**
+ * Login Page
+ */
+function LoginPage() {
+  const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
+
+  // Check if already logged in
+  React.useEffect(() => {
+    const token = localStorage.getItem('auth_token');
+    if (token) {
+      navigate('/');
+    }
+  }, [navigate]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+
+    try {
+      const { getApiClient } = await import('./services/apiClient');
+      const apiClient = getApiClient();
+      await apiClient.login(email, name || email.split('@')[0]);
+      navigate('/');
+    } catch (err) {
+      console.error('Login failed:', err);
+      setError('Login failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="app__login">
+      <div className="app__login-card">
+        <div className="app__login-logo">
+          <span>🌸</span>
+          <h1>Journey Builder</h1>
+        </div>
+        <p className="app__login-subtitle">Sign in to manage your journeys and touchpoints</p>
+        
+        {error && (
+          <div className="app__login-error">
+            {error}
+          </div>
+        )}
+        
+        <form onSubmit={handleSubmit} className="app__login-form">
+          <div className="app__login-field">
+            <label htmlFor="email">Email</label>
+            <input
+              type="email"
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="your@email.com"
+              required
+            />
+          </div>
+          
+          <div className="app__login-field">
+            <label htmlFor="name">Name (optional)</label>
+            <input
+              type="text"
+              id="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Your Name"
+            />
+          </div>
+          
+          <button 
+            type="submit" 
+            className="app__login-btn"
+            disabled={loading}
+          >
+            {loading ? 'Signing in...' : 'Sign In'}
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Main App with Routing
+ */
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/" element={<JourneyBuilder />} />
+        <Route path="/touchpoints" element={<TouchpointList />} />
+        <Route path="/touchpoints/:id/print" element={<TouchpointPrintView />} />
+        <Route path="/touchpoints/:id/edit" element={<HTMLEditor />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 

@@ -3,7 +3,7 @@
  * AI-powered writing sidebar with Knowledge Hub integration
  */
 
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { getKnowledgeHubClient } from '../services/knowledgeHub';
 import { 
   Sparkles, 
@@ -42,6 +42,21 @@ export function AIAssistantPanel({
   const [selectedSuggestion, setSelectedSuggestion] = useState(null);
   const [knowledgeHub, setKnowledgeHub] = useState(null);
 
+  // Refs for cleanup
+  const isMountedRef = useRef(true);
+  const abortControllerRef = useRef(null);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      isMountedRef.current = false;
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+        abortControllerRef.current = null;
+      }
+    };
+  }, []);
+
   // Initialize Knowledge Hub client
   useEffect(() => {
     if (clientSlug) {
@@ -55,6 +70,13 @@ export function AIAssistantPanel({
       loadBrandVoice();
       loadFacts();
     }
+    // Cleanup function to abort pending requests when knowledgeHub changes
+    return () => {
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+        abortControllerRef.current = null;
+      }
+    };
   }, [knowledgeHub]);
 
   // Analyze current content when it changes
@@ -65,20 +87,40 @@ export function AIAssistantPanel({
   }, [currentContent, brandVoice]);
 
   const loadBrandVoice = async () => {
+    // Abort any pending request
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+    abortControllerRef.current = new AbortController();
+
     try {
-      const voice = await knowledgeHub.fetchBrandVoice();
-      setBrandVoice(voice);
+      const voice = await knowledgeHub.fetchBrandVoice(abortControllerRef.current.signal);
+      if (isMountedRef.current) {
+        setBrandVoice(voice);
+      }
     } catch (error) {
-      console.error('Failed to load brand voice:', error);
+      if (error.name !== 'AbortError' && isMountedRef.current) {
+        console.error('Failed to load brand voice:', error);
+      }
     }
   };
 
   const loadFacts = async () => {
+    // Abort any pending request
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+    abortControllerRef.current = new AbortController();
+
     try {
-      const factsData = await knowledgeHub.fetchFacts();
-      setFacts(factsData.slice(0, 10)); // Show top 10 facts
+      const factsData = await knowledgeHub.fetchFacts(null, abortControllerRef.current.signal);
+      if (isMountedRef.current) {
+        setFacts(factsData.slice(0, 10)); // Show top 10 facts
+      }
     } catch (error) {
-      console.error('Failed to load facts:', error);
+      if (error.name !== 'AbortError' && isMountedRef.current) {
+        console.error('Failed to load facts:', error);
+      }
     }
   };
 
@@ -102,44 +144,76 @@ export function AIAssistantPanel({
   const handleSearch = useCallback(async () => {
     if (!query.trim() || !knowledgeHub) return;
     
-    setIsLoading(true);
+    // Abort any pending request
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+    abortControllerRef.current = new AbortController();
+
+    if (isMountedRef.current) {
+      setIsLoading(true);
+    }
     try {
-      const results = await knowledgeHub.searchFacts(query);
-      setSuggestions(results.map(r => ({
-        id: r.id,
-        text: r.fact?.statement || r.text,
-        source: r.fact?.source?.reference || r.metadata?.title || 'Knowledge Hub',
-        type: r.type,
-        confidence: r.fact?.confidence || r.similarity,
-        category: r.fact?.category || r.metadata?.category
-      })));
+      const results = await knowledgeHub.searchFacts(query, abortControllerRef.current.signal);
+      if (isMountedRef.current) {
+        setSuggestions(results.map(r => ({
+          id: r.id,
+          text: r.fact?.statement || r.text,
+          source: r.fact?.source?.reference || r.metadata?.title || 'Knowledge Hub',
+          type: r.type,
+          confidence: r.fact?.confidence || r.similarity,
+          category: r.fact?.category || r.metadata?.category
+        })));
+      }
     } catch (error) {
-      console.error('Search failed:', error);
+      if (error.name !== 'AbortError' && isMountedRef.current) {
+        console.error('Search failed:', error);
+      }
     } finally {
-      setIsLoading(false);
+      if (isMountedRef.current) {
+        setIsLoading(false);
+      }
     }
   }, [query, knowledgeHub]);
 
   const handleGenerate = useCallback(async () => {
     if (!knowledgeHub) return;
     
-    setIsLoading(true);
+    // Abort any pending request
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+    abortControllerRef.current = new AbortController();
+
+    if (isMountedRef.current) {
+      setIsLoading(true);
+    }
     try {
-      const generated = await knowledgeHub.generateSuggestions(query || 'engaging wedding email content', {
-        tone: brandVoice?.tone?.formality || 'friendly',
-        count: 3
-      });
-      setSuggestions(generated.map((s, i) => ({
-        id: `gen-${i}`,
-        text: s.text,
-        source: s.source,
-        type: 'generated',
-        tone: s.tone
-      })));
+      const generated = await knowledgeHub.generateSuggestions(
+        query || 'engaging wedding email content',
+        {
+          tone: brandVoice?.tone?.formality || 'friendly',
+          count: 3
+        },
+        abortControllerRef.current.signal
+      );
+      if (isMountedRef.current) {
+        setSuggestions(generated.map((s, i) => ({
+          id: `gen-${i}`,
+          text: s.text,
+          source: s.source,
+          type: 'generated',
+          tone: s.tone
+        })));
+      }
     } catch (error) {
-      console.error('Generation failed:', error);
+      if (error.name !== 'AbortError' && isMountedRef.current) {
+        console.error('Generation failed:', error);
+      }
     } finally {
-      setIsLoading(false);
+      if (isMountedRef.current) {
+        setIsLoading(false);
+      }
     }
   }, [query, knowledgeHub, brandVoice]);
 

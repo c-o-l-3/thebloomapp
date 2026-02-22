@@ -4,10 +4,10 @@
 name: journey-api
 icon: https://cdn-icons-png.flaticon.com/512/2920/2920347.png
 
-# Service configuration
+# Service configuration - Using Docker for custom build
 services:
   - name: journey-api
-    type: nodejs
+    type: docker
     build:
       dockerfile: Dockerfile
     ports:

@@ -9,6 +9,12 @@ import { JOURNEY_STATUS } from '../types';
 const DATA_SOURCE = import.meta.env.VITE_DATA_SOURCE || 'airtable';
 const DEFAULT_CLIENT_SLUG = import.meta.env.VITE_CLIENT_SLUG || 'promise-farm';
 
+// Vite glob patterns - must be at module level to be analyzed at build time
+// Path from apps/journey-visualizer/src/services/ to project root:
+// services/ -> src/ -> journey-visualizer/ -> apps/ -> root/ (4 levels up)
+const indexFiles = import.meta.glob('../../../../clients/*/journeys/generated-journeys.json', { eager: true });
+const journeyFiles = import.meta.glob('../../../../clients/*/journeys/journey_*.json', { eager: true });
+
 /**
  * Check if local mode is enabled
  */
@@ -134,25 +140,38 @@ export async function getLocalClients() {
  */
 export async function getLocalJourneys(clientSlug = DEFAULT_CLIENT_SLUG) {
   try {
+    // Debug: Log what the glob patterns found
+    console.log('[DEBUG] indexFiles keys:', Object.keys(indexFiles));
+    console.log('[DEBUG] journeyFiles keys:', Object.keys(journeyFiles));
+    
     // Try to load the generated-journeys.json which contains the index
     let journeyList = [];
-    try {
-      const indexModule = await import(`../../../clients/${clientSlug}/journeys/generated-journeys.json`);
-      journeyList = indexModule.default.journeys || [];
-    } catch (indexError) {
+    // Use relative path matching (without leading slash) since glob returns relative paths
+    const indexPath = Object.keys(indexFiles).find(path => path.includes(`clients/${clientSlug}/journeys/generated-journeys.json`));
+    console.log('[DEBUG] Looking for client:', clientSlug, 'Found indexPath:', indexPath);
+    console.log('[DEBUG] Available index paths:', Object.keys(indexFiles));
+    
+    if (indexPath) {
+      const indexModule = indexFiles[indexPath];
+      // Handle both ES module default and direct JSON structure
+      const indexData = indexModule.default || indexModule;
+      journeyList = indexData.journeys || [];
+    } else {
       console.warn(`No generated-journeys.json found for ${clientSlug}, scanning for journey files...`);
     }
 
-    // Also try to discover any additional journey files
-    const journeyFiles = import.meta.glob('../../../clients/*/journeys/journey_*.json', { eager: true });
-    
     const journeys = [];
     
     // Process discovered journey files
+    // Use relative path matching (without leading slash) since glob returns relative paths
     for (const [path, module] of Object.entries(journeyFiles)) {
-      if (path.includes(`/clients/${clientSlug}/journeys/`)) {
-        const journey = module.default;
-        journeys.push(transformJourney(journey));
+      if (path.includes(`clients/${clientSlug}/journeys/`)) {
+        const journey = module.default || module;
+        if (journey) {
+          journeys.push(transformJourney(journey));
+        } else {
+          console.warn(`[LocalJourneys] No journey data found in ${path}`);
+        }
       }
     }
     
@@ -160,8 +179,12 @@ export async function getLocalJourneys(clientSlug = DEFAULT_CLIENT_SLUG) {
     if (journeys.length === 0 && journeyList.length > 0) {
       for (const journeyRef of journeyList) {
         try {
-          const journeyModule = await import(`../../../clients/${clientSlug}/journeys/${journeyRef.id}.json`);
-          journeys.push(transformJourney(journeyModule.default));
+          // Use correct relative path (4 levels up to reach project root)
+          const journeyModule = await import(`../../../../clients/${clientSlug}/journeys/${journeyRef.id}.json`);
+          const journeyData = journeyModule.default || journeyModule;
+          if (journeyData) {
+            journeys.push(transformJourney(journeyData));
+          }
         } catch (journeyError) {
           console.warn(`Could not load journey ${journeyRef.id}:`, journeyError);
         }
@@ -184,12 +207,12 @@ export async function getLocalJourneys(clientSlug = DEFAULT_CLIENT_SLUG) {
  */
 export async function getLocalJourney(journeyId, clientSlug = DEFAULT_CLIENT_SLUG) {
   try {
-    // Try to load the specific journey file
-    const journeyFiles = import.meta.glob('../../../clients/*/journeys/journey_*.json', { eager: true });
-    
+    // Try to find the specific journey file
+    // Use relative path matching (without leading slash) since glob returns relative paths
     for (const [path, module] of Object.entries(journeyFiles)) {
-      if (path.includes(`/clients/${clientSlug}/journeys/${journeyId}.json`)) {
-        return transformJourney(module.default);
+      if (path.includes(`clients/${clientSlug}/journeys/${journeyId}.json`)) {
+        const journey = module.default || module;
+        return journey ? transformJourney(journey) : null;
       }
     }
     

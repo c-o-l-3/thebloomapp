@@ -9,6 +9,20 @@ import axios from 'axios';
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
 /**
+ * Custom error class for 409 Conflict responses
+ */
+export class ConflictError extends Error {
+  constructor(message, serverData, currentVersion, submittedVersion) {
+    super(message);
+    this.name = 'ConflictError';
+    this.serverData = serverData;
+    this.currentVersion = currentVersion;
+    this.submittedVersion = submittedVersion;
+    this.statusCode = 409;
+  }
+}
+
+/**
  * ApiClient class for interacting with the PostgreSQL REST API
  */
 export class ApiClient {
@@ -130,8 +144,22 @@ export class ApiClient {
   }
 
   async updateJourney(id, journeyData) {
-    const response = await this.client.put(`/journeys/${id}`, journeyData);
-    return response.data;
+    try {
+      const response = await this.client.put(`/journeys/${id}`, journeyData);
+      return response.data;
+    } catch (error) {
+      // Handle 409 Conflict for optimistic locking
+      if (error.response?.status === 409) {
+        const { currentVersion, submittedVersion, journey } = error.response.data;
+        throw new ConflictError(
+          'The journey has been modified by another user. Please review the changes and try again.',
+          journey,
+          currentVersion,
+          submittedVersion
+        );
+      }
+      throw error;
+    }
   }
 
   async updateJourneyStatus(id, status) {
@@ -189,6 +217,11 @@ export class ApiClient {
 
   async deleteTouchpoint(id) {
     await this.client.delete(`/touchpoints/${id}`);
+  }
+
+  async publishTouchpoint(id) {
+    const response = await this.client.post(`/touchpoints/${id}/publish`);
+    return response.data;
   }
 
   /**
