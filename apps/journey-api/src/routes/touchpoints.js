@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { PrismaClient } from '@prisma/client';
 import { z } from 'zod';
-import { touchpointPublisher } from '../../../scripts/sync-engine/src/services/touchpoint-publisher.js';
+import { touchpointPublisher } from '../services/touchpoint-publisher.js';
 
 const router = Router();
 const prisma = new PrismaClient();
