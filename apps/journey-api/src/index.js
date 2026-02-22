@@ -22,8 +22,24 @@ const PORT = process.env.PORT || 8080;
 
 // Security middleware
 app.use(helmet());
+// CORS configuration - allow multiple origins for development and production
+const getCorsOrigins = () => {
+  // If CORS_ORIGIN is set, split by comma
+  if (process.env.CORS_ORIGIN) {
+    return process.env.CORS_ORIGIN.split(',').map(o => o.trim());
+  }
+  // Default allowed origins for development and common production URLs
+  return [
+    'http://localhost:5173',
+    'http://localhost:3000',
+    'http://localhost:3001',
+    'https://bloom.zeabur.app',
+    'https://journey-visualizer.zeabur.app'
+  ];
+};
+
 app.use(cors({
-  origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
+  origin: getCorsOrigins(),
   credentials: true
 }));
 
