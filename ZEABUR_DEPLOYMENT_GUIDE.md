@@ -48,16 +48,34 @@ JWT_SECRET=YOUR_JWT_SECRET_HERE
 JWT_EXPIRES_IN=24h
 ```
 
-### Journey Visualizer (`apps/journey-visualizer`)
+### Journey Visualizer (Frontend)
+
+The visualizer needs the API URL to connect to the backend:
 
 ```bash
-# Update with your actual API URL after deployment
 VITE_API_URL=https://journey-api-xxx.zeabur.app/api
 VITE_DATA_SOURCE=api
-
-# Optional: GHL for client-side features
-VITE_GHL_API_KEY=your_ghl_api_key
 ```
+
+**Note:** After deploying the **journey-api** first, copy its URL and set it as `VITE_API_URL` in the visualizer service.
+
+---
+
+## URL Configuration Flow
+
+```
+journey-api (backend)        journey-visualizer (frontend)
+    |                                |
+    |  CORS_ORIGIN=*          |  VITE_API_URL=https://api...
+    |  (allows all origins)   |
+    |<------------------------------|
+    |         API calls              |
+```
+
+1. **Deploy journey-api first** - it will get a URL like `https://journey-api-abc123.zeabur.app`
+2. **Copy that URL** and add `/api` to it: `https://journey-api-abc123.zeabur.app/api`
+3. **Set VITE_API_URL** in journey-visualizer service to that URL
+4. **Deploy journey-visualizer** - it will get its own URL like `https://journey-visualizer-xyz789.zeabur.app`
 
 ---
 
