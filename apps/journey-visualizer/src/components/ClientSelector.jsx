@@ -1,11 +1,12 @@
 /**
  * ClientSelector Component
  * Dropdown for selecting which client's journeys to view
- * Supports both local file mode and Airtable mode
+ * Fetches clients from API when not in local mode
  */
 
 import React, { useState, useEffect } from 'react';
 import { isLocalMode, getLocalClients } from '../services/localJourneys';
+import { getApiClient } from '../services/apiClient';
 import './ClientSelector.css';
 
 // Default mock clients (fallback)
@@ -44,9 +45,31 @@ export function ClientSelector({ onClientChange, selectedClientId, clients: prop
           setLoading(false);
         }
       } else {
-        // Airtable mode - use provided clients or mock
-        setLocalClients(propClients || mockClients);
-        setLoading(false);
+        // API mode - fetch from /api/clients
+        try {
+          setLoading(true);
+          const apiClient = getApiClient();
+          const clientsData = await apiClient.getClients();
+          
+          // Transform API response to match component format
+          const transformedClients = clientsData.map(client => ({
+            id: client.slug,
+            name: client.name,
+            slug: client.slug,
+            pipelines: client._count?.journeys || 0,
+            workflows: client._count?.templates || 0,
+            industry: client.industry,
+            status: client.status
+          }));
+          
+          setLocalClients(transformedClients);
+        } catch (error) {
+          console.error('Error fetching clients from API:', error);
+          // Fallback to prop clients or mock
+          setLocalClients(propClients || mockClients);
+        } finally {
+          setLoading(false);
+        }
       }
     }
 
