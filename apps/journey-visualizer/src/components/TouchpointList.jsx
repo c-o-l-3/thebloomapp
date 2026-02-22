@@ -19,7 +19,7 @@ import {
   MoreVertical,
   LogOut,
   User,
-  CloudUpload,
+  UploadCloud,
   CheckCircle,
   XCircle,
   Loader2
@@ -515,7 +515,7 @@ export function TouchpointList() {
                           {publishingIds.has(touchpoint.id) ? (
                             <Loader2 size={16} className="spin" />
                           ) : (
-                            <CloudUpload size={16} />
+                            <UploadCloud size={16} />
                           )}
                         </button>
                       )}
