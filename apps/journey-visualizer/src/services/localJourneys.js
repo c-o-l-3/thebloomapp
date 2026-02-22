@@ -23,6 +23,13 @@ export function isLocalMode() {
 }
 
 /**
+ * Check if API mode is enabled (production)
+ */
+export function isApiMode() {
+  return DATA_SOURCE === 'api' || DATA_SOURCE === 'airtable';
+}
+
+/**
  * Transform local journey format to visualizer format
  */
 function transformJourney(localJourney) {
