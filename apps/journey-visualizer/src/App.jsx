@@ -13,6 +13,7 @@ import { TouchpointList } from './components/TouchpointList';
 import { TouchpointPrintView } from './components/TouchpointPrintView';
 import { JourneyPrintView } from './components/JourneyPrintView';
 import { HTMLEditor } from './components/HTMLEditor';
+import { VisualEmailEditor } from './components/VisualEmailEditor';
 import { JOURNEY_STATUS } from './types';
 import { useJourneys } from './hooks/useJourneys';
 import { useApprovals } from './hooks/useApprovals';
@@ -348,6 +349,7 @@ function App() {
         <Route path="/touchpoints/:id/print" element={<TouchpointPrintView />} />
         <Route path="/journeys/:id/print" element={<JourneyPrintView />} />
         <Route path="/touchpoints/:id/edit" element={<HTMLEditor />} />
+        <Route path="/touchpoints/:id/visual-edit" element={<VisualEmailEditor />} />
       </Routes>
     </BrowserRouter>
   );
