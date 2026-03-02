@@ -54,47 +54,28 @@ export function TouchpointList({ selectedClientId, selectedJourneyId }) {
   const [touchpoints, setTouchpoints] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState(null);
-  
+  const user = JSON.parse(localStorage.getItem('user') || 'null');
+
   // Publish state
   const [publishingIds, setPublishingIds] = useState(new Set());
   const [notification, setNotification] = useState(null);
-  
+
   // Filter states
   const [searchQuery, setSearchQuery] = useState('');
   const [typeFilter, setTypeFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all');
   const [showFilters, setShowFilters] = useState(false);
-  
+
   // Sort state
   const [sortField, setSortField] = useState('updatedAt');
   const [sortDirection, setSortDirection] = useState('desc');
 
-  // Check authentication on mount
-  useEffect(() => {
-    const token = localStorage.getItem('auth_token');
-    const userData = localStorage.getItem('user');
-
-    if (!token) {
-      navigate('/login');
-      return;
-    }
-
-    setIsAuthenticated(true);
-    if (userData) {
-      setUser(JSON.parse(userData));
-    }
-  }, [navigate]);
-
   // Fetch touchpoints
   const fetchTouchpoints = useCallback(async () => {
-    if (!isAuthenticated) return;
-    
     try {
       setLoading(true);
       setError(null);
-      
+
       // Get touchpoints for the selected journey (or all if no journey selected)
       const data = await apiClient.getTouchpoints(selectedJourneyId || undefined);
       setTouchpoints(data);
@@ -104,7 +85,7 @@ export function TouchpointList({ selectedClientId, selectedJourneyId }) {
     } finally {
       setLoading(false);
     }
-  }, [isAuthenticated, selectedJourneyId]);
+  }, [selectedJourneyId]);
 
   useEffect(() => {
     fetchTouchpoints();
@@ -113,8 +94,6 @@ export function TouchpointList({ selectedClientId, selectedJourneyId }) {
   // Handle logout
   const handleLogout = useCallback(() => {
     apiClient.logout();
-    setIsAuthenticated(false);
-    setUser(null);
     navigate('/login', { replace: true });
   }, [navigate]);
 
@@ -255,14 +234,6 @@ export function TouchpointList({ selectedClientId, selectedJourneyId }) {
     return { label: 'Draft', className: 'status-draft' };
   };
 
-  if (!isAuthenticated) {
-    return (
-      <div className="touchpoint-list__loading">
-        <div className="touchpoint-list__spinner" />
-        <p>Checking authentication...</p>
-      </div>
-    );
-  }
 
   return (
     <div className="touchpoint-list">
