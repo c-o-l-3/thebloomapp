@@ -174,7 +174,7 @@ export function TouchpointList({ selectedClientId, selectedJourneyId }) {
   };
 
   const handleView = (id) => {
-    navigate(`/touchpoints/${id}`);
+    navigate(`/touchpoints/${id}/print`);
   };
 
   const handlePublish = async (touchpoint) => {
