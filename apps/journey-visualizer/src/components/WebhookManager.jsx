@@ -31,7 +31,8 @@ import {
   CheckSquare,
   Server
 } from 'lucide-react';
-import { apiClient } from '../services/apiClient';
+import { getApiClient } from '../services/apiClient';
+const apiClient = getApiClient().client;
 import './WebhookManager.css';
 
 const WebhookManager = ({ clientId, clientName }) => {
