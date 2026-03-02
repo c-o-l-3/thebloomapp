@@ -155,7 +155,18 @@ export class ApiClient {
   async getJourneys(options = {}) {
     const { clientId, status, category, search } = options;
     const params = new URLSearchParams();
-    if (clientId) params.append('clientId', clientId);
+    
+    // Determine if clientId is a slug (non-UUID) or UUID
+    if (clientId) {
+      // Check if it's a UUID (format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)
+      const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+      if (uuidRegex.test(clientId)) {
+        params.append('clientId', clientId);
+      } else {
+        // It's a slug, use clientSlug parameter
+        params.append('clientSlug', clientId);
+      }
+    }
     if (status) params.append('status', status);
     if (category) params.append('category', category);
     if (search) params.append('search', search);
@@ -221,7 +232,9 @@ export class ApiClient {
    * Touchpoints
    */
   async getTouchpoints(journeyId) {
-    const response = await this.client.get(`/touchpoints?journeyId=${journeyId}`);
+    // Only include journeyId if it's defined
+    const params = journeyId ? `?journeyId=${journeyId}` : '';
+    const response = await this.client.get(`/touchpoints${params}`);
     return response.data;
   }
 

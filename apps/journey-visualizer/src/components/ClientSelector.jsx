@@ -86,6 +86,7 @@ export function ClientSelector({ onClientChange, selectedClientId, clients: prop
 
   // Use prop clients if provided (Airtable mode), otherwise use local clients
   const clients = propClients || localClients || mockClients;
+  console.log('[ClientSelector] Final clients list:', clients.map(c => c.id), 'selectedClientId:', selectedClientId);
 
   const selectedClient = clients.find(c => c.id === selectedClientId);
 

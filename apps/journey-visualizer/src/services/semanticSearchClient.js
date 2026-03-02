@@ -102,7 +102,8 @@ export class SemanticSearchClient {
 
     try {
       // Try to load embeddings from local file
-      const embeddingsModule = await import(`../../../clients/${this.clientSlug}/knowledge-hub/embeddings/vectors.json`);
+      const embeddingsUrl = new URL(`../../../clients/${this.clientSlug}/knowledge-hub/embeddings/vectors.json`, import.meta.url).href;
+      const embeddingsModule = await import(/* @vite-ignore */ embeddingsUrl);
       const data = embeddingsModule.default;
       
       if (data && data.vectors) {

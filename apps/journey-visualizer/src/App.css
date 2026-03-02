@@ -398,6 +398,23 @@
 .app__main--fullwidth {
   padding: 0;
   overflow: auto;
+  width: 100%;
+}
+
+/* Full width page wrapper for pages like Webhooks */
+.webhook-page {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  padding: 0;
+}
+
+/* Touchpoint page wrapper */
+.touchpoint-page {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  padding: 0;
 }
 
 /* Performance: Loading Spinner for Lazy Loaded Components */

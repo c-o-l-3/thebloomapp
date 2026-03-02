@@ -562,9 +562,6 @@ export function getBrandVoiceAnalyzer(clientSlug) {
   return brandVoiceAnalyzer;
 }
 
-// Export class for custom instances
-export { BrandVoiceAnalyzer };
-
 export default {
   BrandVoiceAnalyzer,
   getBrandVoiceAnalyzer,

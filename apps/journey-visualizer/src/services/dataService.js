@@ -41,15 +41,18 @@ class DataService {
   async initialize() {
     if (this.initialized) return;
 
+    console.log('[DataService] Initializing with source:', this.source);
+
     switch (this.source) {
       case DATA_SOURCES.API:
         this.apiClient = getApiClient();
         // Test connection
         try {
+          console.log('[DataService] Testing API connection...');
           await this.apiClient.healthCheck();
           console.log('[DataService] Connected to PostgreSQL API');
         } catch (error) {
-          console.warn('[DataService] API connection failed, falling back to local mode', error);
+          console.warn('[DataService] API connection failed, falling back to local mode', error.message);
           this.source = DATA_SOURCES.LOCAL;
         }
         break;

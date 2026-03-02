@@ -22,10 +22,26 @@ const journeySchema = z.object({
 // GET /api/journeys
 router.get('/', async (req, res, next) => {
   try {
-    const { clientId, status, category, search } = req.query;
+    const { clientId, clientSlug, status, category, search } = req.query;
     
     const where = {};
-    if (clientId) where.clientId = clientId;
+    
+    // Support both clientId (UUID) and clientSlug
+    if (clientSlug) {
+      // Look up client by slug and get its ID
+      const client = await prisma.client.findUnique({
+        where: { slug: clientSlug },
+        select: { id: true }
+      });
+      if (client) {
+        where.clientId = client.id;
+      } else {
+        // Client not found, return empty array
+        return res.json([]);
+      }
+    } else if (clientId) {
+      where.clientId = clientId;
+    }
     if (status) where.status = status;
     if (category) where.category = category;
     if (search) {

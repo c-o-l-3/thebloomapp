@@ -25,10 +25,13 @@ export function useJourneys(clientId = null) {
   const dataService = getDataService();
 
   const fetchJourneys = useCallback(async () => {
+    console.log('[useJourneys] Fetching journeys, clientId:', clientId, 'Type:', typeof clientId);
     try {
       setLoading(true);
       setError(null);
+      console.log('[useJourneys] Calling dataService.getJourneys with clientId:', clientId);
       const journeys = await dataService.getJourneys({ clientId });
+      console.log('[useJourneys] Received journeys:', journeys?.length, journeys);
       setJourneys(journeys);
     } catch (err) {
       console.error('Error loading journeys:', err);

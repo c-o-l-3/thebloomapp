@@ -291,7 +291,9 @@ export class KnowledgeHubClient {
   async fetchLocalFacts(clientSlug, category = null) {
     try {
       // Use Vite's dynamic import to load from local files
-      const factsModule = await import(`../../../clients/${clientSlug}/knowledge-hub/facts/index.json`);
+      // Use URL constructor to avoid build-time resolution issues
+      const factsUrl = new URL(`../../../clients/${clientSlug}/knowledge-hub/facts/index.json`, import.meta.url).href;
+      const factsModule = await import(/* @vite-ignore */ factsUrl);
       const factsData = factsModule.default;
       
       let facts = factsData.facts || [];
@@ -316,7 +318,8 @@ export class KnowledgeHubClient {
   async fetchLocalBrandVoice(clientSlug) {
     try {
       // Use Vite's dynamic import to load from local files
-      const brandVoiceModule = await import(`../../../clients/${clientSlug}/knowledge-hub/brand-voice/profile.json`);
+      const brandVoiceUrl = new URL(`../../../clients/${clientSlug}/knowledge-hub/brand-voice/profile.json`, import.meta.url).href;
+      const brandVoiceModule = await import(/* @vite-ignore */ brandVoiceUrl);
       const brandVoiceData = brandVoiceModule.default;
       
       // Transform to expected format if needed
@@ -340,7 +343,8 @@ export class KnowledgeHubClient {
    */
   async fetchLocalGoldenPages(clientSlug) {
     try {
-      const pagesModule = await import(`../../../clients/${clientSlug}/knowledge-hub/golden-pages/index.json`);
+      const pagesUrl = new URL(`../../../clients/${clientSlug}/knowledge-hub/golden-pages/index.json`, import.meta.url).href;
+      const pagesModule = await import(/* @vite-ignore */ pagesUrl);
       const pagesData = pagesModule.default;
       
       return pagesData.pages || pagesData.goldenPages || [];

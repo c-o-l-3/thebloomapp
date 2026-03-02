@@ -46,8 +46,10 @@ const STATUS_OPTIONS = [
 
 /**
  * TouchpointList - Main touchpoint management interface
+ * @param {string} selectedClientId - The currently selected client ID
+ * @param {string} selectedJourneyId - The ID of the selected journey for the client
  */
-export function TouchpointList() {
+export function TouchpointList({ selectedClientId, selectedJourneyId }) {
   const navigate = useNavigate();
   const [touchpoints, setTouchpoints] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -71,21 +73,17 @@ export function TouchpointList() {
 
   // Check authentication on mount
   useEffect(() => {
-    // BYPASS AUTH FOR TESTING: Set dummy token if none exists
     const token = localStorage.getItem('auth_token');
     const userData = localStorage.getItem('user');
-    
+
     if (!token) {
-      // Set dummy auth token for testing
-      localStorage.setItem('auth_token', 'dummy-test-token');
-      localStorage.setItem('user', JSON.stringify({ name: 'Test User', email: 'test@example.com' }));
-      setIsAuthenticated(true);
-      setUser({ name: 'Test User', email: 'test@example.com' });
-    } else if (token) {
-      setIsAuthenticated(true);
-      if (userData) {
-        setUser(JSON.parse(userData));
-      }
+      navigate('/login');
+      return;
+    }
+
+    setIsAuthenticated(true);
+    if (userData) {
+      setUser(JSON.parse(userData));
     }
   }, [navigate]);
 
@@ -97,8 +95,8 @@ export function TouchpointList() {
       setLoading(true);
       setError(null);
       
-      // Get all touchpoints (API currently only supports journeyId filter)
-      const data = await apiClient.getTouchpoints();
+      // Get touchpoints for the selected journey (or all if no journey selected)
+      const data = await apiClient.getTouchpoints(selectedJourneyId || undefined);
       setTouchpoints(data);
     } catch (err) {
       console.error('Failed to fetch touchpoints:', err);
@@ -106,7 +104,7 @@ export function TouchpointList() {
     } finally {
       setLoading(false);
     }
-  }, [isAuthenticated, typeFilter, statusFilter]);
+  }, [isAuthenticated, selectedJourneyId]);
 
   useEffect(() => {
     fetchTouchpoints();

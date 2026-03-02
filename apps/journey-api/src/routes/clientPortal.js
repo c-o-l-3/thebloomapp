@@ -237,8 +237,7 @@ router.get('/journeys/:id', authenticateClient, async (req, res, next) => {
             orderIndex: true,
             content: true,
             status: true,
-            delay: true,
-            delayUnit: true
+            config: true
           }
         },
         pipeline: {

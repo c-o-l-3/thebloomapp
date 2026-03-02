@@ -71,12 +71,42 @@ app.use(helmet({
 }));
 
 // CORS configuration
-app.use(cors({
-  origin: process.env.CORS_ORIGIN?.split(',') || true,
+const corsOptions = {
+  origin: function(origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    // Also allow localhost:3000 for the frontend
+    const allowedOrigins = [
+      'http://localhost:3000',
+      'http://127.0.0.1:3000',
+      'http://localhost:3001',
+      'http://127.0.0.1:3001',
+      'http://localhost:3002',
+      'http://127.0.0.1:3002',
+    ];
+    
+    // If origin is not provided (like Postman), allow it
+    if (!origin) {
+      return callback(null, true);
+    }
+    
+    // Check if the origin is in allowed list or if CORS_ORIGIN env var includes it
+    const envOrigins = process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : [];
+    const allAllowedOrigins = [...allowedOrigins, ...envOrigins];
+    
+    if (allAllowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      console.log('CORS blocked origin:', origin);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Cache-Control'],
-}));
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Cache-Control', 'X-Requested-With', 'Accept', 'Origin'],
+  exposedHeaders: ['Content-Length', 'Content-Type'],
+};
+
+app.use(cors(corsOptions));
 
 // Compression middleware (gzip/brotli)
 app.use(compressionMiddleware({
@@ -155,6 +185,32 @@ app.get('/health', async (req, res) => {
       uptime: process.uptime(),
       memory: process.memoryUsage(),
       environment: process.env.NODE_ENV || 'development',
+    });
+  } catch (error) {
+    res.status(503).json({
+      status: 'unhealthy',
+      timestamp: new Date().toISOString(),
+      database: 'disconnected',
+      error: error.message,
+    });
+  }
+});
+
+// API health check (for frontend)
+app.get('/api/health', async (req, res) => {
+  try {
+    // Check database connection
+    const dbStart = Date.now();
+    await prisma.$queryRaw`SELECT 1`;
+    const dbLatency = Date.now() - dbStart;
+    
+    res.json({
+      status: 'healthy',
+      timestamp: new Date().toISOString(),
+      database: {
+        status: 'connected',
+        latency: `${dbLatency}ms`,
+      },
     });
   } catch (error) {
     res.status(503).json({
