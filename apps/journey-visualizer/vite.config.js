@@ -78,18 +78,8 @@ export default defineConfig(({ mode }) => ({
       },
     },
     
-    // Minification options
-    minify: 'terser',
-    terserOptions: {
-      compress: {
-        drop_console: true,
-        drop_debugger: true,
-        pure_funcs: ['console.log', 'console.info', 'console.debug'],
-      },
-      format: {
-        comments: false,
-      },
-    },
+    // Use esbuild for minification (built into Vite, faster, reliable in Docker)
+    minify: 'esbuild',
     
     // CSS optimization
     cssCodeSplit: true,
