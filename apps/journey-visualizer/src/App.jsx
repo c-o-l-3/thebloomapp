@@ -319,10 +319,12 @@ function JourneyBuilder({ selectedClientId, onClientChange }) {
 
 /**
  * ProtectedRoute - Redirects to /login if no valid auth token
+ * Requires a properly-formatted JWT (header.payload.signature)
  */
 function ProtectedRoute({ children }) {
   const token = localStorage.getItem('auth_token');
-  if (!token || token === 'dummy-test-token') {
+  const isValidJWT = token && token.split('.').length === 3;
+  if (!isValidJWT) {
     localStorage.removeItem('auth_token');
     localStorage.removeItem('user');
     return <Navigate to="/login" replace />;
