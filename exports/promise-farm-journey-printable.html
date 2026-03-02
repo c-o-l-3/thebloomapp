@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Promise Farm - Customer Journey Printout</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      font-size: 12px;
+      line-height: 1.5;
+      color: #1a1a1a;
+      max-width: 8.5in;
+      margin: 0 auto;
+      padding: 0.5in;
+    }
+    
+    @media print {
+      body {
+        padding: 0;
+      }
+      .page-break {
+        page-break-before: always;
+      }
+    }
+    
+    .header {
+      background: linear-gradient(135deg, #2d5a3d 0%, #4a7c59 100%);
+      color: white;
+      padding: 30px;
+      margin: -0.5in -0.5in 20px -0.5in;
+      max-width: 8.5in;
+    }
+    
+    .header h1 {
+      font-size: 28px;
+      margin-bottom: 5px;
+    }
+    
+    .header .subtitle {
+      font-size: 14px;
+      opacity: 0.9;
+    }
+    
+    .header .meta {
+      display: flex;
+      gap: 20px;
+      margin-top: 15px;
+      font-size: 12px;
+    }
+    
+    .header .meta span {
+      background: rgba(255,255,255,0.2);
+      padding: 5px 12px;
+      border-radius: 15px;
+    }
+    
+    .summary {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 30px;
+      padding: 15px;
+      background: #f8f9fa;
+      border-radius: 8px;
+    }
+    
+    .journey-section {
+      margin-bottom: 40px;
+    }
+    
+    .journey-section h2 {
+      font-size: 20px;
+      color: #2d5a3d;
+      border-bottom: 2px solid #2d5a3d;
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+    }
+    
+    .touchpoint {
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      page-break-inside: avoid;
+    }
+    
+    .touchpoint-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 15px;
+      background: #f8f9fa;
+      border-bottom: 1px solid #e0e0e0;
+      border-radius: 8px 8px 0 0;
+    }
+    
+    .touchpoint-number {
+      width: 30px;
+      height: 30px;
+      background: #2d5a3d;
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      margin-right: 12px;
+    }
+    
+    .touchpoint-title {
+      display: flex;
+      align-items: center;
+      flex: 1;
+    }
+    
+    .touchpoint-title h3 {
+      font-size: 16px;
+    }
+    
+    .touchpoint-type {
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+    
+    .touchpoint-type.email {
+      background: #dbeafe;
+      color: #1d4ed8;
+    }
+    
+    .touchpoint-type.sms {
+      background: #d1fae5;
+      color: #047857;
+    }
+    
+    .touchpoint-timing {
+      font-size: 12px;
+      color: #666;
+      text-align: right;
+    }
+    
+    .touchpoint-content {
+      padding: 15px;
+    }
+    
+    .field {
+      margin-bottom: 12px;
+    }
+    
+    .field label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #666;
+      font-weight: bold;
+    }
+    
+    .field-value {
+      margin-top: 3px;
+      font-size: 13px;
+      white-space: pre-wrap;
+    }
+    
+    .field-value.subject {
+      font-weight: bold;
+      font-size: 14px;
+      color: #1a1a1a;
+    }
+    
+    .notes-section {
+      margin-top: 15px;
+      padding-top: 15px;
+      border-top: 1px dashed #ccc;
+    }
+    
+    .notes-section label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #666;
+      font-weight: bold;
+    }
+    
+    .notes-lines {
+      margin-top: 8px;
+    }
+    
+    .note-line {
+      border-bottom: 1px solid #ddd;
+      height: 24px;
+    }
+    
+    .approval-section {
+      margin-top: 30px;
+      padding: 20px;
+      background: #f8f9fa;
+      border-radius: 8px;
+    }
+    
+    .approval-section h2 {
+      font-size: 16px;
+      margin-bottom: 15px;
+      color: #1a1a1a;
+      border: none;
+    }
+    
+    .approval-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+    
+    .approval-box label {
+      display: block;
+      font-size: 10px;
+      text-transform: uppercase;
+      color: #666;
+      margin-bottom: 5px;
+    }
+    
+    .approval-line {
+      border-bottom: 2px solid #333;
+      height: 30px;
+    }
+    
+    .checklist {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    
+    .check-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .checkbox {
+      width: 18px;
+      height: 18px;
+      border: 2px solid #999;
+      border-radius: 3px;
+    }
+    
+    .footer {
+      margin-top: 30px;
+      padding-top: 15px;
+      border-top: 1px solid #ddd;
+      font-size: 10px;
+      color: #999;
+      display: flex;
+      justify-content: space-between;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Promise Farm</h1>
+    <div class="subtitle">Lancaster County Barn Wedding Venue</div>
+    <div class="meta">
+      <span>📧 10 Emails</span>
+      <span>💬 1 SMS</span>
+      <span>📅 2 Journeys / 11 Touchpoints</span>
+    </div>
+  </div>
+
+  <div class="summary">
+    <div><strong>Journey 1:</strong> New Leads → Book a Tour (7 touchpoints)</div>
+    <div><strong>Journey 2:</strong> Tour Reminders (4 touchpoints)</div>
+  </div>
+
+  <!-- Journey 1: New Leads → Book a Tour -->
+  <div class="journey-section">
+    <h2>Journey 1: New Leads → Book a Tour</h2>
+    
+    <!-- Touchpoint 1 -->
+    <div class="touchpoint">
+      <div class="touchpoint-header">
+        <div class="touchpoint-title">
+          <div class="touchpoint-number">1</div>
+          <h3>Welcome - Immediate</h3>
+        </div>
+        <div>
+          <span class="touchpoint-type email">Email</span>
+          <div class="touchpoint-timing">Day 0 (Immediate)</div>
+        </div>
+      </div>
+      <div class="touchpoint-content">
+        <div class="field">
+          <label>Subject Line</label>
+          <div class="field-value subject">Welcome to Promise Farm!</div>
+        </div>
+        <div class="field">
+          <label>Preview Text</label>
+          <div class="field-value">Welcome to Promise Farm! We are absolutely thrilled that you are considering our Lancaster County barn venue.</div>
+        </div>
+        <div class="field">
+          <label>Email Body</label>
+          <div class="field-value">Hi {{contact.first_name}}, welcome to Promise Farm! We are absolutely thrilled that you are considering our Lancaster County barn venue for your special day. Picture this: exchanging vows surrounded by rolling hills, celebrating under crystal chandeliers in our climate-controlled barn, and creating memories that last a lifetime. Here is what makes Promise Farm special: Flexible vendor policy - choose your own caterer, photographer, and more, Day-of coordination included with every package, Gorgeous bridal suite with plenty of getting-ready space, Both indoor and outdoor ceremony options, Affordable pricing without sacrificing elegance. We would love to show you around in person. Our tours typically last about an hour, and you will get to see all the spaces, ask questions, and start envisioning your day here.</div>
+        </div>
+        <div class="notes-section">
+          <label>Review Notes:</label>
+          <div class="notes-lines">
+            <div class="note-line"></div>
+            <div class="note-line"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Touchpoint 2 -->
+    <div class="touchpoint">
+      <div class="touchpoint-header">
+        <div class="touchpoint-title">
+          <div class="touchpoint-number">2</div>
+          <h3>Value Propositions - Day 2</h3>
+        </div>
+        <div>
+          <span class="touchpoint-type email">Email</span>
+          <div class="touchpoint-timing">Day 2</div>
+        </div>
+      </div>
+      <div class="touchpoint-content">
+        <div class="field">
+          <label>Subject Line</label>
+          <div class="field-value subject">Why couples choose Promise Farm</div>
+        </div>
+        <div class="field">
+          <label>Preview Text</label>
+          <div class="field-value">Discover what makes our barn venue different from typical banquet halls.</div>
+        </div>
+        <div class="field">
+          <label>Email Body</label>
+          <div class="field-value">Hi {{contact.first_name}}, as you explore wedding venues, we wanted to share what makes Promise Farm different from the typical banquet hall experience: AUTHENTIC RUSTIC CHARM - Our barn has been thoughtfully restored with modern amenities while keeping its historic character. Think exposed beams, warm wood tones, and that unmistakable cozy feeling. TRANSPARENT, AFFORDABLE PRICING - No hidden fees, no surprises. We believe beautiful weddings should not require breaking the bank. COMPLETE CREATIVE FREEDOM - Bring your own caterer (food trucks welcome!), choose your own florist, decorate however you would like. This is YOUR canvas. LANCASTER COUNTY LOCATION - Your guests will love the scenic drive through Pennsylvania Dutch Country. Have questions about any of these? Just hit reply.</div>
+        </div>
+        <div class="notes-section">
+          <label>Review Notes:</label>
+          <div class="notes-lines">
+            <div class="note-line"></div>
+            <div class="note-line"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Touchpoint 3 -->
+    <div class="touchpoint">
+      <div class="touchpoint-header">
+        <div class="touchpoint-title">
+          <div class="touchpoint-number">3</div>
+          <h3>Our Spaces - Day 4</h3>
+        </div>
+        <div>
+          <span class="touchpoint-type email">Email</span>
+          <div class="touchpoint-timing">Day 4</div>
+        </div>
+      </div>
+      <div class="touchpoint-content">
+        <div class="field">
+          <label>Subject Line</label>
+          <div class="field-value subject">Take a peek at your ceremony options</div>
+        </div>
+        <div class="field">
+          <label>Preview Text</label>
+          <div class="field-value">From outdoor ceremonies with panoramic views to indoor barn elegance.</div>
+        </div>
+        <div class="field">
+          <label>Email Body</label>
+          <div class="field-value">Hi {{contact.first_name}}, one of the things couples love most about Promise Farm is having choices for your ceremony. Here is what you will find: OUTDOOR CEREMONY AREA - Say I do with panoramic countryside views as your backdrop. Our outdoor space features natural landscaping, plenty of photo opportunities, and room for up to 200 guests. INDOOR CEREMONY OPTION - Our climate-controlled barn creates an intimate, romantic atmosphere with stunning architectural details, beautiful lighting, and that cozy barn feel - perfect year-round. COCKTAIL HOUR SPACES - Guests can mingle in multiple areas while you take photos. The wrap-around porch, landscaped gardens, and open lawn spaces give everyone room to relax. RECEPTION BARN - Dinner and dancing happen in our gorgeous main barn, complete with chandeliers, a spacious dance floor, and flexible layout options. Want to see it all in person?</div>
+        </div>
+        <div class="notes-section">
+          <label>Review Notes:</label>
+          <div class="notes-lines">
+            <div class="note-line"></div>
+            <div class="note-line"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Touchpoint 4 -->
+    <div class="touchpoint">
+      <div class="touchpoint-header">
+        <div class="touchpoint-title">
+          <div class="touchpoint-number">4</div>
+          <h3>FAQ - Day 6</h3>
+        </div>
+        <div>
+          <span class="touchpoint-type email">Email</span>
+          <div class="touchpoint-timing">Day 6</div>
+        </div>
+      </div>
+      <div class="touchpoint-content">
+        <div class="field">
+          <label>Subject Line</label>
+          <div class="field-value subject">Questions other couples ask</div>
+        </div>
+        <div class="field">
+          <label>Preview Text</label>
+          <div class="field-value">We know wedding planning comes with lots of questions. Here are the ones we hear most often.</div>
+        </div>
+        <div class="field">
+          <label>Email Body</label>
+          <div class="field-value">Hi {{contact.first_name}}, we know wedding planning comes with lots of questions. Here are the ones we hear most often: CAN WE BRING OUR OWN CATERER? Absolutely! We have a flexible vendor policy. Bring your favorite caterer, food truck, or handle it yourself. WHAT IS INCLUDED IN THE PACKAGE? Day-of coordination, tables and chairs, bridal suite access, parking attendants, and use of our getting-ready spaces. IS THERE A GUEST MINIMUM OR MAXIMUM? Our space comfortably accommodates weddings from 50 to 200 guests. WHAT ABOUT WEATHER FOR OUTDOOR CEREMONIES? We always have a backup plan! Our indoor ceremony space is equally beautiful. HOW FAR IN ADVANCE SHOULD WE BOOK? Prime dates (Saturdays in spring and fall) book 12-18 months ahead. But do not worry - we often have Friday and Sunday availability with shorter notice. Have other questions? We are just an email away!</div>
+        </div>
+        <div class="notes-section">
+          <label>Review Notes:</label>
+          <div class="notes-lines">
+            <div class="note-line"></div>
+            <div class="note-line"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Touchpoint 5 -->
+    <div class="touchpoint">
+      <div class="touchpoint-header">
+        <div class="touchpoint-title">
+          <div class="touchpoint-number">5</div>
+          <h3>Social Proof - Day 9</h3>
+        </div>
+        <div>
+          <span class="touchpoint-type email">Email</span>
+          <div class="touchpoint-timing">Day 9</div>
+        </div>
+      </div>
+      <div class="touchpoint-content">
+        <div class="field">
+          <label>Subject Line</label>
+          <div class="field-value subject">What Sarah & Michael loved about their Promise Farm wedding</div>
+        </div>
+        <div class="field">
+          <label>Preview Text</label>
+          <div class="field-value">Do not just take our word for it. Here is what recent couples shared...</div>
+        </div>
+        <div class="field">
+          <label>Email Body</label>
+          <div class="field-value">Hi {{contact.first_name}}, do not just take our word for it. Here is what Sarah and Michael shared after their June wedding: From our first tour, we knew Promise Farm was perfect. The flexibility to bring our own food truck and decorate exactly how we wanted made it feel so personal. The team handled everything on the day-of, so we could actually enjoy our wedding! Our guests are still talking about how beautiful the venue was. The photos with the rolling hills in the background are absolutely stunning. Best decision we made! The value is incredible - we got the rustic barn wedding of our dreams without going over budget. Your love story deserves a setting this special. Ready to see it for yourself?</div>
+        </div>
+        <div class="notes-section">
+          <label>Review Notes:</label>
+          <div class="notes-lines">
+            <div class="note-line"></div>
+            <div class="note-line"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Touchpoint 6 -->
+    <div class="touchpoint">
+      <div class="touchpoint-header">
+        <div class="touchpoint-title">
+          <div class="touchpoint-number">6</div>
+          <h3>Final CTA - Day 12</h3>
+        </div>
+        <div>
+          <span class="touchpoint-type email">Email</span>
+          <div class="touchpoint-timing">Day 12</div>
+        </div>
+      </div>
+      <div class="touchpoint-content">
+        <div class="field">
+          <label>Subject Line</label>
+          <div class="field-value subject">Let us make your wedding day unforgettable</div>
+        </div>
+        <div class="field">
+          <label>Preview Text</label>
+          <div class="field-value">If Promise Farm feels like it could be the one, we would love to show you around.</div>
+        </div>
+        <div class="field">
+          <label>Email Body</label>
+          <div class="field-value">Hi {{contact.first_name}}, I hope you have enjoyed learning about Promise Farm over the past couple of weeks. Wedding planning is such an exciting journey, and choosing your venue is one of the most important decisions you will make. If Promise Farm feels like it could be the one, I would love to show you around. There is nothing quite like experiencing the space in person - feeling the breeze on the ceremony lawn, walking through the barn as the chandeliers glow, and picturing your first dance. During your tour, we will: Walk through all the ceremony and reception spaces, Discuss your vision and how we can bring it to life, Review available dates and packages, Answer all your questions. Tours are free, no-pressure, and typically last about an hour. Bring your partner, your parents, or just come solo - whatever works for you.</div>
+        </div>
+        <div class="notes-section">
+          <label>Review Notes:</label>
+          <div class="notes-lines">
+            <div class="note-line"></div>
+            <div class="note-line"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Touchpoint 7 -->
+    <div class="touchpoint">
+      <div class="touchpoint-header">
+        <div class="touchpoint-title">
+          <div class="touchpoint-number">7</div>
+          <h3>Soft Breakup - Day 16</h3>
+        </div>
+        <div>
+          <span class="touchpoint-type email">Email</span>
+          <div class="touchpoint-timing">Day 16</div>
+        </div>
+      </div>
+      <div class="touchpoint-content">
+        <div class="field">
+          <label>Subject Line</label>
+          <div class="field-value subject">One last hello from Promise Farm</div>
+        </div>
+        <div class="field">
+          <label>Preview Text</label>
+          <div class="field-value">I have not heard back, so I wanted to check in one final time.</div>
+        </div>
+        <div class="field">
+          <label>Email Body</label>
+          <div class="field-value">Hi {{contact.first_name}}, I have not heard back, so I wanted to check in one final time. I know choosing a venue is a big decision, and Promise Farm might not be the right fit for everyone - and that is okay! If you are still considering us: Tours are always available - just reach out, I am happy to answer any lingering questions, We can check date availability anytime. If you have chosen another venue, congratulations! Wishing you a beautiful wedding and a lifetime of happiness. And if your plans change down the road, we will be here. Warmly, The Promise Farm Team. P.S. Follow us on Instagram @promisefarm to see real weddings and get inspired!</div>
+        </div>
+        <div class="notes-section">
+          <label>Review Notes:</label>
+          <div class="notes-lines">
+            <div class="note-line"></div>
+            <div class="note-line"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-break"></div>
+
+  <!-- Journey 2: Tour Reminders -->
+  <div class="journey-section">
+    <h2>Journey 2: Tour Reminders</h2>
+    
+    <!-- Touchpoint 1 -->
+    <div class="touchpoint">
+      <div class="touchpoint-header">
+        <div class="touchpoint-title">
+          <div class="touchpoint-number">1</div>
+          <h3>Tour Confirmation - Immediate</h3>
+        </div>
+        <div>
+          <span class="touchpoint-type email">Email</span>
+          <div class="touchpoint-timing">Day 0 (Immediate)</div>
+        </div>
+      </div>
+      <div class="touchpoint-content">
+        <div class="field">
+          <label>Subject Line</label>
+          <div class="field-value subject">You are all set! See you {{tour_date}}</div>
+        </div>
+        <div class="field">
+          <label>Preview Text</label>
+          <div class="field-value">Great news! Your tour at Promise Farm is confirmed.</div>
+        </div>
+        <div class="field">
+          <label>Email Body</label>
+          <div class="field-value">Hi {{contact.first_name}}, great news! Your tour at Promise Farm is confirmed. DATE: {{tour_date}}, TIME: {{tour_time}}, LOCATION: Promise Farm, Lancaster County, PA. We are so excited to show you around and help you envision your wedding day here! During your tour, you will see: Our gorgeous ceremony spaces (both indoor and outdoor options), The climate-controlled reception barn with chandeliers, The bridal suite where you will get ready, All the photo-worthy spots throughout the property. WHAT TO EXPECT: Your tour will last about 60 minutes. We will walk the property together, discuss your vision, answer questions, and check date availability. Bring your partner, your parents, or come just the two of you - whoever needs to see the space! WHAT TO BRING: Any inspiration photos or Pinterest boards, Your approximate guest count, Questions! (We love questions). If you need to reschedule, just reply to this email or call us. Life happens, and we totally understand. Cannot wait to meet you! The Promise Farm Team</div>
+        </div>
+        <div class="notes-section">
+          <label>Review Notes:</label>
+          <div class="notes-lines">
+            <div class="note-line"></div>
+            <div class="note-line"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Touchpoint 2 -->
+    <div class="touchpoint">
+      <div class="touchpoint-header">
+        <div class="touchpoint-title">
+          <div class="touchpoint-number">2</div>
+          <h3>Excitement Builder - 3 Days Before</h3>
+        </div>
+        <div>
+          <span class="touchpoint-type email">Email</span>
+          <div class="touchpoint-timing">Day -3</div>
+        </div>
+      </div>
+      <div class="touchpoint-content">
+        <div class="field">
+          <label>Subject Line</label>
+          <div class="field-value subject">3 days until your Promise Farm tour!</div>
+        </div>
+        <div class="field">
+          <label>Preview Text</label>
+          <div class="field-value">Your tour is just around the corner, and we cannot wait to meet you!</div>
+        </div>
+        <div class="field">
+          <label>Email Body</label>
+          <div class="field-value">Hi {{contact.first_name}}, your tour is just around the corner, and we cannot wait to meet you! As you prepare for your visit, here are a few things couples often tell us they appreciated most about Promise Farm: THE SETTING - There is something magical about standing on our ceremony lawn, feeling the breeze, and looking out at the rolling Lancaster County hills. It is the kind of moment that makes you say this is it. THE BARN - Our restored barn strikes that perfect balance - rustic enough to feel authentic, elegant enough to feel special. Those chandeliers! THE FLEXIBILITY - Every wedding here is unique because we let YOU make the choices. Your caterer, your style, your way. THE VALUE - Couples are consistently surprised (in a good way!) by our pricing. Beautiful weddings do not have to drain your savings. We recommend arriving about 5 minutes early so we can start right on time. And do not worry about the weather - if it is raining, we will adjust the tour route and show you how cozy the indoor spaces are! See you soon!</div>
+        </div>
+        <div class="notes-section">
+          <label>Review Notes:</label>
+          <div class="notes-lines">
+            <div class="note-line"></div>
+            <div class="note-line"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Touchpoint 3 -->
+    <div class="touchpoint">
+      <div class="touchpoint-header">
+        <div class="touchpoint-title">
+          <div class="touchpoint-number">3</div>
+          <h3>Logistics & Day-Before Reminder</h3>
+        </div>
+        <div>
+          <span class="touchpoint-type email">Email</span>
+          <div class="touchpoint-timing">Day -1</div>
+        </div>
+      </div>
+      <div class="touchpoint-content">
+        <div class="field">
+          <label>Subject Line</label>
+          <div class="field-value subject">Tomorrow is the day! Final details for your tour</div>
+        </div>
+        <div class="field">
+          <label>Preview Text</label>
+          <div class="field-value">Just one more sleep until your Promise Farm tour!</div>
+        </div>
+        <div class="field">
+          <label>Email Body</label>
+          <div class="field-value">Hi {{contact.first_name}}, just one more sleep until your Promise Farm tour! We wanted to send over a few final details to make tomorrow smooth and enjoyable. DIRECTIONS & PARKING - Promise Farm is located in Lancaster County, PA. When you arrive, you will see a gravel parking area on the right. Park anywhere that is convenient - we will meet you at the main entrance to the barn. TIMING - Your tour starts at {{tour_time}} and will last about an hour. We will walk the property together, so wear comfortable shoes you do not mind getting a little dusty (it is a farm, after all!). WEATHER - Current forecast: {{weather_forecast}}. If rain is expected, do not worry! We have umbrellas and we will show you how the indoor spaces work beautifully as backup options. BRINGING GUESTS? Totally fine! Just let us know how many people to expect so we can plan accordingly. QUESTIONS TO CONSIDER: What is your estimated guest count?, Do you have a preferred season or specific dates in mind?, Any must-haves for your venue? If you need to reach us tomorrow, call or text: {{phone_number}}. See you tomorrow! The Promise Farm Team</div>
+        </div>
+        <div class="notes-section">
+          <label>Review Notes:</label>
+          <div class="notes-lines">
+            <div class="note-line"></div>
+            <div class="note-line"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Touchpoint 4 -->
+    <div class="touchpoint">
+      <div class="touchpoint-header">
+        <div class="touchpoint-title">
+          <div class="touchpoint-number">4</div>
+          <h3>Day-Of SMS Reminder</h3>
+        </div>
+        <div>
+          <span class="touchpoint-type sms">SMS</span>
+          <div class="touchpoint-timing">Day 0 (Tour Day)</div>
+        </div>
+      </div>
+      <div class="touchpoint-content">
+        <div class="field">
+          <label>SMS Message</label>
+          <div class="field-value">Hi {{contact.first_name}}! This is Promise Farm confirming your tour today at {{tour_time}}. We are excited to show you around! Drive safely - see you soon! Reply STOP to opt out.</div>
+        </div>
+        <div class="notes-section">
+          <label>Review Notes:</label>
+          <div class="notes-lines">
+            <div class="note-line"></div>
+            <div class="note-line"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Approval Section -->
+  <div class="approval-section">
+    <h2>Journey Approval</h2>
+    <div class="approval-grid">
+      <div class="approval-box">
+        <label>Reviewer Name</label>
+        <div class="approval-line"></div>
+      </div>
+      <div class="approval-box">
+        <label>Signature</label>
+        <div class="approval-line"></div>
+      </div>
+      <div class="approval-box">
+        <label>Date</label>
+        <div class="approval-line"></div>
+      </div>
+    </div>
+    <div class="checklist">
+      <div class="check-item">
+        <div class="checkbox"></div>
+        <span>All content reviewed for accuracy</span>
+      </div>
+      <div class="check-item">
+        <div class="checkbox"></div>
+        <span>Timing and sequencing approved</span>
+      </div>
+      <div class="check-item">
+        <div class="checkbox"></div>
+        <span>Branding and voice consistent</span>
+      </div>
+      <div class="check-item">
+        <div class="checkbox"></div>
+        <span>Personalization tokens verified</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>Promise Farm - Customer Journey Map</span>
+    <span>Generated: February 2026</span>
+  </div>
+</body>
+</html>

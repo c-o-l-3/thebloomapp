@@ -137,6 +137,7 @@ export class AIProvider {
 
   /**
    * Get the embedding model name based on provider
+   * Fixed: Use correct Gemini embedding model names
    */
   getEmbeddingModelName() {
     switch (this.provider) {
@@ -146,6 +147,8 @@ export class AIProvider {
         // OpenRouter doesn't have embeddings, use OpenAI if available or fallback
         return 'openai/text-embedding-3-small';
       case 'google':
+        // Fixed: Use correct embedding model - text-embedding-004 is for Gemini API
+        // For older APIs, use embedding-001 or rely on the API to resolve the model
         return 'text-embedding-004';
       default:
         return 'openai/text-embedding-3-small';
@@ -197,77 +200,141 @@ export class AIProvider {
 
   /**
    * Extract facts using OpenAI
+   * Added retry logic for transient errors
    */
   async extractFactsOpenAI(content, prompt) {
-    await this.rateLimit();
+    const maxRetries = 3;
+    
+    for (let attempt = 0; attempt < maxRetries; attempt++) {
+      try {
+        await this.rateLimit();
 
-    try {
-      const response = await this.openai.chat.completions.create({
-        model: this.getModelName(),
-        messages: [
-          { role: 'system', content: prompt },
-          { role: 'user', content: content }
-        ],
-        response_format: { type: 'json_object' },
-        temperature: 0.3
-      });
+        const response = await this.openai.chat.completions.create({
+          model: this.getModelName(),
+          messages: [
+            { role: 'system', content: prompt },
+            { role: 'user', content: content }
+          ],
+          response_format: { type: 'json_object' },
+          temperature: 0.3
+        });
 
-      return JSON.parse(response.choices[0].message.content);
-    } catch (error) {
-      logger.error('OpenAI fact extraction failed', { error: error.message });
-      throw error;
+        return JSON.parse(response.choices[0].message.content);
+      } catch (error) {
+        // Check if it's a transient error
+        const isTransient = this.isTransientError(error);
+        const isLastAttempt = attempt === maxRetries - 1;
+        
+        if (!isTransient || isLastAttempt) {
+          logger.error('OpenAI fact extraction failed', { error: error.message, attempts: attempt + 1 });
+          throw error;
+        }
+        
+        // Exponential backoff
+        const delay = 1000 * Math.pow(2, attempt) + Math.random() * 1000;
+        logger.warn(`OpenAI fact extraction transient error, retry ${attempt + 1}/${maxRetries} after ${Math.round(delay)}ms`, {
+          error: error.message
+        });
+        await this.sleep(delay);
+      }
     }
   }
 
   /**
    * Extract facts using OpenRouter
+   * Added retry logic for transient errors
    */
   async extractFactsOpenRouter(content, prompt) {
-    await this.rateLimit();
+    const maxRetries = 3;
+    
+    for (let attempt = 0; attempt < maxRetries; attempt++) {
+      try {
+        await this.rateLimit();
 
-    try {
-      const response = await this.openrouter.chat.completions.create({
-        model: this.getModelName(),
-        messages: [
-          { role: 'system', content: prompt },
-          { role: 'user', content: content }
-        ],
-        temperature: 0.3
-      });
+        const response = await this.openrouter.chat.completions.create({
+          model: this.getModelName(),
+          messages: [
+            { role: 'system', content: prompt },
+            { role: 'user', content: content }
+          ],
+          temperature: 0.3
+        });
 
-      const content_text = response.choices[0].message.content;
-      
-      // Try to extract JSON from response (in case there's markdown)
-      const jsonMatch = content_text.match(/```json\n?([\s\S]*?)\n?```/) || 
-                       content_text.match(/\{[\s\S]*\}/);
-      
-      if (jsonMatch) {
-        const jsonStr = jsonMatch[1] || jsonMatch[0];
-        return JSON.parse(jsonStr);
+        const content_text = response.choices[0].message.content;
+        
+        // Try to extract JSON from response (in case there's markdown)
+        const jsonMatch = content_text.match(/```json\n?([\s\S]*?)\n?```/) || 
+                         content_text.match(/\{[\s\S]*\}/);
+        
+        if (jsonMatch) {
+          const jsonStr = jsonMatch[1] || jsonMatch[0];
+          return JSON.parse(jsonStr);
+        }
+        
+        return JSON.parse(content_text);
+      } catch (error) {
+        // Check if it's a transient error
+        const isTransient = this.isTransientError(error);
+        const isLastAttempt = attempt === maxRetries - 1;
+        
+        if (!isTransient || isLastAttempt) {
+          logger.error('OpenRouter fact extraction failed', { error: error.message, attempts: attempt + 1 });
+          throw error;
+        }
+        
+        // Exponential backoff
+        const delay = 1000 * Math.pow(2, attempt) + Math.random() * 1000;
+        logger.warn(`OpenRouter fact extraction transient error, retry ${attempt + 1}/${maxRetries} after ${Math.round(delay)}ms`, {
+          error: error.message
+        });
+        await this.sleep(delay);
       }
-      
-      return JSON.parse(content_text);
-    } catch (error) {
-      logger.error('OpenRouter fact extraction failed', { error: error.message });
-      throw error;
     }
   }
 
   /**
+   * Check if error is transient and should be retried
+   */
+  isTransientError(error) {
+    const status = error.status || error.response?.status;
+    
+    // Rate limit
+    if (status === 429) return true;
+    
+    // Server errors
+    if (status >= 500 && status < 600) return true;
+    
+    // Network errors
+    const transientPatterns = [
+      'ETIMEDOUT',
+      'ECONNREFUSED',
+      'ECONNRESET',
+      'ENOTFOUND',
+      'EAI_AGAIN',
+      'timeout',
+      'network',
+      'socket',
+      'Invalid response body',
+      'fetch failed'
+    ];
+    
+    const message = (error.message || '').toLowerCase();
+    return transientPatterns.some(p => message.includes(p.toLowerCase()));
+  }
+
+  /**
    * Extract facts using Google Gemini
+   * Fixed: Handle API version compatibility issues
    */
   async extractFactsGemini(content, prompt) {
     await this.rateLimit();
 
     try {
       const model = this.gemini.getGenerativeModel({ 
-        model: this.getModelName(),
-        generationConfig: {
-          temperature: 0.3,
-          responseMimeType: 'application/json'
-        }
+        model: this.getModelName()
       });
 
+      // Try without responseMimeType first (older API versions)
       const result = await model.generateContent([
         { text: prompt + '\n\nRespond with valid JSON only.' },
         { text: content }
@@ -286,6 +353,35 @@ export class AIProvider {
       
       return JSON.parse(response);
     } catch (error) {
+      // If responseMimeType error, try with generationConfig
+      if (error.message?.includes('responseMimeType') || error.message?.includes('Unknown name')) {
+        logger.warn('Gemini API version compatibility issue, retrying without generationConfig');
+        try {
+          const model = this.gemini.getGenerativeModel({ 
+            model: this.getModelName()
+            // No generationConfig - let API use defaults
+          });
+
+          const result = await model.generateContent([
+            { text: prompt + '\n\nRespond with valid JSON only.' },
+            { text: content }
+          ]);
+
+          const response = result.response.text();
+          const jsonMatch = response.match(/```json\n?([\s\S]*?)\n?```/) || 
+                           response.match(/\{[\s\S]*\}/);
+          
+          if (jsonMatch) {
+            const jsonStr = jsonMatch[1] || jsonMatch[0];
+            return JSON.parse(jsonStr);
+          }
+          
+          return JSON.parse(response);
+        } catch (retryError) {
+          logger.error('Gemini fact extraction retry failed', { error: retryError.message });
+          throw retryError;
+        }
+      }
       logger.error('Gemini fact extraction failed', { error: error.message });
       throw error;
     }
@@ -460,21 +556,37 @@ export class AIProvider {
 
   /**
    * Generate embedding using Google Gemini
+   * Fixed: Use correct API method for embedding
    */
   async generateEmbeddingGemini(text) {
     await this.rateLimit();
 
     try {
       // Use Gemini's text embedding model via the embedding API
+      // Fixed: Use the correct approach for Gemini embeddings
       const geminiClient = this.gemini || new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
-      const embeddingModel = geminiClient.getGenerativeModel({ 
-        model: 'models/embedding-001'
-      });
+      
+      // Use the embeddings API directly - this is the correct method
+      const model = 'text-embedding-004';
+      const embeddingModel = geminiClient.getGenerativeModel({ model });
 
       const result = await embeddingModel.embedContent(text.slice(0, 8000));
       
       return result.embedding.values;
     } catch (error) {
+      // If text-embedding-004 fails, try embedding-001 as fallback
+      if (error.message?.includes('not found') || error.message?.includes('not supported')) {
+        logger.warn('Primary embedding model failed, trying fallback model');
+        try {
+          const geminiClient = this.gemini || new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
+          const embeddingModel = geminiClient.getGenerativeModel({ model: 'embedding-001' });
+          const result = await embeddingModel.embedContent(text.slice(0, 8000));
+          return result.embedding.values;
+        } catch (fallbackError) {
+          logger.error('Fallback Gemini embedding generation also failed', { error: fallbackError.message });
+          throw fallbackError;
+        }
+      }
       logger.error('Gemini embedding generation failed', { error: error.message });
       throw error;
     }

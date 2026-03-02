@@ -18,6 +18,7 @@ model Client {
   status          String   @default("active")
   settings        Json     @default("{}")
   config          Json     @default("{}")
+  rateLimitTierId Int?     @map("rate_limit_tier_id")
   createdAt       DateTime @default(now()) @map("created_at")
   updatedAt       DateTime @updatedAt @map("updated_at")
 
@@ -27,10 +28,45 @@ model Client {
   workflows       Workflow[]
   clientUsers     ClientUser[]
   syncHistory     SyncHistory[]
+  analyticsEvents JourneyAnalyticsEvent[]
+  journeyMetrics  JourneyPerformanceMetrics[]
+  touchpointMetrics TouchpointPerformanceMetrics[]
+  abTestResults   ABTestResult[]
+  funnelStages    JourneyFunnelStage[]
+  analyticsSummary ClientAnalyticsSummary[]
+  fieldMappings   FieldMapping[]
+  workflowTriggers WorkflowTriggerV2[]
+  workflowExecutions WorkflowExecution[]
+  
+  // Client Portal relations
+  changeRequests  ChangeRequest[]
+  brandVoiceSettings BrandVoiceSettings?
+  assets          ClientAsset[]
+  portalUsers     ClientPortalUser[]
+  
+  // Webhook system relations
+  webhookConfigs  WebhookConfig[]
+  syncedContacts  SyncedContact[]
+  syncedAppointments SyncedAppointment[]
+  formSubmissions FormSubmission[]
+  emailEvents     EmailEvent[]
+  opportunityStageHistory OpportunityStageHistory[]
+
+  // A/B Testing relations
+  abTests         JourneyABTest[]
+  abTestVariants  JourneyABTestVariant[]
+  abTestParticipants ABTestParticipant[]
+  abTestEvents    ABTestEvent[]
+  abTestDailyStats ABTestDailyStats[]
+
+  // Rate limiting relations
+  rateLimitTier   RateLimitTier? @relation(fields: [rateLimitTierId], references: [id], onDelete: SetNull)
+  apiKeys         ApiKey[]
 
   @@index([slug])
   @@index([status])
   @@index([ghlLocationId])
+  @@index([rateLimitTierId])
   @@map("clients")
 }
 
@@ -66,6 +102,8 @@ model Journey {
   metadata        Json      @default("{}")
   publishedAt     DateTime? @map("published_at")
   approvedAt      DateTime? @map("approved_at")
+  analyticsEnabled Boolean  @default(true) @map("analytics_enabled")
+  analyticsConfig Json      @default("{}") @map("analytics_config")
   createdAt       DateTime  @default(now()) @map("created_at")
   updatedAt       DateTime  @updatedAt @map("updated_at")
 
@@ -74,6 +112,15 @@ model Journey {
   touchpoints     Touchpoint[]
   versions        JourneyVersion[]
   approvals       Approval[]
+  analyticsEvents JourneyAnalyticsEvent[]
+  performanceMetrics JourneyPerformanceMetrics[]
+  touchpointMetrics TouchpointPerformanceMetrics[]
+  abTestResults   ABTestResult[]
+  funnelStages    JourneyFunnelStage[]
+
+  // A/B Testing relations
+  abTests         JourneyABTest[]
+  abTestVariants  JourneyABTestVariant[]
 
   @@index([clientId])
   @@index([status])
@@ -98,6 +145,8 @@ model Touchpoint {
   updatedAt       DateTime @updatedAt @map("updated_at")
 
   journey         Journey  @relation(fields: [journeyId], references: [id], onDelete: Cascade)
+  analyticsEvents JourneyAnalyticsEvent[]
+  performanceMetrics TouchpointPerformanceMetrics[]
 
   @@index([journeyId])
   @@index([type])
@@ -140,9 +189,126 @@ model Workflow {
   updatedAt   DateTime @updatedAt @map("updated_at")
 
   client      Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  triggers    WorkflowTriggerV2[]
+  executions  WorkflowExecution[]
 
   @@index([clientId])
   @@map("workflows")
+}
+
+// Workflow Triggers V2 - P1 Q2 2026
+model WorkflowTriggerV2 {
+  id                String   @id @default(uuid())
+  workflowId        String   @map("workflow_id")
+  clientId          String   @map("client_id")
+  name              String
+  type              String   // contactCreated, stageChanged, emailOpened, linkClicked, formSubmitted, appointmentBooked
+  status            String   @default("active") // active, paused, archived
+  
+  // Trigger configuration
+  config            Json     @default("{}") // Type-specific configuration
+  
+  // Conditional logic
+  conditions        Json?    @default("[]") // Array of condition groups
+  conditionLogic    String   @default("and") @map("condition_logic") // and, or
+  
+  // Time-based settings
+  timeDelay         Int?     @map("time_delay") // Delay in minutes
+  timeDelayType     String?  @map("time_delay_type") // immediate, minutes, hours, days
+  scheduleWindow    Json?    @map("schedule_window") // Business hours, days of week
+  
+  // Execution settings
+  maxExecutions     Int?     @map("max_executions") // Per contact
+  executionCooldown Int?     @map("execution_cooldown") // Minutes between executions
+  
+  // Deduplication
+  dedupWindow       Int      @default(1440) @map("dedup_window") // Minutes (default 24h)
+  dedupKey          String?  @map("dedup_key") // contactId, email, etc.
+  
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  workflow          Workflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  client            Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  executions        TriggerExecution[]
+
+  @@index([workflowId])
+  @@index([clientId])
+  @@index([type])
+  @@index([status])
+  @@index([clientId, type, status])
+  @@map("workflow_triggers_v2")
+}
+
+// Workflow Execution Tracking
+model WorkflowExecution {
+  id                String   @id @default(uuid())
+  workflowId        String   @map("workflow_id")
+  clientId          String   @map("client_id")
+  contactId         String?  @map("contact_id")
+  triggerId         String?  @map("trigger_id")
+  
+  status            String   // pending, running, completed, failed, cancelled
+  startedAt         DateTime @default(now()) @map("started_at")
+  completedAt       DateTime? @map("completed_at")
+  
+  // Execution context
+  context           Json?    // Contact data, event data, etc.
+  results           Json?    // Action results
+  error             String?
+  
+  // Analytics
+  actionsTotal      Int      @default(0) @map("actions_total")
+  actionsCompleted  Int      @default(0) @map("actions_completed")
+  actionsFailed     Int      @default(0) @map("actions_failed")
+  
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  workflow          Workflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  client            Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@index([workflowId])
+  @@index([clientId])
+  @@index([contactId])
+  @@index([status])
+  @@index([startedAt])
+  @@index([clientId, status])
+  @@map("workflow_executions")
+}
+
+// Individual Trigger Executions
+model TriggerExecution {
+  id                String   @id @default(uuid())
+  triggerId         String   @map("trigger_id")
+  workflowId        String   @map("workflow_id")
+  clientId          String   @map("client_id")
+  contactId         String?  @map("contact_id")
+  
+  // Event data
+  eventType         String   @map("event_type")
+  eventData         Json     @map("event_data")
+  
+  // Execution result
+  status            String   // triggered, suppressed, failed, conditions_not_met
+  matchedConditions Json?    @map("matched_conditions")
+  executionId       String?  @map("execution_id") // Links to WorkflowExecution
+  
+  // Deduplication
+  dedupHash         String?  @map("dedup_hash")
+  
+  createdAt         DateTime @default(now()) @map("created_at")
+
+  trigger           WorkflowTriggerV2 @relation(fields: [triggerId], references: [id], onDelete: Cascade)
+
+  @@index([triggerId])
+  @@index([clientId])
+  @@index([contactId])
+  @@index([eventType])
+  @@index([status])
+  @@index([createdAt])
+  @@index([dedupHash])
+  @@map("trigger_executions")
 }
 
 model JourneyVersion {
@@ -190,6 +356,8 @@ model User {
   updatedAt     DateTime     @updatedAt @map("updated_at")
 
   clientUsers   ClientUser[]
+  apiKeys       ApiKey[]
+  apiKeysCreated ApiKey[] @relation(name: "ApiKeyCreator")
 
   @@map("users")
 }
@@ -232,4 +400,1035 @@ model MigrationLog {
   createdAt   DateTime @default(now()) @map("created_at")
 
   @@map("migration_logs")
+}
+
+// Analytics Models
+model JourneyAnalyticsEvent {
+  id            String    @id @default(uuid())
+  journeyId     String    @map("journey_id")
+  touchpointId  String?   @map("touchpoint_id")
+  clientId      String    @map("client_id")
+  eventType     String    @map("event_type")
+  eventData     Json      @default("{}") @map("event_data")
+  sessionId     String?   @map("session_id")
+  contactId     String?   @map("contact_id")
+  metadata      Json      @default("{}")
+  createdAt     DateTime  @default(now()) @map("created_at")
+
+  journey       Journey   @relation(fields: [journeyId], references: [id], onDelete: Cascade)
+  client        Client    @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  touchpoint    Touchpoint? @relation(fields: [touchpointId], references: [id], onDelete: SetNull)
+
+  @@index([journeyId])
+  @@index([clientId])
+  @@index([eventType])
+  @@index([createdAt])
+  @@index([journeyId, eventType, createdAt])
+  @@index([createdAt, clientId, eventType])
+  @@map("journey_analytics_events")
+}
+
+model JourneyPerformanceMetrics {
+  id                          String    @id @default(uuid())
+  journeyId                   String    @map("journey_id")
+  clientId                    String    @map("client_id")
+  date                        DateTime  @db.Date
+  totalContactsEntered        Int       @default(0) @map("total_contacts_entered")
+  totalContactsCompleted      Int       @default(0) @map("total_contacts_completed")
+  totalContactsDropped        Int       @default(0) @map("total_contacts_dropped")
+  conversions                 Int       @default(0)
+  conversionRate              Decimal   @default(0) @db.Decimal(5, 4) @map("conversion_rate")
+  touchpointsSent             Int       @default(0) @map("touchpoints_sent")
+  touchpointsDelivered        Int       @default(0) @map("touchpoints_delivered")
+  touchpointsOpened           Int       @default(0) @map("touchpoints_opened")
+  touchpointsClicked          Int       @default(0) @map("touchpoints_clicked")
+  bounceRate                  Decimal   @default(0) @db.Decimal(5, 4) @map("bounce_rate")
+  unsubscribeRate             Decimal   @default(0) @db.Decimal(5, 4) @map("unsubscribe_rate")
+  avgTimeToCompletionMinutes  Int       @default(0) @map("avg_time_to_completion_minutes")
+  avgTimeToConversionMinutes  Int       @default(0) @map("avg_time_to_conversion_minutes")
+  totalValue                  Decimal   @default(0) @db.Decimal(12, 2) @map("total_value")
+  avgValuePerConversion       Decimal   @default(0) @db.Decimal(12, 2) @map("avg_value_per_conversion")
+  createdAt                   DateTime  @default(now()) @map("created_at")
+  updatedAt                   DateTime  @updatedAt @map("updated_at")
+
+  journey                     Journey   @relation(fields: [journeyId], references: [id], onDelete: Cascade)
+  client                      Client    @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@unique([journeyId, date])
+  @@index([journeyId])
+  @@index([clientId])
+  @@index([date])
+  @@index([journeyId, date])
+  @@index([date, clientId])
+  @@map("journey_performance_metrics")
+}
+
+model TouchpointPerformanceMetrics {
+  id              String    @id @default(uuid())
+  touchpointId    String    @map("touchpoint_id")
+  journeyId       String    @map("journey_id")
+  clientId        String    @map("client_id")
+  date            DateTime  @db.Date
+  sent            Int       @default(0)
+  delivered       Int       @default(0)
+  opened          Int       @default(0)
+  clicked         Int       @default(0)
+  replied         Int       @default(0)
+  bounced         Int       @default(0)
+  unsubscribed    Int       @default(0)
+  openRate        Decimal   @default(0) @db.Decimal(5, 4) @map("open_rate")
+  clickRate       Decimal   @default(0) @db.Decimal(5, 4) @map("click_rate")
+  replyRate       Decimal   @default(0) @db.Decimal(5, 4) @map("reply_rate")
+  bounceRate      Decimal   @default(0) @db.Decimal(5, 4) @map("bounce_rate")
+  dropOffs        Int       @default(0) @map("drop_offs")
+  dropOffRate     Decimal   @default(0) @db.Decimal(5, 4) @map("drop_off_rate")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  touchpoint      Touchpoint @relation(fields: [touchpointId], references: [id], onDelete: Cascade)
+  journey         Journey   @relation(fields: [journeyId], references: [id], onDelete: Cascade)
+  client          Client    @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@unique([touchpointId, date])
+  @@index([touchpointId])
+  @@index([journeyId])
+  @@index([date])
+  @@map("touchpoint_performance_metrics")
+}
+
+model ABTestResult {
+  id                    String    @id @default(uuid())
+  journeyId             String    @map("journey_id")
+  touchpointId          String?   @map("touchpoint_id")
+  clientId              String    @map("client_id")
+  testName              String    @map("test_name")
+  variantName           String    @map("variant_name")
+  variantType           String    @map("variant_type")
+  participants          Int       @default(0)
+  trafficPercentage     Decimal   @default(0) @db.Decimal(5, 2) @map("traffic_percentage")
+  conversions           Int       @default(0)
+  conversionRate        Decimal   @default(0) @db.Decimal(5, 4) @map("conversion_rate")
+  clicks                Int       @default(0)
+  clickRate             Decimal   @default(0) @db.Decimal(5, 4) @map("click_rate")
+  opens                 Int       @default(0)
+  openRate              Decimal   @default(0) @db.Decimal(5, 4) @map("open_rate")
+  confidenceLevel       Decimal   @default(0) @db.Decimal(5, 4) @map("confidence_level")
+  isWinner              Boolean   @default(false) @map("is_winner")
+  improvementPercentage Decimal   @default(0) @db.Decimal(6, 2) @map("improvement_percentage")
+  startDate             DateTime? @map("start_date")
+  endDate               DateTime? @map("end_date")
+  status                String    @default("running")
+  createdAt             DateTime  @default(now()) @map("created_at")
+  updatedAt             DateTime  @updatedAt @map("updated_at")
+
+  journey               Journey   @relation(fields: [journeyId], references: [id], onDelete: Cascade)
+  client                Client    @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@index([journeyId])
+  @@index([clientId])
+  @@index([status])
+  @@map("ab_test_results")
+}
+
+model JourneyFunnelStage {
+  id                    String    @id @default(uuid())
+  journeyId             String    @map("journey_id")
+  clientId              String    @map("client_id")
+  stageName             String    @map("stage_name")
+  stageOrder            Int       @map("stage_order")
+  enteredCount          Int       @default(0) @map("entered_count")
+  completedCount        Int       @default(0) @map("completed_count")
+  droppedCount          Int       @default(0) @map("dropped_count")
+  conversionRate        Decimal   @default(0) @db.Decimal(5, 4) @map("conversion_rate")
+  avgTimeInStageMinutes Int       @default(0) @map("avg_time_in_stage_minutes")
+  touchpointId          String?   @map("touchpoint_id")
+  date                  DateTime  @db.Date
+  createdAt             DateTime  @default(now()) @map("created_at")
+  updatedAt             DateTime  @updatedAt @map("updated_at")
+
+  journey               Journey   @relation(fields: [journeyId], references: [id], onDelete: Cascade)
+  client                Client    @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@unique([journeyId, stageName, date])
+  @@index([journeyId])
+  @@index([date])
+  @@map("journey_funnel_stages")
+}
+
+model ClientAnalyticsSummary {
+  id                          String    @id @default(uuid())
+  clientId                    String    @map("client_id")
+  date                        DateTime  @db.Date
+  activeJourneys              Int       @default(0) @map("active_journeys")
+  totalJourneyRuns            Int       @default(0) @map("total_journey_runs")
+  totalConversions            Int       @default(0) @map("total_conversions")
+  overallConversionRate       Decimal   @default(0) @db.Decimal(5, 4) @map("overall_conversion_rate")
+  totalTouchpointsSent        Int       @default(0) @map("total_touchpoints_sent")
+  avgOpenRate                 Decimal   @default(0) @db.Decimal(5, 4) @map("avg_open_rate")
+  avgClickRate                Decimal   @default(0) @db.Decimal(5, 4) @map("avg_click_rate")
+  avgBounceRate               Decimal   @default(0) @db.Decimal(5, 4) @map("avg_bounce_rate")
+  avgTimeToConversionMinutes  Int       @default(0) @map("avg_time_to_conversion_minutes")
+  totalRevenue                Decimal   @default(0) @db.Decimal(12, 2) @map("total_revenue")
+  createdAt                   DateTime  @default(now()) @map("created_at")
+  updatedAt                   DateTime  @updatedAt @map("updated_at")
+
+  client                      Client    @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@unique([clientId, date])
+  @@index([clientId])
+  @@index([date])
+  @@map("client_analytics_summary")
+}
+
+// Custom Field Mapping Model - P1 Q2 2026
+model FieldMapping {
+  id                  String   @id @default(uuid())
+  clientId            String   @map("client_id")
+  sourceField         String   @map("source_field")
+  sourceFieldType     String   @map("source_field_type")
+  targetField         String   @map("target_field")
+  targetFieldType     String   @map("target_field_type")
+  targetSystem        String   @default("gohighlevel") @map("target_system")
+  transformationRule  String?  @map("transformation_rule")
+  validationRule      String?  @map("validation_rule")
+  isRequired          Boolean  @default(false) @map("is_required")
+  isActive            Boolean  @default(true) @map("is_active")
+  description         String?
+  exampleValue        String?  @map("example_value")
+  createdAt           DateTime @default(now()) @map("created_at")
+  updatedAt           DateTime @updatedAt @map("updated_at")
+
+  client              Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@unique([clientId, sourceField, targetSystem])
+  @@index([clientId])
+  @@index([targetSystem])
+  @@index([isActive])
+  @@map("field_mappings")
+}
+
+// Client Self-Service Portal Models - P2 Q2 2026
+
+// Change Requests for content approval workflow
+model ChangeRequest {
+  id                String    @id @default(uuid())
+  clientId          String    @map("client_id")
+  journeyId         String?   @map("journey_id")
+  touchpointId      String?   @map("touchpoint_id")
+  
+  // Request details
+  type              String    // content_change, new_touchpoint, delete_touchpoint, brand_update, other
+  title             String
+  description       String
+  proposedContent   Json?     @map("proposed_content")
+  
+  // Status workflow: pending_review -> in_review -> approved -> implemented
+  //                -> rejected, -> cancelled
+  status            String    @default("pending_review")
+  priority          String    @default("medium") // low, medium, high, urgent
+  
+  // Requester info (client user)
+  requestedBy       String    @map("requested_by")
+  requestedByEmail  String    @map("requested_by_email")
+  
+  // Reviewer info (internal team)
+  reviewedBy        String?   @map("reviewed_by")
+  reviewNotes       String?   @map("review_notes")
+  reviewedAt        DateTime? @map("reviewed_at")
+  
+  // Implementation tracking
+  implementedAt     DateTime? @map("implemented_at")
+  implementationNotes String? @map("implementation_notes")
+  
+  // Comments/activity log
+  comments          Json      @default("[]")
+  
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @updatedAt @map("updated_at")
+
+  client            Client    @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@index([clientId])
+  @@index([status])
+  @@index([journeyId])
+  @@index([clientId, status])
+  @@index([createdAt])
+  @@map("change_requests")
+}
+
+// Brand Voice Settings per client
+model BrandVoiceSettings {
+  id                String   @id @default(uuid())
+  clientId          String   @unique @map("client_id")
+  
+  // Brand personality
+  tone              String   @default("professional") // professional, casual, friendly, formal, playful, luxury
+  personalityTraits Json     @default("[]") @map("personality_traits")
+  
+  // Voice guidelines
+  voiceGuidelines   String?  @map("voice_guidelines")
+  writingStyle      String?  @map("writing_style")
+  
+  // Content preferences
+  preferredPhrases  Json     @default("[]") @map("preferred_phrases")
+  avoidedPhrases    Json     @default("[]") @map("avoided_phrases")
+  
+  // Audience
+  targetAudience    String?  @map("target_audience")
+  audienceToneNotes String?  @map("audience_tone_notes")
+  
+  // Examples
+  goodExamples      Json     @default("[]") @map("good_examples")
+  badExamples       Json     @default("[]") @map("bad_examples")
+  
+  // Meta
+  lastAnalyzedAt    DateTime? @map("last_analyzed_at")
+  analysisVersion   Int       @default(0) @map("analysis_version")
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @updatedAt @map("updated_at")
+
+  client            Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@index([clientId])
+  @@map("brand_voice_settings")
+}
+
+// Client Assets (images, documents, etc.)
+model ClientAsset {
+  id                String   @id @default(uuid())
+  clientId          String   @map("client_id")
+  
+  // Asset details
+  name              String
+  description       String?
+  type              String   // image, document, video, audio, other
+  fileType          String   @map("file_type") // jpg, png, pdf, etc.
+  
+  // File storage
+  fileUrl           String   @map("file_url")
+  fileSize          Int      @map("file_size") // in bytes
+  thumbnailUrl      String?  @map("thumbnail_url")
+  
+  // Categorization
+  category          String   @default("general") // general, logo, banner, email_header, social, document
+  tags              Json     @default("[]")
+  
+  // Usage tracking
+  usageCount        Int      @default(0) @map("usage_count")
+  lastUsedAt        DateTime? @map("last_used_at")
+  
+  // Uploader info
+  uploadedBy        String   @map("uploaded_by")
+  uploadedByEmail   String   @map("uploaded_by_email")
+  
+  // Status
+  status            String   @default("active") // active, archived, processing
+  
+  // Metadata
+  metadata          Json     @default("{}")
+  
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  client            Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@index([clientId])
+  @@index([type])
+  @@index([category])
+  @@index([status])
+  @@index([clientId, category])
+  @@map("client_assets")
+}
+
+// Client Portal Users (separate from internal users)
+model ClientPortalUser {
+  id                String   @id @default(uuid())
+  clientId          String   @map("client_id")
+  
+  // User info
+  email             String
+  name              String
+  role              String   @default("viewer") // viewer, editor, admin
+  
+  // Authentication
+  passwordHash      String?  @map("password_hash")
+  resetToken        String?  @map("reset_token")
+  resetTokenExpiry  DateTime? @map("reset_token_expiry")
+  
+  // Status
+  status            String   @default("active") // active, inactive, pending
+  lastLoginAt       DateTime? @map("last_login_at")
+  
+  // Permissions (override role defaults)
+  permissions       Json     @default("{}")
+  
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  client            Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@unique([clientId, email])
+  @@index([clientId])
+  @@index([email])
+  @@index([status])
+  @@map("client_portal_users")
+}
+
+  // Client Portal Sessions
+model ClientPortalSession {
+  id                String   @id @default(uuid())
+  userId            String   @map("user_id")
+  clientId          String   @map("client_id")
+  
+  token             String   @unique
+  expiresAt         DateTime @map("expires_at")
+  
+  // Session metadata
+  ipAddress         String?  @map("ip_address")
+  userAgent         String?  @map("user_agent")
+  
+  createdAt         DateTime @default(now()) @map("created_at")
+  lastActiveAt      DateTime @default(now()) @map("last_active_at")
+
+  @@index([userId])
+  @@index([token])
+  @@index([expiresAt])
+  @@map("client_portal_sessions")
+}
+
+// ============================================
+// WEBHOOK SYSTEM - P1 Q3 2026
+// Real-time sync with GoHighLevel webhooks
+// ============================================
+
+// Webhook Configuration - Stores webhook endpoints and settings per client
+model WebhookConfig {
+  id                String   @id @default(uuid())
+  clientId          String   @map("client_id")
+  
+  // Webhook settings
+  name              String
+  description       String?
+  webhookUrl        String   @map("webhook_url") // URL where GHL sends webhooks
+  secretKey         String   @map("secret_key") // For signature verification
+  
+  // Event subscriptions
+  subscribedEvents  Json     @default("[]") @map("subscribed_events") // Array of event types
+  
+  // Status
+  status            String   @default("active") // active, paused, disabled
+  
+  // Retry configuration
+  maxRetries        Int      @default(3) @map("max_retries")
+  retryDelayMs      Int      @default(5000) @map("retry_delay_ms") // Base delay between retries
+  
+  // Rate limiting
+  rateLimitPerMinute Int     @default(100) @map("rate_limit_per_minute")
+  
+  // Metadata
+  lastSuccessAt     DateTime? @map("last_success_at")
+  lastFailureAt     DateTime? @map("last_failure_at")
+  totalDeliveries   Int      @default(0) @map("total_deliveries")
+  failedDeliveries  Int      @default(0) @map("failed_deliveries")
+  
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  client            Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  deliveries        WebhookDelivery[]
+
+  @@index([clientId])
+  @@index([status])
+  @@map("webhook_configs")
+}
+
+// Webhook Delivery - Logs each webhook received from GHL
+model WebhookDelivery {
+  id                String   @id @default(uuid())
+  configId          String   @map("config_id")
+  clientId          String   @map("client_id")
+  
+  // Event details
+  eventType         String   @map("event_type") // ContactCreate, ContactUpdate, etc.
+  eventId           String?  @map("event_id") // GHL event ID for deduplication
+  payload           Json     // Full webhook payload
+  
+  // Processing status
+  status            String   @default("pending") // pending, processing, completed, failed, retrying
+  
+  // Signature verification
+  signatureValid    Boolean? @map("signature_valid")
+  signatureChecked  Boolean  @default(false) @map("signature_checked")
+  
+  // Processing results
+  processedAt       DateTime? @map("processed_at")
+  errorMessage      String?   @map("error_message")
+  retryCount        Int       @default(0) @map("retry_count")
+  nextRetryAt       DateTime? @map("next_retry_at")
+  
+  // Processing metadata
+  processingTimeMs  Int?      @map("processing_time_ms")
+  handlerResults    Json?     @map("handler_results") // Results from each handler
+  
+  // Raw request data
+  headers           Json?     // HTTP headers
+  ipAddress         String?   @map("ip_address")
+  
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @updatedAt @map("updated_at")
+
+  config            WebhookConfig @relation(fields: [configId], references: [id], onDelete: Cascade)
+
+  @@index([configId])
+  @@index([clientId])
+  @@index([eventType])
+  @@index([status])
+  @@index([eventId])
+  @@index([createdAt])
+  @@index([clientId, eventType, createdAt])
+  @@map("webhook_deliveries")
+}
+
+// Synced Contact - Contacts synced from GHL via webhooks
+model SyncedContact {
+  id                String   @id @default(uuid())
+  clientId          String   @map("client_id")
+  
+  // GHL Contact data
+  ghlContactId      String   @unique @map("ghl_contact_id")
+  email             String?
+  phone             String?
+  firstName         String?  @map("first_name")
+  lastName          String?  @map("last_name")
+  name              String?
+  
+  // Additional GHL data
+  tags              Json     @default("[]")
+  customFields      Json?    @map("custom_fields")
+  address           Json?
+  source            String?
+  
+  // Pipeline/Opportunity data
+  pipelineId        String?  @map("pipeline_id")
+  stageId           String?  @map("stage_id")
+  stageName         String?  @map("stage_name")
+  opportunityId     String?  @map("opportunity_id")
+  opportunityValue  Decimal? @map("opportunity_value") @db.Decimal(12, 2)
+  
+  // Sync metadata
+  lastSyncedAt      DateTime @default(now()) @map("last_synced_at")
+  lastEventType     String?  @map("last_event_type") // created, updated, deleted
+  syncStatus        String   @default("active") @map("sync_status") // active, merged, deleted
+  
+  // Raw data cache
+  rawData           Json?    @map("raw_data") // Full GHL contact data
+  
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  client            Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  appointments      SyncedAppointment[]
+  formSubmissions   FormSubmission[]
+  emailEvents       EmailEvent[]
+
+  @@index([clientId])
+  @@index([ghlContactId])
+  @@index([email])
+  @@index([syncStatus])
+  @@index([clientId, syncStatus])
+  @@index([lastSyncedAt])
+  @@map("synced_contacts")
+}
+
+// Synced Appointment - Appointments synced from GHL
+model SyncedAppointment {
+  id                String   @id @default(uuid())
+  clientId          String   @map("client_id")
+  contactId         String?  @map("contact_id") // Links to SyncedContact
+  
+  // GHL Appointment data
+  ghlAppointmentId  String   @unique @map("ghl_appointment_id")
+  calendarId        String   @map("calendar_id")
+  title             String?
+  description       String?
+  
+  // Timing
+  startTime         DateTime @map("start_time")
+  endTime           DateTime @map("end_time")
+  timezone          String   @default("America/New_York")
+  
+  // Status
+  status            String   @default("scheduled") // scheduled, completed, cancelled, no_show
+  appointmentType   String?  @map("appointment_type")
+  
+  // Attendees
+  contactEmail      String?  @map("contact_email")
+  contactPhone      String?  @map("contact_phone")
+  
+  // Location
+  location          String?  // physical address or "video"
+  meetingLink       String?  @map("meeting_link")
+  
+  // Sync metadata
+  lastSyncedAt      DateTime @default(now()) @map("last_synced_at")
+  lastEventType     String?  @map("last_event_type") // created, updated, cancelled
+  
+  // Raw data
+  rawData           Json?    @map("raw_data")
+  
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  client            Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  contact           SyncedContact? @relation(fields: [contactId], references: [id], onDelete: SetNull)
+
+  @@index([clientId])
+  @@index([ghlAppointmentId])
+  @@index([calendarId])
+  @@index([startTime])
+  @@index([status])
+  @@index([clientId, status])
+  @@map("synced_appointments")
+}
+
+// Form Submission - Form submissions synced from GHL
+model FormSubmission {
+  id                String   @id @default(uuid())
+  clientId          String   @map("client_id")
+  contactId         String?  @map("contact_id") // Links to SyncedContact
+  
+  // GHL Form data
+  ghlSubmissionId   String   @unique @map("ghl_submission_id")
+  formId            String   @map("form_id")
+  formName          String?  @map("form_name")
+  
+  // Submission data
+  submissionData    Json     @map("submission_data") // Form field values
+  pageUrl           String?  @map("page_url")
+  
+  // Contact info at time of submission
+  contactEmail      String?  @map("contact_email")
+  contactName       String?  @map("contact_name")
+  contactPhone      String?  @map("contact_phone")
+  
+  // UTM and tracking
+  utmSource         String?  @map("utm_source")
+  utmMedium         String?  @map("utm_medium")
+  utmCampaign       String?  @map("utm_campaign")
+  
+  // Sync metadata
+  submittedAt       DateTime @map("submitted_at")
+  lastSyncedAt      DateTime @default(now()) @map("last_synced_at")
+  
+  // Raw data
+  rawData           Json?    @map("raw_data")
+  
+  createdAt         DateTime @default(now()) @map("created_at")
+
+  client            Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  contact           SyncedContact? @relation(fields: [contactId], references: [id], onDelete: SetNull)
+
+  @@index([clientId])
+  @@index([ghlSubmissionId])
+  @@index([formId])
+  @@index([submittedAt])
+  @@index([clientId, formId])
+  @@map("form_submissions")
+}
+
+// Email Event - Email events (open, click, bounce, etc.) synced from GHL
+model EmailEvent {
+  id                String   @id @default(uuid())
+  clientId          String   @map("client_id")
+  contactId         String?  @map("contact_id") // Links to SyncedContact
+  
+  // Email data
+  emailId           String?  @map("email_id")
+  messageId         String?  @map("message_id")
+  templateId        String?  @map("template_id")
+  templateName      String?  @map("template_name")
+  
+  // Event details
+  eventType         String   @map("event_type") // delivered, opened, clicked, bounced, complained, unsubscribed
+  eventTime         DateTime @map("event_time")
+  
+  // Recipient
+  recipientEmail    String   @map("recipient_email")
+  
+  // Click tracking (for click events)
+  clickedLink       String?  @map("clicked_link")
+  clickCount        Int      @default(0) @map("click_count")
+  
+  // Open tracking
+  openCount         Int      @default(0) @map("open_count")
+  ipAddress         String?  @map("ip_address")
+  userAgent         String?  @map("user_agent")
+  
+  // Bounce/complaint details
+  bounceReason      String?  @map("bounce_reason")
+  bounceType        String?  @map("bounce_type") // hard_bounce, soft_bounce
+  
+  // Sync metadata
+  lastSyncedAt      DateTime @default(now()) @map("last_synced_at")
+  
+  // Raw data
+  rawData           Json?    @map("raw_data")
+  
+  createdAt         DateTime @default(now()) @map("created_at")
+
+  client            Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  contact           SyncedContact? @relation(fields: [contactId], references: [id], onDelete: SetNull)
+
+  @@index([clientId])
+  @@index([contactId])
+  @@index([eventType])
+  @@index([eventTime])
+  @@index([recipientEmail])
+  @@index([templateId])
+  @@index([clientId, eventType, eventTime])
+  @@map("email_events")
+}
+
+// Opportunity Stage History - Track stage changes for opportunities
+model OpportunityStageHistory {
+  id                String   @id @default(uuid())
+  clientId          String   @map("client_id")
+  
+  // Opportunity data
+  ghlOpportunityId  String   @map("ghl_opportunity_id")
+  contactId         String?  @map("contact_id") // GHL contact ID
+  
+  // Stage change details
+  fromStageId       String?  @map("from_stage_id")
+  fromStageName     String?  @map("from_stage_name")
+  toStageId         String   @map("to_stage_id")
+  toStageName       String   @map("to_stage_name")
+  pipelineId        String   @map("pipeline_id")
+  pipelineName      String?  @map("pipeline_name")
+  
+  // Opportunity value
+  opportunityValue  Decimal? @map("opportunity_value") @db.Decimal(12, 2)
+  status            String?  // open, won, lost, abandoned
+  
+  // Change metadata
+  changedAt         DateTime @map("changed_at")
+  changedBy         String?  @map("changed_by") // User who made the change
+  
+  // Sync metadata
+  lastSyncedAt      DateTime @default(now()) @map("last_synced_at")
+  
+  // Raw data
+  rawData           Json?    @map("raw_data")
+  
+  createdAt         DateTime @default(now()) @map("created_at")
+
+  client            Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@index([clientId])
+  @@index([ghlOpportunityId])
+  @@index([toStageId])
+  @@index([changedAt])
+  @@index([clientId, pipelineId])
+  @@map("opportunity_stage_history")
+}
+
+// ============================================
+// A/B TESTING FRAMEWORK - P1 Q3 2026
+// Comprehensive A/B Testing for Journeys
+// ============================================
+
+// Main A/B Test Configuration
+model JourneyABTest {
+  id                    String    @id @default(uuid())
+  clientId              String    @map("client_id")
+  journeyId             String    @map("journey_id")
+  name                  String
+  description           String?
+  hypothesis            String?
+  status                String    @default("draft") // draft, running, paused, completed, cancelled
+  testType              String    @default("journey") @map("test_type") // journey, touchpoint, subject_line, content
+  targetMetric          String    @default("conversion") @map("target_metric") // conversion, click_rate, open_rate, reply_rate
+  minConfidenceLevel    Decimal   @default(0.95) @db.Decimal(5,4) @map("min_confidence_level")
+  minSampleSize         Int       @default(100) @map("min_sample_size")
+  autoWinnerSelection   Boolean   @default(false) @map("auto_winner_selection")
+  trafficAllocation     Json      @default("{}") @map("traffic_allocation")
+  startDate             DateTime? @map("start_date")
+  endDate               DateTime? @map("end_date")
+  scheduledStart        DateTime? @map("scheduled_start")
+  winnerVariantId       String?   @map("winner_variant_id")
+  winnerSelectedAt      DateTime? @map("winner_selected_at")
+  winnerSelectionReason String?   @map("winner_selection_reason")
+  createdBy             String?
+  createdAt             DateTime  @default(now()) @map("created_at")
+  updatedAt             DateTime  @updatedAt @map("updated_at")
+
+  client       Client                @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  journey      Journey               @relation(fields: [journeyId], references: [id], onDelete: Cascade)
+  variants     JourneyABTestVariant[]
+  participants ABTestParticipant[]
+  events       ABTestEvent[]
+  dailyStats   ABTestDailyStats[]
+
+  @@unique([clientId, name])
+  @@index([clientId])
+  @@index([journeyId])
+  @@index([status])
+  @@index([startDate])
+  @@map("journey_ab_tests")
+}
+
+// A/B Test Variants
+model JourneyABTestVariant {
+  id                    String   @id @default(uuid())
+  testId                String   @map("test_id")
+  clientId              String   @map("client_id")
+  journeyId             String   @map("journey_id")
+  name                  String   // "Control", "Variant A", etc.
+  description           String?
+  trafficPercentage     Decimal  @default(50.00) @db.Decimal(5,2) @map("traffic_percentage")
+  journeySnapshot       Json     @map("journey_snapshot")
+  touchpointChanges     Json?    @map("touchpoint_changes")
+  isControl             Boolean  @default(false) @map("is_control")
+  status                String   @default("active") // active, disabled, winner, loser
+  participantsCount     Int      @default(0) @map("participants_count")
+  conversionsCount      Int      @default(0) @map("conversions_count")
+  conversionRate        Decimal  @default(0) @db.Decimal(5,4) @map("conversion_rate")
+  confidenceLevel       Decimal  @default(0) @db.Decimal(5,4) @map("confidence_level")
+  improvementPercentage Decimal  @default(0) @db.Decimal(6,2) @map("improvement_percentage")
+  createdAt             DateTime @default(now()) @map("created_at")
+  updatedAt             DateTime @updatedAt @map("updated_at")
+
+  test         JourneyABTest      @relation(fields: [testId], references: [id], onDelete: Cascade)
+  client       Client             @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  journey      Journey            @relation(fields: [journeyId], references: [id], onDelete: Cascade)
+  participants ABTestParticipant[]
+  events       ABTestEvent[]
+  dailyStats   ABTestDailyStats[]
+
+  @@index([testId])
+  @@index([clientId])
+  @@index([status])
+  @@map("journey_ab_test_variants")
+}
+
+// A/B Test Participants Tracking
+model ABTestParticipant {
+  id                   String    @id @default(uuid())
+  testId               String    @map("test_id")
+  variantId            String    @map("variant_id")
+  clientId             String    @map("client_id")
+  contactId            String    @map("contact_id")
+  sessionId            String?
+  journeyId            String    @map("journey_id")
+  entryTouchpointId    String?   @map("entry_touchpoint_id")
+  assignedAt           DateTime  @default(now()) @map("assigned_at")
+  convertedAt          DateTime? @map("converted_at")
+  conversionValue      Decimal?  @db.Decimal(12,2) @map("conversion_value")
+  conversionEvent      String?   @map("conversion_event")
+  droppedOffAt         DateTime? @map("dropped_off_at")
+  dropOffTouchpointId  String?   @map("drop_off_touchpoint_id")
+  timeInJourneyMinutes Int?      @map("time_in_journey_minutes")
+  deviceType           String?   @map("device_type")
+  utmSource            String?   @map("utm_source")
+  utmMedium            String?   @map("utm_medium")
+  utmCampaign          String?   @map("utm_campaign")
+  metadata             Json      @default("{}")
+  createdAt            DateTime  @default(now()) @map("created_at")
+  updatedAt            DateTime  @updatedAt @map("updated_at")
+
+  test     JourneyABTest      @relation(fields: [testId], references: [id], onDelete: Cascade)
+  variant  JourneyABTestVariant @relation(fields: [variantId], references: [id], onDelete: Cascade)
+  client   Client             @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  events   ABTestEvent[]
+
+  @@unique([testId, contactId])
+  @@index([testId])
+  @@index([variantId])
+  @@index([clientId])
+  @@index([contactId])
+  @@index([convertedAt])
+  @@map("ab_test_participants")
+}
+
+// A/B Test Events/Conversions
+model ABTestEvent {
+  id            String   @id @default(uuid())
+  testId        String   @map("test_id")
+  variantId     String   @map("variant_id")
+  participantId String   @map("participant_id")
+  clientId      String   @map("client_id")
+  eventType     String   @map("event_type")
+  eventData     Json     @default("{}") @map("event_data")
+  touchpointId  String?  @map("touchpoint_id")
+  timestamp     DateTime @default(now())
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  test        JourneyABTest      @relation(fields: [testId], references: [id], onDelete: Cascade)
+  variant     JourneyABTestVariant @relation(fields: [variantId], references: [id], onDelete: Cascade)
+  participant ABTestParticipant  @relation(fields: [participantId], references: [id], onDelete: Cascade)
+  client      Client             @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@index([testId])
+  @@index([variantId])
+  @@index([participantId])
+  @@index([eventType])
+  @@index([timestamp])
+  @@map("ab_test_events")
+}
+
+// A/B Test Daily Statistics
+model ABTestDailyStats {
+  id                String   @id @default(uuid())
+  testId            String   @map("test_id")
+  variantId         String   @map("variant_id")
+  clientId          String   @map("client_id")
+  date              DateTime @db.Date
+  participantsNew   Int      @default(0) @map("participants_new")
+  participantsTotal Int      @default(0) @map("participants_total")
+  conversionsNew    Int      @default(0) @map("conversions_new")
+  conversionsTotal  Int      @default(0) @map("conversions_total")
+  conversionRate    Decimal  @default(0) @db.Decimal(5,4) @map("conversion_rate")
+  emailOpens        Int      @default(0) @map("email_opens")
+  emailClicks       Int      @default(0) @map("email_clicks")
+  openRate          Decimal  @default(0) @db.Decimal(5,4) @map("open_rate")
+  clickRate         Decimal  @default(0) @db.Decimal(5,4) @map("click_rate")
+  revenue           Decimal  @default(0) @db.Decimal(12,2)
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  test    JourneyABTest      @relation(fields: [testId], references: [id], onDelete: Cascade)
+  variant JourneyABTestVariant @relation(fields: [variantId], references: [id], onDelete: Cascade)
+  client  Client             @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@unique([testId, variantId, date])
+  @@index([testId])
+  @@index([variantId])
+  @@index([date])
+  @@map("ab_test_daily_stats")
+}
+
+// ============================================
+// RATE LIMITING SYSTEM - P1 Q3 2026
+// Comprehensive API Rate Limiting & Throttling
+// ============================================
+
+model RateLimitTier {
+  id                  Int       @id @default(autoincrement())
+  name                String    @unique @db.VarChar(50)
+  displayName         String    @map("display_name") @db.VarChar(100)
+  description         String?
+  requestsPerMinute   Int       @map("requests_per_minute") @default(60)
+  requestsPerHour     Int       @map("requests_per_hour") @default(1000)
+  requestsPerDay      Int       @map("requests_per_day") @default(10000)
+  burstCapacity       Int       @map("burst_capacity") @default(10)
+  endpointLimits      Json      @map("endpoint_limits") @default("{}")
+  windowStrategy      String    @map("window_strategy") @default("sliding_window") @db.VarChar(30)
+  headersEnabled      Boolean   @map("headers_enabled") @default(true)
+  retryAfterEnabled   Boolean   @map("retry_after_enabled") @default(true)
+  isActive            Boolean   @map("is_active") @default(true)
+  createdAt           DateTime  @default(now()) @map("created_at")
+  updatedAt           DateTime  @updatedAt @map("updated_at")
+
+  clients     Client[]
+  apiKeys     ApiKey[]
+  usage       RateLimitUsage[]
+  violations  RateLimitViolation[]
+
+  @@map("rate_limit_tiers")
+}
+
+model RateLimitUsage {
+  id              Int       @id @default(autoincrement())
+  identifier      String    @db.VarChar(255)
+  identifierType  String    @map("identifier_type") @db.VarChar(50)
+  tierId          Int?      @map("tier_id")
+  windowStart     DateTime  @map("window_start")
+  windowEnd       DateTime  @map("window_end")
+  requestsCount   Int       @map("requests_count") @default(0)
+  tokensRemaining Decimal?  @map("tokens_remaining") @db.Decimal(10, 2)
+  lastRefillAt    DateTime? @map("last_refill_at")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  tier RateLimitTier? @relation(fields: [tierId], references: [id], onDelete: SetNull)
+
+  @@unique([identifier, windowStart])
+  @@index([identifier, windowStart])
+  @@index([windowEnd])
+  @@index([tierId])
+  @@map("rate_limit_usage")
+}
+
+model ApiKey {
+  id              String    @id @default(uuid())
+  clientId        String?   @map("client_id")
+  userId          String?   @map("user_id")
+  name            String    @db.VarChar(100)
+  keyHash         String    @unique @map("key_hash") @db.VarChar(255)
+  keyPrefix       String    @map("key_prefix") @db.VarChar(20)
+  tierId          Int?      @map("tier_id")
+  customLimits    Json?     @map("custom_limits")
+  scopes          Json      @default("[\"read\"]")
+  allowedIps      Json?     @map("allowed_ips")
+  allowedRoutes   Json?     @map("allowed_routes")
+  status          String    @default("active") @db.VarChar(20)
+  expiresAt       DateTime? @map("expires_at")
+  lastUsedAt      DateTime? @map("last_used_at")
+  totalRequests   Int       @map("total_requests") @default(0)
+  createdBy       String?   @map("created_by")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  client        Client?       @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  user          User?         @relation(fields: [userId], references: [id], onDelete: SetNull)
+  creator       User?         @relation(name: "ApiKeyCreator", fields: [createdBy], references: [id], onDelete: SetNull)
+  tier          RateLimitTier? @relation(fields: [tierId], references: [id], onDelete: SetNull)
+  violations    RateLimitViolation[]
+
+  @@index([clientId])
+  @@index([keyHash])
+  @@index([status])
+  @@index([tierId])
+  @@map("api_keys")
+}
+
+model RateLimitViolation {
+  id              Int       @id @default(autoincrement())
+  identifier      String    @db.VarChar(255)
+  identifierType  String    @map("identifier_type") @db.VarChar(50)
+  tierId          Int?      @map("tier_id")
+  apiKeyId        String?   @map("api_key_id")
+  route           String    @db.VarChar(255)
+  method          String    @db.VarChar(10)
+  ipAddress       String?   @map("ip_address") @db.Inet
+  userAgent       String?   @map("user_agent")
+  limitType       String    @map("limit_type") @db.VarChar(50)
+  limitValue      Int       @map("limit_value")
+  requestsMade    Int       @map("requests_made")
+  retryAfter      Int?      @map("retry_after")
+  createdAt       DateTime  @default(now()) @map("created_at")
+
+  tier    RateLimitTier? @relation(fields: [tierId], references: [id], onDelete: SetNull)
+  apiKey  ApiKey?        @relation(fields: [apiKeyId], references: [id], onDelete: SetNull)
+
+  @@index([identifier, createdAt])
+  @@index([createdAt])
+  @@index([tierId])
+  @@map("rate_limit_violations")
+}
+
+model RateLimitExemption {
+  id              Int       @id @default(autoincrement())
+  identifier      String    @db.VarChar(255)
+  identifierType  String    @map("identifier_type") @db.VarChar(50)
+  reason          String
+  expiresAt       DateTime? @map("expires_at")
+  overrideTierId  Int?      @map("override_tier_id")
+  createdBy       String?   @map("created_by")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  @@unique([identifier, identifierType])
+  @@index([identifier, identifierType])
+  @@map("rate_limit_exemptions")
 }

@@ -6,6 +6,7 @@ const router = Router();
 const prisma = new PrismaClient();
 
 const journeySchema = z.object({
+  id: z.string().uuid().optional(),
   clientId: z.string().uuid(),
   pipelineId: z.string().uuid().optional(),
   name: z.string().min(1).max(255),
@@ -99,9 +100,12 @@ router.post('/', async (req, res, next) => {
       // Create journey with slug
       const slug = data.slug || data.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
       
+      const { id, ...journeyData } = data;
+      
       const newJourney = await tx.journey.create({
         data: {
-          ...data,
+          ...journeyData,
+          ...(id && { id }),
           slug
         }
       });

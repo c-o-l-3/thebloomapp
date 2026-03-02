@@ -49,8 +49,9 @@ describe('useJourneys - Conflict Resolution', () => {
         3
       );
 
+      // Use Airtable record format (with fields)
       mockAirtableClient.getJourneys.mockResolvedValue([
-        { id: 'journey-123', name: 'Original', version: 3 }
+        { id: 'journey-123', fields: { Name: 'Original', Version: 3 } }
       ]);
       mockAirtableClient.updateJourney.mockRejectedValue(conflictError);
 
@@ -83,8 +84,9 @@ describe('useJourneys - Conflict Resolution', () => {
       const serverJourney = { id: 'journey-123', name: 'Server Version', version: 5 };
       const conflictError = new ConflictError('Conflict', serverJourney, 5, 3);
 
+      // Use Airtable record format (with fields)
       mockAirtableClient.getJourneys.mockResolvedValue([
-        { id: 'journey-123', name: 'Original', version: 3 }
+        { id: 'journey-123', fields: { Name: 'Original', Version: 3 } }
       ]);
       mockAirtableClient.updateJourney.mockRejectedValue(conflictError);
 
@@ -117,8 +119,9 @@ describe('useJourneys - Conflict Resolution', () => {
       const serverJourney = { id: 'journey-123', name: 'Server Name', version: 5 };
       const conflictError = new ConflictError('Conflict', serverJourney, 5, 3);
 
+      // Use Airtable record format (with fields)
       mockAirtableClient.getJourneys.mockResolvedValue([
-        { id: 'journey-123', name: 'Original', version: 3 }
+        { id: 'journey-123', fields: { Name: 'Original', Version: 3 } }
       ]);
 
       // First call conflicts, second succeeds
@@ -158,8 +161,9 @@ describe('useJourneys - Conflict Resolution', () => {
       const serverJourney = { id: 'journey-123', name: 'Server Name', version: 5 };
       const conflictError = new ConflictError('Conflict', serverJourney, 5, 3);
 
+      // Use Airtable record format (with fields)
       mockAirtableClient.getJourneys.mockResolvedValue([
-        { id: 'journey-123', name: 'Original', version: 3 }
+        { id: 'journey-123', fields: { Name: 'Original', Version: 3 } }
       ]);
 
       mockAirtableClient.updateJourney
@@ -202,8 +206,9 @@ describe('useJourneys - Conflict Resolution', () => {
       };
       const conflictError = new ConflictError('Conflict', serverJourney, 5, 3);
 
+      // Use Airtable record format (with fields)
       mockAirtableClient.getJourneys.mockResolvedValue([
-        { id: 'journey-123', name: 'Original', version: 3 }
+        { id: 'journey-123', fields: { Name: 'Original', Version: 3 } }
       ]);
       mockAirtableClient.updateJourney.mockRejectedValue(conflictError);
 
@@ -235,8 +240,9 @@ describe('useJourneys - Conflict Resolution', () => {
 
   describe('Version Handling', () => {
     it('should include current version in update requests', async () => {
+      // Use Airtable record format (with fields)
       mockAirtableClient.getJourneys.mockResolvedValue([
-        { id: 'journey-123', name: 'Test', version: 5 }
+        { id: 'journey-123', fields: { Name: 'Test', Version: 5 } }
       ]);
       mockAirtableClient.updateJourney.mockResolvedValue({
         id: 'journey-123',
@@ -260,8 +266,9 @@ describe('useJourneys - Conflict Resolution', () => {
     });
 
     it('should use version from journeyData if provided', async () => {
+      // Use Airtable record format (with fields)
       mockAirtableClient.getJourneys.mockResolvedValue([
-        { id: 'journey-123', name: 'Test', version: 5 }
+        { id: 'journey-123', fields: { Name: 'Test', Version: 5 } }
       ]);
       mockAirtableClient.updateJourney.mockResolvedValue({
         id: 'journey-123',
@@ -290,8 +297,9 @@ describe('useJourneys - Conflict Resolution', () => {
       const serverJourney = { id: 'journey-123', name: 'Server', version: 5 };
       const conflictError = new ConflictError('Conflict', serverJourney, 5, 3);
 
+      // Use Airtable record format (with fields)
       mockAirtableClient.getJourneys.mockResolvedValue([
-        { id: 'journey-123', name: 'Original', version: 3 }
+        { id: 'journey-123', fields: { Name: 'Original', Version: 3 } }
       ]);
       mockAirtableClient.updateJourney.mockRejectedValue(conflictError);
 
@@ -311,8 +319,9 @@ describe('useJourneys - Conflict Resolution', () => {
     });
 
     it('should set error for non-conflict errors', async () => {
+      // Use Airtable record format (with fields)
       mockAirtableClient.getJourneys.mockResolvedValue([
-        { id: 'journey-123', name: 'Original', version: 3 }
+        { id: 'journey-123', fields: { Name: 'Original', Version: 3 } }
       ]);
       mockAirtableClient.updateJourney.mockRejectedValue(new Error('Network error'));
 

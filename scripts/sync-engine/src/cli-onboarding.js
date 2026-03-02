@@ -10,6 +10,10 @@
  * - Progress indicators and colored output
  * - --skip-validation flag for faster iteration
  * - Backward compatible with existing CLI
+ * - Location config completeness validation
+ * - Timezone validation
+ * - Guided business hours/contact/social configuration
+ * - Setup completeness score
  */
 
 import { Command } from 'commander';
@@ -43,9 +47,10 @@ const PROGRESS_FILE = path.join(repoRoot, '.onboarding-progress.json');
 const WIZARD_STEPS = [
   { id: 'welcome', name: 'Welcome & Client Selection', weight: 5 },
   { id: 'ghl-credentials', name: 'GHL API Credentials', weight: 15 },
-  { id: 'airtable-setup', name: 'Airtable Connection', weight: 15 },
-  { id: 'brand-voice', name: 'Brand Voice Configuration', weight: 20 },
-  { id: 'email-templates', name: 'Email Template Selection', weight: 15 },
+  { id: 'airtable-setup', name: 'Airtable Connection', weight: 10 },
+  { id: 'brand-voice', name: 'Brand Voice Configuration', weight: 15 },
+  { id: 'email-templates', name: 'Email Template Selection', weight: 10 },
+  { id: 'location-config', name: 'Location Configuration', weight: 15 },
   { id: 'review', name: 'Review & Confirm', weight: 10 },
   { id: 'execute', name: 'Execute Setup', weight: 20 }
 ];
@@ -433,6 +438,16 @@ export class InteractiveOnboardingWizard {
           const templatesPath = path.join(clientDir, 'emails', 'email-templates.json');
           const templates = JSON.parse(await fs.readFile(templatesPath, 'utf8'));
           return templates.templates?.length > 0;
+        } catch {
+          return false;
+        }
+      }
+      case 'location-config': {
+        try {
+          const configPath = path.join(clientDir, 'location-config.json');
+          const config = JSON.parse(await fs.readFile(configPath, 'utf8'));
+          const score = this.calculateLocationConfigScore(config);
+          return score >= 80; // Skip if 80%+ complete
         } catch {
           return false;
         }
@@ -1229,10 +1244,425 @@ export class InteractiveOnboardingWizard {
   }
 
   /**
-   * Step 6: Review & Confirm
+   * Step 6: Location Configuration with Completeness Score
    */
-  async step6_Review() {
-    this.printHeader('Step 6: Review & Confirm');
+  async step6_LocationConfig() {
+    this.printHeader('Step 6: Location Configuration', 'Configure business details, hours & contact info');
+    this.stepStartTime = Date.now();
+
+    // Check if already configured
+    if (this.skipConfigured && await this.shouldSkipStep('location-config')) {
+      this.logStep('Location config', 'skipped', 'Already configured');
+      this.completedSteps.push('location-config');
+      return { skipped: true };
+    }
+
+    const clientDir = path.join(repoRoot, 'clients', this.clientSlug);
+    const configPath = path.join(clientDir, 'location-config.json');
+
+    // Load existing config
+    let locationConfig = {};
+    try {
+      locationConfig = JSON.parse(await fs.readFile(configPath, 'utf8'));
+    } catch {
+      // Use defaults
+      locationConfig = {
+        locationId: '',
+        name: '',
+        timezone: 'America/New_York',
+        address: { street: '', city: '', state: '', postalCode: '', country: 'US' },
+        contact: { email: '', phone: '', website: this.website || '' },
+        businessHours: {
+          monday: { start: '09:00', end: '17:00' },
+          tuesday: { start: '09:00', end: '17:00' },
+          wednesday: { start: '09:00', end: '17:00' },
+          thursday: { start: '09:00', end: '17:00' },
+          friday: { start: '09:00', end: '17:00' },
+          saturday: { start: '10:00', end: '14:00' },
+          sunday: { start: '', end: '' }
+        },
+        settings: { defaultCountry: 'US', currency: 'USD', dateFormat: 'MM/DD/YYYY', timeFormat: '12h' },
+        socialAccounts: { facebook: '', instagram: '', twitter: '', linkedin: '' }
+      };
+    }
+
+    // Show current completeness score
+    const completeness = this.calculateLocationConfigScore(locationConfig);
+    console.log(chalk.cyan(`\nCurrent Completeness Score: ${this.getCompletenessColor(completeness)}${completeness}%`));
+    console.log(chalk.gray('  (100% = fully configured)\n'));
+
+    if (this.nonInteractive) {
+      // Validate timezone if provided
+      if (locationConfig.timezone) {
+        const tzValidation = this.validateTimezone(locationConfig.timezone);
+        if (!tzValidation.valid) {
+          this.logStep('Timezone validation', 'warning', tzValidation.message);
+        }
+      }
+      this.logStep('Location config', 'success', `Completeness: ${completeness}%`);
+      this.completedSteps.push('location-config');
+      return { configured: true, completeness };
+    }
+
+    // Show what's missing
+    const missing = this.getMissingConfigFields(locationConfig);
+    if (missing.length > 0) {
+      console.log(chalk.yellow('Missing or incomplete fields:'));
+      missing.forEach(field => {
+        console.log(chalk.gray(`  • ${field}`));
+      });
+      console.log('');
+    }
+
+    const { configureNow } = await inquirer.prompt([{
+      type: 'confirm',
+      name: 'configureNow',
+      message: 'Configure location details now?',
+      default: completeness < 100
+    }]);
+
+    if (!configureNow) {
+      this.completedSteps.push('location-config');
+      return { configured: false, completeness };
+    }
+
+    // Collect configuration
+    console.log(chalk.cyan('\n--- Basic Information ---'));
+
+    const basicInfo = await inquirer.prompt([
+      {
+        type: 'input',
+        name: 'name',
+        message: 'Location/Venue Name:',
+        default: locationConfig.name,
+        validate: (input) => input ? true : 'Name is required'
+      },
+      {
+        type: 'list',
+        name: 'timezone',
+        message: 'Timezone:',
+        default: locationConfig.timezone || 'America/New_York',
+        choices: [
+          { name: 'Eastern (America/New_York)', value: 'America/New_York' },
+          { name: 'Central (America/Chicago)', value: 'America/Chicago' },
+          { name: 'Mountain (America/Denver)', value: 'America/Denver' },
+          { name: 'Pacific (America/Los_Angeles)', value: 'America/Los_Angeles' },
+          { name: 'Hawaii (Pacific/Honolulu)', value: 'Pacific/Honolulu' },
+          { name: 'Arizona (America/Phoenix)', value: 'America/Phoenix' },
+          { name: 'Alaska (America/Anchorage)', value: 'America/Anchorage' },
+          { name: 'Other (specify)', value: 'other' }
+        ]
+      },
+      {
+        type: 'input',
+        name: 'otherTimezone',
+        message: 'Enter IANA timezone (e.g., Europe/London):',
+        when: (answers) => answers.timezone === 'other',
+        validate: (input) => this.validateTimezone(input).valid ? true : 'Invalid IANA timezone'
+      }
+    ]);
+
+    if (basicInfo.otherTimezone) {
+      basicInfo.timezone = basicInfo.otherTimezone;
+    }
+
+    // Validate timezone
+    const tzValidation = this.validateTimezone(basicInfo.timezone);
+    if (!tzValidation.valid) {
+      console.log(chalk.red(`\n⚠ Invalid timezone: ${tzValidation.message}`));
+    } else {
+      console.log(chalk.green(`✓ Timezone validated: ${tzValidation.offset}`));
+    }
+
+    console.log(chalk.cyan('\n--- Contact Information ---'));
+
+    const contactInfo = await inquirer.prompt([
+      {
+        type: 'input',
+        name: 'email',
+        message: 'Contact Email:',
+        default: locationConfig.contact?.email || '',
+        validate: (input) => {
+          if (!input) return 'Email is required';
+          if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input)) {
+            return 'Please enter a valid email address';
+          }
+          return true;
+        }
+      },
+      {
+        type: 'input',
+        name: 'phone',
+        message: 'Contact Phone:',
+        default: locationConfig.contact?.phone || '',
+        validate: (input) => input ? true : 'Phone is required'
+      },
+      {
+        type: 'input',
+        name: 'website',
+        message: 'Website URL:',
+        default: locationConfig.contact?.website || this.website || '',
+        validate: (input) => {
+          if (!input) return 'Website is required';
+          try {
+            new URL(input);
+            return true;
+          } catch {
+            return 'Please enter a valid URL (include https://)';
+          }
+        }
+      }
+    ]);
+
+    console.log(chalk.cyan('\n--- Address ---'));
+
+    const addressInfo = await inquirer.prompt([
+      {
+        type: 'input',
+        name: 'street',
+        message: 'Street Address:',
+        default: locationConfig.address?.street || ''
+      },
+      {
+        type: 'input',
+        name: 'city',
+        message: 'City:',
+        default: locationConfig.address?.city || '',
+        validate: (input) => input ? true : 'City is required'
+      },
+      {
+        type: 'input',
+        name: 'state',
+        message: 'State/Province:',
+        default: locationConfig.address?.state || '',
+        validate: (input) => input ? true : 'State is required'
+      },
+      {
+        type: 'input',
+        name: 'postalCode',
+        message: 'Postal Code:',
+        default: locationConfig.address?.postalCode || '',
+        validate: (input) => input ? true : 'Postal code is required'
+      }
+    ]);
+
+    console.log(chalk.cyan('\n--- Business Hours (leave blank for closed) ---'));
+
+    const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+    const businessHours = {};
+
+    for (const day of days) {
+      const current = locationConfig.businessHours?.[day] || { start: '', end: '' };
+      const isWeekend = day === 'saturday' || day === 'sunday';
+      
+      const hours = await inquirer.prompt([
+        {
+          type: 'confirm',
+          name: 'open',
+          message: `${day.charAt(0).toUpperCase() + day.slice(1)}: Open?`,
+          default: !!current.start
+        },
+        {
+          type: 'input',
+          name: 'start',
+          message: '  Opening time (HH:MM):',
+          default: current.start || (isWeekend ? '10:00' : '09:00'),
+          when: (answers) => answers.open,
+          validate: (input) => /^([01]?\d|2[0-3]):([0-5]\d)$/.test(input) ? true : 'Use format HH:MM'
+        },
+        {
+          type: 'input',
+          name: 'end',
+          message: '  Closing time (HH:MM):',
+          default: current.end || (isWeekend ? '14:00' : '17:00'),
+          when: (answers) => answers.open,
+          validate: (input) => /^([01]?\d|2[0-3]):([0-5]\d)$/.test(input) ? true : 'Use format HH:MM'
+        }
+      ]);
+
+      if (hours.open) {
+        businessHours[day] = { start: hours.start, end: hours.end };
+      } else {
+        businessHours[day] = { start: '', end: '' };
+      }
+    }
+
+    console.log(chalk.cyan('\n--- Social Media (optional) ---'));
+
+    const socialInfo = await inquirer.prompt([
+      {
+        type: 'input',
+        name: 'facebook',
+        message: 'Facebook URL:',
+        default: locationConfig.socialAccounts?.facebook || ''
+      },
+      {
+        type: 'input',
+        name: 'instagram',
+        message: 'Instagram handle (without @):',
+        default: locationConfig.socialAccounts?.instagram || ''
+      },
+      {
+        type: 'input',
+        name: 'twitter',
+        message: 'Twitter/X handle (without @):',
+        default: locationConfig.socialAccounts?.twitter || ''
+      },
+      {
+        type: 'input',
+        name: 'linkedin',
+        message: 'LinkedIn URL:',
+        default: locationConfig.socialAccounts?.linkedin || ''
+      }
+    ]);
+
+    // Build updated config
+    const updatedConfig = {
+      locationId: this.ghlLocationId || locationConfig.locationId || '',
+      name: basicInfo.name,
+      timezone: basicInfo.timezone,
+      address: {
+        street: addressInfo.street,
+        city: addressInfo.city,
+        state: addressInfo.state,
+        postalCode: addressInfo.postalCode,
+        country: locationConfig.address?.country || 'US'
+      },
+      contact: {
+        email: contactInfo.email,
+        phone: contactInfo.phone,
+        website: contactInfo.website
+      },
+      businessHours,
+      settings: locationConfig.settings || { defaultCountry: 'US', currency: 'USD', dateFormat: 'MM/DD/YYYY', timeFormat: '12h' },
+      socialAccounts: {
+        facebook: socialInfo.facebook,
+        instagram: socialInfo.instagram,
+        twitter: socialInfo.twitter,
+        linkedin: socialInfo.linkedin
+      }
+    };
+
+    // Save config
+    await fs.mkdir(path.dirname(configPath), { recursive: true });
+    await fs.writeFile(configPath, JSON.stringify(updatedConfig, null, 2), 'utf8');
+
+    // Calculate new completeness score
+    const newCompleteness = this.calculateLocationConfigScore(updatedConfig);
+    const duration = ((Date.now() - this.stepStartTime) / 1000).toFixed(1);
+    
+    this.logStep('Location name', 'success', updatedConfig.name);
+    this.logStep('Timezone', 'success', updatedConfig.timezone);
+    this.logStep('Contact info', 'success', updatedConfig.contact.email);
+    this.logStep('Completeness score', 'success', `${newCompleteness}%`, duration);
+    
+    this.completedSteps.push('location-config');
+    this.results.config.locationConfig = updatedConfig;
+    
+    await this.stateManager.save({
+      currentStep: 'location-config',
+      completedSteps: this.completedSteps,
+      clientSlug: this.clientSlug,
+      config: this.results.config
+    });
+
+    return { configured: true, completeness: newCompleteness };
+  }
+
+  /**
+   * Validate timezone is valid IANA format
+   */
+  validateTimezone(timezone) {
+    try {
+      Intl.DateTimeFormat(undefined, { timeZone: timezone });
+      // Get offset info
+      const now = new Date();
+      const formatter = new Intl.DateTimeFormat('en-US', {
+        timeZone: timezone,
+        timeZoneName: 'shortOffset'
+      });
+      const parts = formatter.formatToParts(now);
+      const offset = parts.find(p => p.type === 'timeZoneName')?.value || '';
+      return { valid: true, offset };
+    } catch (e) {
+      return { valid: false, message: 'Invalid IANA timezone format' };
+    }
+  }
+
+  /**
+   * Calculate location config completeness score (0-100)
+   */
+  calculateLocationConfigScore(config) {
+    if (!config) return 0;
+    
+    let score = 0;
+    const maxScore = 100;
+    
+    // Basic info (30 points)
+    if (config.name) score += 10;
+    if (config.locationId) score += 10;
+    if (config.timezone) score += 10;
+    
+    // Contact info (25 points)
+    if (config.contact?.email) score += 10;
+    if (config.contact?.phone) score += 10;
+    if (config.contact?.website) score += 5;
+    
+    // Address (20 points)
+    if (config.address?.city) score += 5;
+    if (config.address?.state) score += 5;
+    if (config.address?.postalCode) score += 5;
+    if (config.address?.street) score += 5;
+    
+    // Business hours (15 points)
+    if (config.businessHours) {
+      const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
+      const weekdaysOpen = days.filter(d => config.businessHours[d]?.start).length;
+      score += Math.min(weekdaysOpen * 2, 10); // Max 10 for weekdays
+      if (config.businessHours.saturday?.start) score += 3;
+      if (config.businessHours.sunday?.start) score += 2;
+    }
+    
+    // Social accounts (10 points - bonus)
+    const socialCount = Object.values(config.socialAccounts || {}).filter(v => v).length;
+    score += Math.min(socialCount * 2.5, 10);
+    
+    return Math.min(score, maxScore);
+  }
+
+  /**
+   * Get color for completeness score
+   */
+  getCompletenessColor(score) {
+    if (score >= 80) return chalk.green(`${score}`);
+    if (score >= 50) return chalk.yellow(`${score}`);
+    return chalk.red(`${score}`);
+  }
+
+  /**
+   * Get list of missing configuration fields
+   */
+  getMissingConfigFields(config) {
+    const missing = [];
+    
+    if (!config.name) missing.push('Location name');
+    if (!config.locationId) missing.push('GHL Location ID');
+    if (!config.timezone) missing.push('Timezone');
+    if (!config.contact?.email) missing.push('Contact email');
+    if (!config.contact?.phone) missing.push('Contact phone');
+    if (!config.contact?.website) missing.push('Website');
+    if (!config.address?.city) missing.push('City');
+    if (!config.address?.state) missing.push('State');
+    if (!config.address?.postalCode) missing.push('Postal code');
+    
+    return missing;
+  }
+
+  /**
+   * Step 7: Review & Confirm
+   */
+  async step7_Review() {
+    this.printHeader('Step 7: Review & Confirm');
     this.stepStartTime = Date.now();
 
     // Gather all configuration info
@@ -1249,6 +1679,9 @@ export class InteractiveOnboardingWizard {
       const locationConfig = JSON.parse(await fs.readFile(configPath, 'utf8'));
       config.locationName = locationConfig.name;
       config.timezone = locationConfig.timezone;
+      
+      // Calculate completeness score
+      config.locationCompleteness = this.calculateLocationConfigScore(locationConfig);
     } catch {
       // Not available yet
     }
@@ -1260,6 +1693,11 @@ export class InteractiveOnboardingWizard {
     console.log(`  Website: ${chalk.white(config.website)}`);
     console.log(`  Industry: ${chalk.white(config.industry)}`);
     console.log(`  Timezone: ${chalk.white(config.timezone || 'Not set')}`);
+    
+    // Show completeness score if available
+    if (config.locationCompleteness !== undefined) {
+      console.log(`\n  Location Config: ${this.getCompletenessColor(config.locationCompleteness)}% complete`);
+    }
     
     console.log(chalk.cyan('\nCompleted Steps:'));
     this.completedSteps.forEach(stepId => {
@@ -1320,10 +1758,10 @@ export class InteractiveOnboardingWizard {
   }
 
   /**
-   * Step 7: Execute Setup with Progress Bar
+   * Step 8: Execute Setup with Progress Bar
    */
-  async step7_Execute() {
-    this.printHeader('Step 7: Execute Setup', 'Creating client configuration...');
+  async step8_Execute() {
+    this.printHeader('Step 8: Execute Setup', 'Creating client configuration...');
     this.stepStartTime = Date.now();
 
     if (this.dryRun) {
@@ -1758,11 +2196,14 @@ export class InteractiveOnboardingWizard {
           case 'email-templates':
             await this.step5_EmailTemplates();
             break;
+          case 'location-config':
+            await this.step6_LocationConfig();
+            break;
           case 'review':
-            await this.step6_Review();
+            await this.step7_Review();
             break;
           case 'execute':
-            await this.step7_Execute();
+            await this.step8_Execute();
             break;
         }
       }

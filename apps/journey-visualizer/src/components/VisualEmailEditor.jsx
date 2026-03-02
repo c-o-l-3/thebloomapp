@@ -19,9 +19,12 @@ import {
   Smartphone,
   Eye,
   EyeOff,
-  Layout
+  Layout,
+  Sparkles
 } from 'lucide-react';
 import { getApiClient } from '../services/apiClient';
+import { aiEmailTemplateService } from '../services/aiEmailTemplateService';
+import SmartTemplateSelector from './SmartTemplateSelector';
 import './VisualEmailEditor.css';
 
 const apiClient = getApiClient();
@@ -49,6 +52,56 @@ export function VisualEmailEditor() {
   const [device, setDevice] = useState('desktop');
   const [showPreview, setShowPreview] = useState(true);
   const [copySuccess, setCopySuccess] = useState(false);
+  const [aiInitialized, setAiInitialized] = useState(false);
+  const [clientSlug, setClientSlug] = useState(null);
+  
+  // Initialize AI service
+  useEffect(() => {
+    const initAI = async () => {
+      // Try to get client slug from touchpoint or localStorage
+      const storedClient = localStorage.getItem('current_client_slug');
+      if (storedClient) {
+        setClientSlug(storedClient);
+        await aiEmailTemplateService.initialize(storedClient);
+        setAiInitialized(true);
+      }
+    };
+    initAI();
+  }, []);
+  
+  // Handle AI template selection
+  const handleAITemplateSelect = useCallback(async (template, category) => {
+    if (!editorInstanceRef.current) return;
+    
+    try {
+      // Get context from touchpoint
+      const context = {
+        first_name: touchpoint?.contact?.first_name || 'there',
+        last_name: touchpoint?.contact?.last_name || '',
+        venue_name: touchpoint?.venue_name || 'our venue',
+        planner_name: touchpoint?.planner_name || 'our team',
+        event_date: touchpoint?.event_date || 'your special day'
+      };
+      
+      // Generate content using AI
+      const generated = await aiEmailTemplateService.generateContent(template, context);
+      
+      // Expand to full HTML
+      const html = await aiEmailTemplateService.expandToHTML(template, context);
+      
+      // Set the generated content in the editor
+      editorInstanceRef.current.setComponents(html);
+      
+      setError(null);
+    } catch (err) {
+      console.error('Failed to generate AI content:', err);
+      setError('Failed to generate AI content. Using fallback template.');
+      
+      // Fallback: use basic template structure
+      const fallbackContent = `<h1>${template.name}</h1><p>${template.previewText}</p>`;
+      editorInstanceRef.current.setComponents(fallbackContent);
+    }
+  }, [touchpoint]);
   
   // Initialize GrapesJS editor
   useEffect(() => {
@@ -268,10 +321,6 @@ export function VisualEmailEditor() {
           { type: 'text', name: 'alt', label: 'Alt Text' },
           { type: 'text', name: 'target', label: 'Target' }
         ]
-      },
-      // Disable default panels - we'll create our own
-      panels: {
-        defaults: []
       }
     });
     
@@ -637,6 +686,36 @@ ${html}
               <span>Preview</span>
             </button>
           </div>
+          
+          <div className="visual-editor__divider" />
+          
+          {/* AI Templates */}
+          {aiInitialized && clientSlug && (
+            <div className="visual-editor__toolbar-group">
+              <SmartTemplateSelector
+                clientSlug={clientSlug}
+                onSelectTemplate={handleAITemplateSelect}
+                currentContext={{
+                  journeyStage: touchpoint?.journey?.stage || 'nurturing',
+                  touchpointNumber: touchpoint?.order,
+                  contactData: touchpoint?.contact
+                }}
+              />
+            </div>
+          )}
+          
+          {!aiInitialized && (
+            <div className="visual-editor__toolbar-group">
+              <button 
+                className="visual-editor__tool-btn visual-editor__tool-btn--ai"
+                title="AI Templates (loading...)"
+                disabled
+              >
+                <Sparkles size={16} />
+                <span>AI Templates</span>
+              </button>
+            </div>
+          )}
           
           <div className="visual-editor__divider" />
           

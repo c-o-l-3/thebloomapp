@@ -1,28 +1,19 @@
 /**
  * useJourneys Hook
  * Manages journey data fetching and state
- * Supports both Airtable and local file modes
+ * Uses PostgreSQL API exclusively (Airtable migration completed - P0 Q3 2026)
  */
 
 import { useState, useEffect, useCallback } from 'react';
 import { JOURNEY_STATUS } from '../types';
-import { 
-  isLocalMode, 
-  getLocalJourneys, 
-  createLocalJourney, 
-  updateLocalJourney, 
-  deleteLocalJourney 
-} from '../services/localJourneys';
+import { getDataService } from '../services/dataService';
 import { ConflictError } from '../services/apiClient';
-
-const DATA_SOURCE = import.meta.env.VITE_DATA_SOURCE || 'airtable';
 
 /**
  * Custom hook for managing journey data
- * @param {Object} airtableClient - Airtable client instance (optional in local mode)
  * @param {string} clientId - Optional client ID to filter journeys
  */
-export function useJourneys(airtableClient, clientId = null) {
+export function useJourneys(clientId = null) {
   const [journeys, setJourneys] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -31,86 +22,36 @@ export function useJourneys(airtableClient, clientId = null) {
   const [conflict, setConflict] = useState(null);
   const [pendingChanges, setPendingChanges] = useState(null);
 
-  const usingLocalMode = isLocalMode();
+  const dataService = getDataService();
 
   const fetchJourneys = useCallback(async () => {
-    // Local file mode
-    if (usingLocalMode) {
-      try {
-        setLoading(true);
-        setError(null);
-        const localJourneys = await getLocalJourneys(clientId);
-        setJourneys(localJourneys);
-      } catch (err) {
-        console.error('Error loading local journeys:', err);
-        setError(err.message);
-        // Fall back to mock data on error
-        setJourneys(getMockJourneys());
-      } finally {
-        setLoading(false);
-      }
-      return;
-    }
-
-    // Airtable mode
-    if (!airtableClient) {
-      // Use mock data if no client provided
-      setJourneys(getMockJourneys());
-      setLoading(false);
-      return;
-    }
-
     try {
       setLoading(true);
       setError(null);
-      const records = await airtableClient.getJourneys(clientId);
-      const formattedJourneys = records.map(formatJourneyRecord);
-      setJourneys(formattedJourneys);
+      const journeys = await dataService.getJourneys({ clientId });
+      setJourneys(journeys);
     } catch (err) {
+      console.error('Error loading journeys:', err);
       setError(err.message);
       // Fall back to mock data on error
       setJourneys(getMockJourneys());
     } finally {
       setLoading(false);
     }
-  }, [airtableClient, clientId, usingLocalMode]);
+  }, [dataService, clientId]);
 
   useEffect(() => {
     fetchJourneys();
   }, [fetchJourneys]);
 
   const createJourney = async (journeyData) => {
-    // Local file mode
-    if (usingLocalMode) {
-      try {
-        const newJourney = await createLocalJourney(journeyData, clientId);
-        setJourneys(prev => [...prev, newJourney]);
-        return newJourney;
-      } catch (err) {
-        setError(err.message);
-        throw err;
-      }
-    }
-
-    // Airtable mode
-    if (!airtableClient) {
-      const newJourney = {
-        id: `journey-${Date.now()}`,
+    try {
+      const newJourney = await dataService.createJourney({
         ...journeyData,
-        status: JOURNEY_STATUS.DRAFT,
-        version: 1,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      };
+        clientId
+      });
       setJourneys(prev => [...prev, newJourney]);
       return newJourney;
-    }
-
-    try {
-      const record = await airtableClient.createJourney(journeyData);
-      const formattedJourney = formatJourneyRecord(record);
-      setJourneys(prev => [...prev, formattedJourney]);
-      return formattedJourney;
     } catch (err) {
       setError(err.message);
       throw err;
@@ -118,28 +59,6 @@ export function useJourneys(airtableClient, clientId = null) {
   };
 
   const updateJourney = async (journeyId, journeyData) => {
-    // Local file mode
-    if (usingLocalMode) {
-      try {
-        const updatedJourney = await updateLocalJourney(journeyId, journeyData, clientId);
-        setJourneys(prev => prev.map(j => 
-          j.id === journeyId ? { ...updatedJourney, ...journeyData, updatedAt: new Date().toISOString() } : j
-        ));
-        return updatedJourney;
-      } catch (err) {
-        setError(err.message);
-        throw err;
-      }
-    }
-
-    // Airtable mode
-    if (!airtableClient) {
-      setJourneys(prev => prev.map(j => 
-        j.id === journeyId ? { ...j, ...journeyData, updatedAt: new Date().toISOString() } : j
-      ));
-      return;
-    }
-
     try {
       // Include version for optimistic locking if available
       const currentJourney = journeys.find(j => j.id === journeyId);
@@ -148,7 +67,7 @@ export function useJourneys(airtableClient, clientId = null) {
         version: journeyData.version ?? currentJourney?.version ?? 1
       };
       
-      const result = await airtableClient.updateJourney(journeyId, dataWithVersion);
+      const result = await dataService.updateJourney(journeyId, dataWithVersion);
       setJourneys(prev => prev.map(j => 
         j.id === journeyId ? { ...j, ...result, updatedAt: new Date().toISOString() } : j
       ));
@@ -189,7 +108,7 @@ export function useJourneys(airtableClient, clientId = null) {
         version: serverData.version
       };
       
-      const result = await airtableClient.updateJourney(journeyId, dataWithVersion);
+      const result = await dataService.updateJourney(journeyId, dataWithVersion);
       setJourneys(prev => prev.map(j => 
         j.id === journeyId ? { ...j, ...result, updatedAt: new Date().toISOString() } : j
       ));
@@ -228,7 +147,7 @@ export function useJourneys(airtableClient, clientId = null) {
         version: serverData.version
       };
       
-      const result = await airtableClient.updateJourney(journeyId, dataWithVersion);
+      const result = await dataService.updateJourney(journeyId, dataWithVersion);
       setJourneys(prev => prev.map(j => 
         j.id === journeyId ? { ...j, ...result, updatedAt: new Date().toISOString() } : j
       ));
@@ -276,27 +195,20 @@ export function useJourneys(airtableClient, clientId = null) {
   };
 
   const deleteJourney = async (journeyId) => {
-    // Local file mode
-    if (usingLocalMode) {
-      try {
-        await deleteLocalJourney(journeyId, clientId);
-        setJourneys(prev => prev.filter(j => j.id !== journeyId));
-      } catch (err) {
-        setError(err.message);
-        throw err;
-      }
-      return;
-    }
-
-    // Airtable mode
-    if (!airtableClient) {
-      setJourneys(prev => prev.filter(j => j.id !== journeyId));
-      return;
-    }
-
     try {
-      await airtableClient.deleteRecord('Journeys', journeyId);
+      await dataService.deleteJourney(journeyId);
       setJourneys(prev => prev.filter(j => j.id !== journeyId));
+    } catch (err) {
+      setError(err.message);
+      throw err;
+    }
+  };
+
+  const duplicateJourney = async (journeyId, newName) => {
+    try {
+      const duplicated = await dataService.duplicateJourney(journeyId, newName);
+      setJourneys(prev => [...prev, duplicated]);
+      return duplicated;
     } catch (err) {
       setError(err.message);
       throw err;
@@ -311,7 +223,7 @@ export function useJourneys(airtableClient, clientId = null) {
     createJourney,
     updateJourney,
     deleteJourney,
-    isLocalMode: usingLocalMode,
+    duplicateJourney,
     // Conflict resolution
     conflict,
     pendingChanges,
@@ -319,23 +231,6 @@ export function useJourneys(airtableClient, clientId = null) {
     forceOverwrite,
     cancelConflict,
     refreshAndAcceptServerVersion
-  };
-}
-
-/**
- * Format Airtable record to Journey object
- */
-function formatJourneyRecord(record) {
-  return {
-    id: record.id,
-    name: record.fields.Name,
-    description: record.fields.Description || '',
-    clientId: record.fields.Client?.[0] || null,
-    pipelineId: record.fields.Pipeline?.[0] || null,
-    status: record.fields.Status || JOURNEY_STATUS.DRAFT,
-    version: record.fields.Version || 1,
-    createdAt: record.createdTime,
-    updatedAt: record.fields.Updated || record.createdTime
   };
 }
 

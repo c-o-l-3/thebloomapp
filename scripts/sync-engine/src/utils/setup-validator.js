@@ -1391,6 +1391,144 @@ export class SetupValidator {
     return { passed, failed, total: schemas.length };
   }
 
+  /**
+   * Validate timezone is a valid IANA timezone
+   */
+  async validateTimezone(timezone = null) {
+    let tz = timezone;
+    
+    // Get timezone from location config if not provided
+    if (!tz) {
+      try {
+        const configPath = path.join(this.clientDir, 'location-config.json');
+        const config = JSON.parse(await fs.readFile(configPath, 'utf8'));
+        tz = config.timezone;
+      } catch (error) {
+        return this.addResult(
+          'timezone_validation',
+          ValidationStatus.FAIL,
+          'Could not read timezone from location-config.json',
+          { error: error.message },
+          ['Ensure location-config.json exists and has a timezone field']
+        );
+      }
+    }
+
+    if (!tz) {
+      return this.addResult(
+        'timezone_validation',
+        ValidationStatus.FAIL,
+        'Timezone not set in location config',
+        null,
+        ['Add a valid IANA timezone to location-config.json (e.g., America/New_York)']
+      );
+    }
+
+    // Validate timezone using Intl API
+    try {
+      Intl.DateTimeFormat(undefined, { timeZone: tz });
+      
+      // Get timezone offset
+      const now = new Date();
+      const formatter = new Intl.DateTimeFormat('en-US', {
+        timeZone: tz,
+        timeZoneName: 'shortOffset'
+      });
+      const parts = formatter.formatToParts(now);
+      const offset = parts.find(p => p.type === 'timeZoneName')?.value || '';
+      
+      return this.addResult(
+        'timezone_validation',
+        ValidationStatus.PASS,
+        `Timezone valid: ${tz} (${offset})`,
+        { timezone: tz, offset }
+      );
+    } catch (error) {
+      return this.addResult(
+        'timezone_validation',
+        ValidationStatus.FAIL,
+        `Invalid timezone: ${tz}`,
+        { timezone: tz, error: error.message },
+        [
+          `Timezone "${tz}" is not a valid IANA timezone`,
+          'Use a valid IANA timezone like: America/New_York, Europe/London, Pacific/Honolulu',
+          'Visit https://en.wikipedia.org/wiki/List_of_tz_database_time_zones for full list'
+        ]
+      );
+    }
+  }
+
+  /**
+   * Validate location config completeness score
+   */
+  async validateLocationConfigCompleteness() {
+    try {
+      const configPath = path.join(this.clientDir, 'location-config.json');
+      const config = JSON.parse(await fs.readFile(configPath, 'utf8'));
+      
+      let score = 0;
+      const maxScore = 100;
+      const details = {};
+      
+      // Basic info (30 points)
+      if (config.name) { score += 10; details.name = true; }
+      if (config.locationId) { score += 10; details.locationId = true; }
+      if (config.timezone) { score += 10; details.timezone = true; }
+      
+      // Contact info (25 points)
+      if (config.contact?.email) { score += 10; details.email = true; }
+      if (config.contact?.phone) { score += 10; details.phone = true; }
+      if (config.contact?.website) { score += 5; details.website = true; }
+      
+      // Address (20 points)
+      if (config.address?.city) { score += 5; details.city = true; }
+      if (config.address?.state) { score += 5; details.state = true; }
+      if (config.address?.postalCode) { score += 5; details.postalCode = true; }
+      if (config.address?.street) { score += 5; details.street = true; }
+      
+      // Business hours (15 points)
+      if (config.businessHours) {
+        const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
+        const weekdaysOpen = days.filter(d => config.businessHours[d]?.start).length;
+        score += Math.min(weekdaysOpen * 2, 10);
+        details.weekdaysOpen = weekdaysOpen;
+        if (config.businessHours.saturday?.start) { score += 3; details.saturday = true; }
+        if (config.businessHours.sunday?.start) { score += 2; details.sunday = true; }
+      }
+      
+      // Social accounts (10 points - bonus)
+      const socialCount = Object.values(config.socialAccounts || {}).filter(v => v).length;
+      score += Math.min(socialCount * 2.5, 10);
+      details.socialAccounts = socialCount;
+      
+      score = Math.min(score, maxScore);
+      
+      const status = score >= 80 ? ValidationStatus.PASS :
+                      score >= 50 ? ValidationStatus.WARNING :
+                      ValidationStatus.FAIL;
+      
+      const message = score >= 80 ? 'Location config is comprehensive' :
+                      score >= 50 ? 'Location config is partially complete' :
+                      'Location config needs completion';
+      
+      return this.addResult(
+        'location_config_completeness',
+        status,
+        `${message}: ${score}%`,
+        { score, maxScore, details },
+        score < 100 ? ['Run location configuration step in onboarding wizard to complete setup'] : null
+      );
+    } catch (error) {
+      return this.addResult(
+        'location_config_completeness',
+        ValidationStatus.FAIL,
+        'Could not validate location config completeness',
+        { error: error.message },
+        ['Ensure location-config.json exists in client directory']
+      );
+    }
+  }
+
   //===========================================================================
   // COMPREHENSIVE VALIDATION
   //===========================================================================
@@ -1412,6 +1550,8 @@ export class SetupValidator {
       await this.validateRequiredFiles();
       await this.validateJsonSchemas();
       await this.validateClientConfig();
+      await this.validateTimezone();
+      await this.validateLocationConfigCompleteness();
     }
 
     // API connections

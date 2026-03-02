@@ -20,8 +20,11 @@ import {
   FileText,
   Layout,
   Palette,
-  Box
+  Box,
+  Sparkles
 } from 'lucide-react';
+import { aiEmailTemplateService } from '../services/aiEmailTemplateService';
+import SmartTemplateSelector from './SmartTemplateSelector';
 import './VisualEmailEditor.css';
 
 const DEFAULT_EMAIL_TEMPLATE = `
@@ -69,6 +72,41 @@ export function StandaloneEmailEditor() {
   const [device, setDevice] = useState('desktop');
   const [copySuccess, setCopySuccess] = useState(false);
   const [showBlocks, setShowBlocks] = useState(true);
+  const [aiInitialized, setAiInitialized] = useState(false);
+  const [clientSlug, setClientSlug] = useState(null);
+  
+  // Initialize AI service
+  useEffect(() => {
+    const initAI = async () => {
+      const storedClient = localStorage.getItem('current_client_slug');
+      if (storedClient) {
+        setClientSlug(storedClient);
+        await aiEmailTemplateService.initialize(storedClient);
+        setAiInitialized(true);
+      }
+    };
+    initAI();
+  }, []);
+  
+  // Handle AI template selection
+  const handleAITemplateSelect = useCallback(async (template, category) => {
+    if (!editorInstanceRef.current) return;
+    
+    try {
+      const context = {
+        first_name: 'there',
+        venue_name: 'Our Venue',
+        planner_name: 'The Team'
+      };
+      
+      const html = await aiEmailTemplateService.expandToHTML(template, context);
+      editorInstanceRef.current.setComponents(html);
+    } catch (err) {
+      console.error('Failed to generate AI content:', err);
+      const fallbackContent = `<h1>${template.name}</h1><p>${template.previewText}</p>`;
+      editorInstanceRef.current.setComponents(fallbackContent);
+    }
+  }, []);
   
   // Initialize GrapesJS editor
   useEffect(() => {
@@ -288,9 +326,6 @@ export function StandaloneEmailEditor() {
           { type: 'text', name: 'alt', label: 'Alt Text' },
           { type: 'text', name: 'target', label: 'Target' }
         ]
-      },
-      panels: {
-        defaults: []
       }
     });
     
@@ -580,6 +615,31 @@ ${html}
               <span>{copySuccess ? 'Copied!' : 'Copy'}</span>
             </button>
           </div>
+          
+          {/* AI Templates */}
+          <div className="visual-editor__divider" />
+          {aiInitialized && clientSlug ? (
+            <div className="visual-editor__toolbar-group">
+              <SmartTemplateSelector
+                clientSlug={clientSlug}
+                onSelectTemplate={handleAITemplateSelect}
+                currentContext={{
+                  journeyStage: 'nurturing'
+                }}
+              />
+            </div>
+          ) : (
+            <div className="visual-editor__toolbar-group">
+              <button 
+                className="visual-editor__tool-btn visual-editor__tool-btn--ai"
+                title="AI Templates (loading...)"
+                disabled
+              >
+                <Sparkles size={16} />
+                <span>AI Templates</span>
+              </button>
+            </div>
+          )}
         </div>
       </header>
       

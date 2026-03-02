@@ -38,32 +38,55 @@ export class RateLimiter {
 
   /**
    * Execute a function with rate limit retry logic
+   * Now handles both rate limits AND transient errors (network timeouts, 5xx errors)
    * @param {Function} fn - Async function to execute
    * @param {string} context - Context string for logging (e.g., 'createWorkflow', 'updateTemplate')
+   * @param {Object} options - Optional configuration
+   * @param {number} options.maxRetries - Override max retries for this call
+   * @param {boolean} options.retryOnTransient - Whether to retry on transient errors (default: true)
    * @returns {Promise<any>} Result of the function
-   * @throws {Error} If all retries are exhausted or error is not rate limit related
+   * @throws {Error} If all retries are exhausted or error is not transient
    */
-  async execute(fn, context = '') {
-    for (let attempt = 0; attempt < this.maxRetries; attempt++) {
+  async execute(fn, context = '', options = {}) {
+    const maxRetries = options.maxRetries ?? this.maxRetries;
+    const retryOnTransient = options.retryOnTransient ?? true;
+    
+    for (let attempt = 0; attempt < maxRetries; attempt++) {
       try {
         return await fn();
       } catch (error) {
-        const isLastAttempt = attempt === this.maxRetries - 1;
+        const isLastAttempt = attempt === maxRetries - 1;
         
-        if (!this.isRateLimitError(error) || isLastAttempt) {
+        // Determine if we should retry
+        const isRetryable = retryOnTransient 
+          ? this.isTransientError(error) 
+          : this.isRateLimitError(error);
+        
+        if (!isRetryable || isLastAttempt) {
           throw error;
         }
 
         const retryAfter = this.extractRetryAfter(error);
         const delay = this.calculateDelay(attempt, retryAfter);
         
-        logger.warn(`Rate limited [${context}], retry ${attempt + 1}/${this.maxRetries} after ${Math.round(delay)}ms`, {
-          context,
-          attempt: attempt + 1,
-          maxRetries: this.maxRetries,
-          delay: Math.round(delay),
-          retryAfter: retryAfter || null
-        });
+        // Log appropriate message based on error type
+        if (this.isRateLimitError(error)) {
+          logger.warn(`Rate limited [${context}], retry ${attempt + 1}/${maxRetries} after ${Math.round(delay)}ms`, {
+            context,
+            attempt: attempt + 1,
+            maxRetries,
+            delay: Math.round(delay),
+            retryAfter: retryAfter || null
+          });
+        } else {
+          logger.warn(`Transient error [${context}], retry ${attempt + 1}/${maxRetries} after ${Math.round(delay)}ms`, {
+            context,
+            attempt: attempt + 1,
+            maxRetries,
+            delay: Math.round(delay),
+            error: error.message
+          });
+        }
         
         await this.sleep(delay);
       }
@@ -82,6 +105,53 @@ export class RateLimiter {
       error.statusCode === 429 ||
       (error.message && error.message.includes('429'))
     );
+  }
+
+  /**
+   * Check if error is a transient error that should be retried
+   * Includes: rate limits, network errors, timeouts, and server errors
+   * @param {Error} error - Error object to check
+   * @returns {boolean} True if transient error
+   */
+  isTransientError(error) {
+    // Rate limit errors
+    if (this.isRateLimitError(error)) {
+      return true;
+    }
+    
+    // Network errors, timeouts, connection issues
+    const transientPatterns = [
+      'ETIMEDOUT',
+      'ECONNREFUSED',
+      'ECONNRESET',
+      'ENOTFOUND',
+      'EAI_AGAIN',
+      'network',
+      'timeout',
+      'socket',
+      'ECONNABORTED',
+      'Invalid response body',
+      'fetch failed',
+      'Failed to fetch'
+    ];
+    
+    const errorMessage = error.message?.toLowerCase() || '';
+    if (transientPatterns.some(pattern => errorMessage.includes(pattern.toLowerCase()))) {
+      return true;
+    }
+    
+    // Server errors (5xx)
+    const status = error.status || error.statusCode || error.response?.status;
+    if (status >= 500 && status < 600) {
+      return true;
+    }
+    
+    // Bad gateway (502) and service unavailable (503) are common transient errors
+    if (status === 502 || status === 503 || status === 504) {
+      return true;
+    }
+    
+    return false;
   }
 
   /**

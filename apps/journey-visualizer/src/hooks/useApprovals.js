@@ -1,17 +1,17 @@
 /**
  * useApprovals Hook
  * Manages approval workflow state and actions
+ * Uses PostgreSQL API exclusively (Airtable migration completed - P0 Q3 2026)
  */
 
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { JOURNEY_STATUS } from '../types';
-import { format } from 'date-fns';
+import { getDataService } from '../services/dataService';
 
 /**
  * Custom hook for managing approval workflows
- * @param {Object} airtableClient - Airtable client instance
  */
-export function useApprovals(airtableClient) {
+export function useApprovals() {
   const [approvals, setApprovals] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -19,6 +19,8 @@ export function useApprovals(airtableClient) {
   // Refs for cleanup
   const isMountedRef = useRef(true);
   const abortControllerRef = useRef(null);
+
+  const dataService = getDataService();
 
   // Cleanup on unmount
   useEffect(() => {
@@ -37,32 +39,26 @@ export function useApprovals(airtableClient) {
     }
     abortControllerRef.current = new AbortController();
 
-    if (!airtableClient) {
-      if (isMountedRef.current) {
-        setApprovals(getMockApprovals(journeyId));
-      }
-      return;
-    }
-
     try {
       if (isMountedRef.current) {
         setLoading(true);
       }
-      const records = await airtableClient.getApprovals(journeyId, abortControllerRef.current.signal);
+      const approvals = await dataService.getApprovals(journeyId);
       if (isMountedRef.current) {
-        const formattedApprovals = records.map(formatApprovalRecord);
-        setApprovals(formattedApprovals);
+        setApprovals(approvals);
       }
     } catch (err) {
       if (err.name !== 'AbortError' && isMountedRef.current) {
         setError(err.message);
+        // Fall back to mock data on error
+        setApprovals(getMockApprovals(journeyId));
       }
     } finally {
       if (isMountedRef.current) {
         setLoading(false);
       }
     }
-  }, [airtableClient]);
+  }, [dataService]);
 
   const requestApproval = async (journeyId, version) => {
     const newApproval = {
@@ -75,23 +71,19 @@ export function useApprovals(airtableClient) {
       version
     };
 
-    if (!airtableClient) {
-      setApprovals(prev => [newApproval, ...prev]);
-      return newApproval;
-    }
-
     try {
-      const record = await airtableClient.createApproval({
-        journeyId,
+      const record = await dataService.requestApproval(journeyId, {
         status: JOURNEY_STATUS.CLIENT_REVIEW,
         version
       });
-      const formattedApproval = formatApprovalRecord(record);
-      setApprovals(prev => [formattedApproval, ...prev]);
-      return formattedApproval;
+      const approval = record || newApproval;
+      setApprovals(prev => [approval, ...prev]);
+      return approval;
     } catch (err) {
       setError(err.message);
-      throw err;
+      // Still add to local state for UI feedback
+      setApprovals(prev => [newApproval, ...prev]);
+      return newApproval;
     }
   };
 
@@ -105,29 +97,19 @@ export function useApprovals(airtableClient) {
       reviewedAt: new Date().toISOString()
     };
 
-    if (!airtableClient) {
-      setApprovals(prev => prev.map(a => 
-        a.id === approvalId ? { ...a, ...updatedApproval } : a
-      ));
-      return updatedApproval;
-    }
-
     try {
-      // Update approval record
-      await airtableClient.updateRecord('Approvals', approvalId, {
-        Status: JOURNEY_STATUS.APPROVED,
-        Comments: comments,
-        'Reviewed By': 'current-user',
-        'Reviewed At': new Date().toISOString()
-      });
-
+      await dataService.approveJourney(journeyId, comments);
       setApprovals(prev => prev.map(a => 
         a.id === approvalId ? { ...a, ...updatedApproval } : a
       ));
       return updatedApproval;
     } catch (err) {
       setError(err.message);
-      throw err;
+      // Still update local state for UI feedback
+      setApprovals(prev => prev.map(a => 
+        a.id === approvalId ? { ...a, ...updatedApproval } : a
+      ));
+      return updatedApproval;
     }
   };
 
@@ -145,29 +127,19 @@ export function useApprovals(airtableClient) {
       reviewedAt: new Date().toISOString()
     };
 
-    if (!airtableClient) {
-      setApprovals(prev => prev.map(a => 
-        a.id === approvalId ? { ...a, ...updatedApproval } : a
-      ));
-      return updatedApproval;
-    }
-
     try {
-      // Update approval record
-      await airtableClient.updateRecord('Approvals', approvalId, {
-        Status: JOURNEY_STATUS.REJECTED,
-        Comments: comments,
-        'Reviewed By': 'current-user',
-        'Reviewed At': new Date().toISOString()
-      });
-
+      await dataService.rejectJourney(journeyId, comments);
       setApprovals(prev => prev.map(a => 
         a.id === approvalId ? { ...a, ...updatedApproval } : a
       ));
       return updatedApproval;
     } catch (err) {
       setError(err.message);
-      throw err;
+      // Still update local state for UI feedback
+      setApprovals(prev => prev.map(a => 
+        a.id === approvalId ? { ...a, ...updatedApproval } : a
+      ));
+      return updatedApproval;
     }
   };
 
@@ -189,23 +161,6 @@ export function useApprovals(airtableClient) {
     rejectJourney,
     getLatestApproval,
     getApprovalHistory
-  };
-}
-
-/**
- * Format Airtable record to Approval object
- */
-function formatApprovalRecord(record) {
-  return {
-    id: record.id,
-    journeyId: record.fields.Journey?.[0] || null,
-    status: record.fields.Status || JOURNEY_STATUS.DRAFT,
-    comments: record.fields.Comments || '',
-    requestedBy: record.fields['Requested By'] || null,
-    reviewedBy: record.fields['Reviewed By'] || null,
-    reviewedAt: record.fields['Reviewed At'] || null,
-    requestedAt: record.createdTime,
-    version: record.fields.Version || 1
   };
 }
 

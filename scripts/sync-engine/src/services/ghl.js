@@ -35,39 +35,111 @@ class GHLService {
     }
   }
 
+  /**
+   * Check if error is a transient error that should be retried
+   * @param {Error} error - Error to check
+   * @returns {boolean} True if transient error
+   */
+  isTransientError(error) {
+    // Rate limit errors (429)
+    if (error.status === 429 || error.response?.status === 429) {
+      return true;
+    }
+    
+    // Server errors (5xx)
+    const status = error.status || error.statusCode || error.response?.status;
+    if (status >= 500 && status < 600) {
+      return true;
+    }
+    
+    // Common transient errors
+    const transientPatterns = [
+      'ETIMEDOUT',
+      'ECONNREFUSED',
+      'ECONNRESET',
+      'ENOTFOUND',
+      'EAI_AGAIN',
+      'network',
+      'timeout',
+      'socket',
+      'ECONNABORTED',
+      '502',
+      '503',
+      '504'
+    ];
+    
+    const errorMessage = (error.message || '').toLowerCase();
+    return transientPatterns.some(pattern => errorMessage.includes(pattern.toLowerCase()));
+  }
+
+  /**
+   * Calculate delay with exponential backoff
+   * @param {number} attempt - Current retry attempt
+   * @returns {number} Delay in milliseconds
+   */
+  calculateRetryDelay(attempt) {
+    const baseDelay = this.retryDelay;
+    const exponential = baseDelay * Math.pow(2, attempt);
+    const jitter = Math.random() * 1000; // Add jitter
+    return Math.min(exponential + jitter, 60000); // Cap at 60 seconds
+  }
+
   async request(method, endpoint, data = null, options = {}) {
     const url = `${this.baseUrl}${endpoint}`;
-    const { skipRateLimiter = false } = options;
+    const { skipRateLimiter = false, retries = this.maxRetries } = options;
     
-    try {
-      await this.throttle();
-      
-      const response = await axios({
-        method,
-        url,
-        headers: this.getHeaders(),
-        data
-      });
+    for (let attempt = 0; attempt <= retries; attempt++) {
+      try {
+        if (!skipRateLimiter) {
+          await this.throttle();
+        }
+        
+        const response = await axios({
+          method,
+          url,
+          headers: this.getHeaders(),
+          data,
+          timeout: 30000 // 30 second timeout
+        });
 
-      return response.data;
-    } catch (error) {
-      // Enhance error with status code for rate limiter detection
-      if (error.response) {
-        error.status = error.response.status;
-        error.statusCode = error.response.status;
+        return response.data;
+      } catch (error) {
+        // Enhance error with status code for rate limiter detection
+        if (error.response) {
+          error.status = error.response.status;
+          error.statusCode = error.response.status;
+        }
+
+        const isLastAttempt = attempt === retries;
+        const shouldRetry = !isLastAttempt && this.isTransientError(error);
+
+        if (error.response?.status === 404 && method === 'GET') {
+          return null;
+        }
+
+        if (shouldRetry) {
+          const delay = this.calculateRetryDelay(attempt);
+          logger.warn(`GHL request failed [${method} ${endpoint}], retry ${attempt + 1}/${retries + 1} after ${Math.round(delay)}ms`, {
+            method,
+            endpoint,
+            attempt: attempt + 1,
+            maxRetries: retries + 1,
+            error: error.message,
+            status: error.response?.status
+          });
+          await this.sleep(delay);
+          continue;
+        }
+
+        logger.error('GHL API request failed', { 
+          method, 
+          endpoint, 
+          error: error.message,
+          status: error.response?.status,
+          attempts: attempt + 1
+        });
+        throw error;
       }
-
-      if (error.response?.status === 404 && method === 'GET') {
-        return null;
-      }
-
-      logger.error('GHL API request failed', { 
-        method, 
-        endpoint, 
-        error: error.message,
-        status: error.response?.status 
-      });
-      throw error;
     }
   }
 

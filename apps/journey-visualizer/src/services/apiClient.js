@@ -122,6 +122,33 @@ export class ApiClient {
     return response.data;
   }
 
+  async getClientsHealth() {
+    const response = await this.client.get('/clients/health/all');
+    return response.data;
+  }
+
+  async getClientHealth(id) {
+    const response = await this.client.get(`/clients/${id}/health`);
+    return response.data;
+  }
+
+  async bulkClientAction(clientIds, action, filters) {
+    const response = await this.client.post('/clients/bulk-action', {
+      clientIds,
+      action,
+      filters
+    });
+    return response.data;
+  }
+
+  async bulkJourneyStatusUpdate(journeyIds, status) {
+    const response = await this.client.post('/clients/journeys/bulk-status', {
+      journeyIds,
+      status
+    });
+    return response.data;
+  }
+
   /**
    * Journeys
    */
@@ -304,6 +331,345 @@ export class ApiClient {
    */
   async healthCheck() {
     const response = await this.client.get('/health');
+    return response.data;
+  }
+
+  /**
+   * Analytics - Advanced Journey Analytics (P1 Q2 2026)
+   */
+  async getAnalyticsDashboard(params = {}) {
+    const { days, clientId, startDate, endDate } = params;
+    const queryParams = new URLSearchParams();
+    if (days) queryParams.append('days', days);
+    if (clientId) queryParams.append('clientId', clientId);
+    if (startDate) queryParams.append('startDate', startDate);
+    if (endDate) queryParams.append('endDate', endDate);
+
+    const response = await this.client.get(`/analytics/dashboard?${queryParams}`);
+    return response.data;
+  }
+
+  async getJourneyMetrics(journeyId, params = {}) {
+    const { days, startDate, endDate } = params;
+    const queryParams = new URLSearchParams();
+    if (days) queryParams.append('days', days);
+    if (startDate) queryParams.append('startDate', startDate);
+    if (endDate) queryParams.append('endDate', endDate);
+
+    const response = await this.client.get(`/analytics/journeys/${journeyId}/metrics?${queryParams}`);
+    return response.data;
+  }
+
+  async getJourneyPerformance(params = {}) {
+    const { clientId, category, limit, days, startDate, endDate } = params;
+    const queryParams = new URLSearchParams();
+    if (clientId) queryParams.append('clientId', clientId);
+    if (category) queryParams.append('category', category);
+    if (limit) queryParams.append('limit', limit);
+    if (days) queryParams.append('days', days);
+    if (startDate) queryParams.append('startDate', startDate);
+    if (endDate) queryParams.append('endDate', endDate);
+
+    const response = await this.client.get(`/analytics/journeys/performance?${queryParams}`);
+    return response.data;
+  }
+
+  async getTouchpointEngagement(params = {}) {
+    const { journeyId, clientId, type, days, startDate, endDate } = params;
+    const queryParams = new URLSearchParams();
+    if (journeyId) queryParams.append('journeyId', journeyId);
+    if (clientId) queryParams.append('clientId', clientId);
+    if (type) queryParams.append('type', type);
+    if (days) queryParams.append('days', days);
+    if (startDate) queryParams.append('startDate', startDate);
+    if (endDate) queryParams.append('endDate', endDate);
+
+    const response = await this.client.get(`/analytics/touchpoints/engagement?${queryParams}`);
+    return response.data;
+  }
+
+  async getABTests(params = {}) {
+    const { journeyId, clientId, status, days, startDate, endDate } = params;
+    const queryParams = new URLSearchParams();
+    if (journeyId) queryParams.append('journeyId', journeyId);
+    if (clientId) queryParams.append('clientId', clientId);
+    if (status) queryParams.append('status', status);
+    if (days) queryParams.append('days', days);
+    if (startDate) queryParams.append('startDate', startDate);
+    if (endDate) queryParams.append('endDate', endDate);
+
+    const response = await this.client.get(`/analytics/ab-tests?${queryParams}`);
+    return response.data;
+  }
+
+  async getDropOffAnalysis(params = {}) {
+    const { journeyId, clientId, days, startDate, endDate } = params;
+    const queryParams = new URLSearchParams();
+    if (journeyId) queryParams.append('journeyId', journeyId);
+    if (clientId) queryParams.append('clientId', clientId);
+    if (days) queryParams.append('days', days);
+    if (startDate) queryParams.append('startDate', startDate);
+    if (endDate) queryParams.append('endDate', endDate);
+
+    const response = await this.client.get(`/analytics/drop-offs?${queryParams}`);
+    return response.data;
+  }
+
+  async getClientAnalyticsSummary(clientId, params = {}) {
+    const { days, startDate, endDate } = params;
+    const queryParams = new URLSearchParams();
+    if (days) queryParams.append('days', days);
+    if (startDate) queryParams.append('startDate', startDate);
+    if (endDate) queryParams.append('endDate', endDate);
+
+    const response = await this.client.get(`/analytics/clients/${clientId}/summary?${queryParams}`);
+    return response.data;
+  }
+
+  async getRealtimeAnalytics(params = {}) {
+    const { clientId, journeyId } = params;
+    const queryParams = new URLSearchParams();
+    if (clientId) queryParams.append('clientId', clientId);
+    if (journeyId) queryParams.append('journeyId', journeyId);
+
+    const response = await this.client.get(`/analytics/realtime?${queryParams}`);
+    return response.data;
+  }
+
+  async trackEvent(eventData) {
+    const response = await this.client.post('/analytics/events', eventData);
+    return response.data;
+  }
+
+  async trackEventsBatch(events) {
+    const response = await this.client.post('/analytics/events/batch', { events });
+    return response.data;
+  }
+
+  async getAnalyticsEvents(params = {}) {
+    const { journeyId, touchpointId, clientId, eventType, contactId, limit, offset, days, startDate, endDate } = params;
+    const queryParams = new URLSearchParams();
+    if (journeyId) queryParams.append('journeyId', journeyId);
+    if (touchpointId) queryParams.append('touchpointId', touchpointId);
+    if (clientId) queryParams.append('clientId', clientId);
+    if (eventType) queryParams.append('eventType', eventType);
+    if (contactId) queryParams.append('contactId', contactId);
+    if (limit) queryParams.append('limit', limit);
+    if (offset) queryParams.append('offset', offset);
+    if (days) queryParams.append('days', days);
+    if (startDate) queryParams.append('startDate', startDate);
+    if (endDate) queryParams.append('endDate', endDate);
+
+    const response = await this.client.get(`/analytics/events?${queryParams}`);
+    return response.data;
+  }
+
+  /**
+   * Field Mappings - Custom Field Mapping UI (P1 Q2 2026)
+   */
+  async getFieldMappings(clientId, options = {}) {
+    const { targetSystem, isActive } = options;
+    const params = new URLSearchParams();
+    if (targetSystem) params.append('targetSystem', targetSystem);
+    if (isActive !== undefined) params.append('isActive', isActive);
+
+    const response = await this.client.get(`/clients/${clientId}/field-mappings?${params}`);
+    return response.data;
+  }
+
+  async getFieldMapping(clientId, mappingId) {
+    const response = await this.client.get(`/clients/${clientId}/field-mappings/${mappingId}`);
+    return response.data;
+  }
+
+  async createFieldMapping(clientId, mappingData) {
+    const response = await this.client.post(`/clients/${clientId}/field-mappings`, mappingData);
+    return response.data;
+  }
+
+  async updateFieldMapping(clientId, mappingId, mappingData) {
+    const response = await this.client.put(`/clients/${clientId}/field-mappings/${mappingId}`, mappingData);
+    return response.data;
+  }
+
+  async deleteFieldMapping(clientId, mappingId) {
+    await this.client.delete(`/clients/${clientId}/field-mappings/${mappingId}`);
+  }
+
+  async createBulkFieldMappings(clientId, mappings) {
+    const response = await this.client.post(`/clients/${clientId}/field-mappings/bulk`, { mappings });
+    return response.data;
+  }
+
+  async getFieldMappingMetadata() {
+    const response = await this.client.get('/field-mappings/metadata');
+    return response.data;
+  }
+
+  async validateFieldData(clientId, data) {
+    const response = await this.client.post(`/clients/${clientId}/field-mappings/validate`, { data });
+    return response.data;
+  }
+
+  async transformFieldData(clientId, data, targetSystem = 'gohighlevel') {
+    const response = await this.client.post(`/clients/${clientId}/field-mappings/transform`, { data, targetSystem });
+    return response.data;
+  }
+
+  async syncGhlFieldMappings(clientId, customFields) {
+    const response = await this.client.post(`/clients/${clientId}/field-mappings/sync-ghl`, { customFields });
+    return response.data;
+  }
+
+  /**
+   * A/B Testing - P1 Q3 2026
+   */
+  async getABTestingDashboard(clientId, params = {}) {
+    const { days } = params;
+    const queryParams = new URLSearchParams();
+    queryParams.append('clientId', clientId);
+    if (days) queryParams.append('days', days);
+
+    const response = await this.client.get(`/ab-testing/dashboard?${queryParams}`);
+    return response.data;
+  }
+
+  async getABTests(clientId, params = {}) {
+    const { journeyId, status, limit, offset } = params;
+    const queryParams = new URLSearchParams();
+    queryParams.append('clientId', clientId);
+    if (journeyId) queryParams.append('journeyId', journeyId);
+    if (status) queryParams.append('status', status);
+    if (limit) queryParams.append('limit', limit);
+    if (offset) queryParams.append('offset', offset);
+
+    const response = await this.client.get(`/ab-testing/tests?${queryParams}`);
+    return response.data;
+  }
+
+  async getABTest(testId) {
+    const response = await this.client.get(`/ab-testing/tests/${testId}`);
+    return response.data;
+  }
+
+  async createABTest(testData) {
+    const response = await this.client.post('/ab-testing/tests', testData);
+    return response.data;
+  }
+
+  async updateABTest(testId, testData) {
+    const response = await this.client.put(`/ab-testing/tests/${testId}`, testData);
+    return response.data;
+  }
+
+  async deleteABTest(testId) {
+    await this.client.delete(`/ab-testing/tests/${testId}`);
+  }
+
+  async startABTest(testId) {
+    const response = await this.client.post(`/ab-testing/tests/${testId}/start`);
+    return response.data;
+  }
+
+  async pauseABTest(testId) {
+    const response = await this.client.post(`/ab-testing/tests/${testId}/pause`);
+    return response.data;
+  }
+
+  async stopABTest(testId, winnerVariantId = null) {
+    const response = await this.client.post(`/ab-testing/tests/${testId}/stop`, {
+      winnerVariantId
+    });
+    return response.data;
+  }
+
+  async getABTestResults(testId) {
+    const response = await this.client.get(`/ab-testing/tests/${testId}/results`);
+    return response.data;
+  }
+
+  async getABTestDailyStats(testId, params = {}) {
+    const { days } = params;
+    const queryParams = new URLSearchParams();
+    if (days) queryParams.append('days', days);
+
+    const response = await this.client.get(`/ab-testing/tests/${testId}/daily-stats?${queryParams}`);
+    return response.data;
+  }
+
+  async getABTestParticipants(testId, params = {}) {
+    const { limit, offset, variantId, converted } = params;
+    const queryParams = new URLSearchParams();
+    if (limit) queryParams.append('limit', limit);
+    if (offset) queryParams.append('offset', offset);
+    if (variantId) queryParams.append('variantId', variantId);
+    if (converted !== undefined) queryParams.append('converted', converted);
+
+    const response = await this.client.get(`/ab-testing/tests/${testId}/participants?${queryParams}`);
+    return response.data;
+  }
+
+  async assignABTestParticipant(testId, contactId, sessionId = null, metadata = {}) {
+    const response = await this.client.post(`/ab-testing/tests/${testId}/assign`, {
+      contactId,
+      sessionId,
+      metadata
+    });
+    return response.data;
+  }
+
+  async recordABTestConversion(testId, contactId, eventData = {}) {
+    const response = await this.client.post(`/ab-testing/tests/${testId}/convert`, {
+      contactId,
+      ...eventData
+    });
+    return response.data;
+  }
+
+  async recordABTestEvent(testId, contactId, eventType, eventData = {}) {
+    const response = await this.client.post(`/ab-testing/tests/${testId}/events`, {
+      contactId,
+      eventType,
+      eventData
+    });
+    return response.data;
+  }
+
+  async getActiveABTests(journeyId, clientId = null) {
+    const queryParams = new URLSearchParams();
+    queryParams.append('journeyId', journeyId);
+    if (clientId) queryParams.append('clientId', clientId);
+
+    const response = await this.client.get(`/ab-testing/active-tests?${queryParams}`);
+    return response.data;
+  }
+
+  async getSampleSizeCalculator(params = {}) {
+    const { baselineRate, minimumDetectableEffect, confidenceLevel, power } = params;
+    const queryParams = new URLSearchParams();
+    if (baselineRate) queryParams.append('baselineRate', baselineRate);
+    if (minimumDetectableEffect) queryParams.append('minimumDetectableEffect', minimumDetectableEffect);
+    if (confidenceLevel) queryParams.append('confidenceLevel', confidenceLevel);
+    if (power) queryParams.append('power', power);
+
+    const response = await this.client.get(`/ab-testing/sample-size-calculator?${queryParams}`);
+    return response.data;
+  }
+
+  async autoCheckABTestWinner(testId) {
+    const response = await this.client.post(`/ab-testing/tests/${testId}/auto-check`);
+    return response.data;
+  }
+
+  async runAutoWinnerChecks() {
+    const response = await this.client.post('/ab-testing/run-auto-checks');
+    return response.data;
+  }
+
+  async updateVariantTraffic(variantId, trafficPercentage) {
+    const response = await this.client.put(`/ab-testing/variants/${variantId}/traffic`, {
+      trafficPercentage
+    });
     return response.data;
   }
 }

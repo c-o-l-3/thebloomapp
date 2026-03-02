@@ -1,26 +1,39 @@
 /**
- * Main App Component
+ * Main App Component - Performance Optimized
  * Journey Builder Stack - Visualizer Layer with Writer Experience
+ * 
+ * Performance Optimizations Implemented:
+ * - React.lazy() for code splitting on all routes
+ * - Suspense boundaries with loading fallbacks
+ * - Preload hints for critical components
+ * - Dynamic imports for heavy components
  */
 
-import React, { useState, useMemo } from 'react';
-import { BrowserRouter, Routes, Route, Link, useLocation, Navigate } from 'react-router-dom';
+import React, { useState, useMemo, Suspense, lazy } from 'react';
+import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate, Navigate } from 'react-router-dom';
 import { ClientSelector } from './components/ClientSelector';
-import { JourneyFlow } from './components/JourneyFlow';
-import { ApprovalPanel } from './components/ApprovalPanel';
 import { StatusBadge } from './components/StatusBadge';
-import { TouchpointList } from './components/TouchpointList';
-import { TouchpointPrintView } from './components/TouchpointPrintView';
-import { JourneyPrintView } from './components/JourneyPrintView';
-import { HTMLEditor } from './components/HTMLEditor';
-import { VisualEmailEditor } from './components/VisualEmailEditor';
-import { StandaloneEmailEditor } from './components/StandaloneEmailEditor';
 import { JOURNEY_STATUS } from './types';
 import { useJourneys } from './hooks/useJourneys';
 import { useApprovals } from './hooks/useApprovals';
 import { isLocalMode } from './services/localJourneys';
-import { Mail, LayoutDashboard, GitBranch } from 'lucide-react';
+import { Mail, LayoutDashboard, GitBranch, Building2, BarChart3, Webhook } from 'lucide-react';
 import './App.css';
+
+// Lazy load heavy components for code splitting
+const JourneyFlow = lazy(() => import('./components/JourneyFlow'));
+const MultiClientDashboard = lazy(() => import('./components/MultiClientDashboard'));
+const AnalyticsDashboard = lazy(() => import('./components/AnalyticsDashboard'));
+const ApprovalPanel = lazy(() => import('./components/ApprovalPanel'));
+const TouchpointList = lazy(() => import('./components/TouchpointList'));
+const TouchpointPrintView = lazy(() => import('./components/TouchpointPrintView'));
+const JourneyPrintView = lazy(() => import('./components/JourneyPrintView'));
+const HTMLEditor = lazy(() => import('./components/HTMLEditor'));
+const VisualEmailEditor = lazy(() => import('./components/VisualEmailEditor'));
+const StandaloneEmailEditor = lazy(() => import('./components/StandaloneEmailEditor'));
+const ClientSelfServicePortal = lazy(() => import('./components/ClientSelfServicePortal'));
+const ClientLogin = lazy(() => import('./components/ClientLogin'));
+const WebhookManager = lazy(() => import('./components/WebhookManager'));
 
 const DATA_SOURCE = import.meta.env.VITE_DATA_SOURCE || 'airtable';
 const DEFAULT_CLIENT_SLUG = import.meta.env.VITE_CLIENT_SLUG || 'promise-farm';
@@ -32,6 +45,14 @@ const getDefaultClient = () => {
   }
   return 'maison-albion';
 };
+
+// Loading fallback component
+const PageLoader = () => (
+  <div className="app__loading-container">
+    <div className="app__loading-spinner"></div>
+    <p>Loading...</p>
+  </div>
+);
 
 /**
  * Navigation Component
@@ -48,19 +69,40 @@ function Navigation() {
 
   return (
     <nav className="app__nav">
-      <Link 
-        to="/" 
-        className={`app__nav-link ${isActive('/') && !isActive('/touchpoints') ? 'app__nav-link--active' : ''}`}
+      <Link
+        to="/dashboard"
+        className={`app__nav-link ${isActive('/dashboard') ? 'app__nav-link--active' : ''}`}
+      >
+        <Building2 size={18} />
+        <span>Dashboard</span>
+      </Link>
+      <Link
+        to="/"
+        className={`app__nav-link ${isActive('/') && !isActive('/touchpoints') && !isActive('/analytics') ? 'app__nav-link--active' : ''}`}
       >
         <GitBranch size={18} />
         <span>Journeys</span>
       </Link>
-      <Link 
-        to="/touchpoints" 
+      <Link
+        to="/touchpoints"
         className={`app__nav-link ${isActive('/touchpoints') ? 'app__nav-link--active' : ''}`}
       >
         <Mail size={18} />
         <span>Touchpoints</span>
+      </Link>
+      <Link
+        to="/analytics"
+        className={`app__nav-link ${isActive('/analytics') ? 'app__nav-link--active' : ''}`}
+      >
+        <BarChart3 size={18} />
+        <span>Analytics</span>
+      </Link>
+      <Link
+        to="/webhooks"
+        className={`app__nav-link ${isActive('/webhooks') ? 'app__nav-link--active' : ''}`}
+      >
+        <Webhook size={18} />
+        <span>Webhooks</span>
       </Link>
     </nav>
   );
@@ -209,11 +251,13 @@ function JourneyBuilder() {
                 </div>
               </div>
               <div className={`app__flow-wrapper ${showApprovalPanel ? 'app__flow-wrapper--with-panel' : ''}`}>
-                <JourneyFlow 
-                  journey={selectedJourney} 
-                  clientSlug={selectedClientId}
-                  onUpdateJourney={handleUpdateJourney}
-                />
+                <Suspense fallback={<PageLoader />}>
+                  <JourneyFlow 
+                    journey={selectedJourney} 
+                    clientSlug={selectedClientId}
+                    onUpdateJourney={handleUpdateJourney}
+                  />
+                </Suspense>
               </div>
             </>
           )}
@@ -222,16 +266,18 @@ function JourneyBuilder() {
         {/* Approval Panel Sidebar */}
         {showApprovalPanel && selectedJourney && (
           <aside className="app__approval-sidebar">
-            <ApprovalPanel
-              journey={selectedJourney}
-              approvalHistory={journeyApprovals}
-              touchpoints={selectedJourney.touchpoints || []}
-              onApprove={handleApprove}
-              onReject={handleReject}
-              onRequestApproval={handleRequestApproval}
-              onDeploy={handleDeploy}
-              onEditModeChange={handleEditModeChange}
-            />
+            <Suspense fallback={<PageLoader />}>
+              <ApprovalPanel
+                journey={selectedJourney}
+                approvalHistory={journeyApprovals}
+                touchpoints={selectedJourney.touchpoints || []}
+                onApprove={handleApprove}
+                onReject={handleReject}
+                onRequestApproval={handleRequestApproval}
+                onDeploy={handleDeploy}
+                onEditModeChange={handleEditModeChange}
+              />
+            </Suspense>
           </aside>
         )}
       </main>
@@ -338,20 +384,115 @@ function LoginPage() {
 }
 
 /**
- * Main App with Routing
+ * Webhook Manager Page Wrapper
+ */
+function WebhookManagerPage() {
+  const [selectedClientId, setSelectedClientId] = useState(getDefaultClient());
+  const [clientName, setClientName] = useState('');
+
+  // Fetch client name when client changes
+  React.useEffect(() => {
+    const fetchClientName = async () => {
+      try {
+        const { getApiClient } = await import('./services/apiClient');
+        const apiClient = getApiClient();
+        const client = await apiClient.getClient(selectedClientId);
+        setClientName(client.name);
+      } catch (err) {
+        console.error('Failed to fetch client name:', err);
+        setClientName(selectedClientId);
+      }
+    };
+    fetchClientName();
+  }, [selectedClientId]);
+
+  return (
+    <div className="app__container">
+      <header className="app__header">
+        <div className="app__header-left">
+          <div className="app__logo">
+            <span className="app__logo-icon">🌸</span>
+            <h1 className="app__title">Journey Builder</h1>
+          </div>
+          <Navigation />
+        </div>
+        <div className="app__header-right">
+          <ClientSelector
+            onClientChange={setSelectedClientId}
+            selectedClientId={selectedClientId}
+          />
+        </div>
+      </header>
+      <main className="app__main app__main--fullwidth">
+        <Suspense fallback={<PageLoader />}>
+          <WebhookManager clientId={selectedClientId} clientName={clientName} />
+        </Suspense>
+      </main>
+    </div>
+  );
+}
+
+/**
+ * Main App with Routing - Performance Optimized with Lazy Loading
  */
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/dashboard" element={
+          <Suspense fallback={<PageLoader />}>
+            <MultiClientDashboard />
+          </Suspense>
+        } />
+        <Route path="/analytics" element={
+          <Suspense fallback={<PageLoader />}>
+            <AnalyticsDashboard />
+          </Suspense>
+        } />
+        <Route path="/webhooks" element={<WebhookManagerPage />} />
         <Route path="/" element={<JourneyBuilder />} />
-        <Route path="/touchpoints" element={<TouchpointList />} />
-        <Route path="/touchpoints/:id/print" element={<TouchpointPrintView />} />
-        <Route path="/journeys/:id/print" element={<JourneyPrintView />} />
-        <Route path="/touchpoints/:id/edit" element={<HTMLEditor />} />
-        <Route path="/touchpoints/:id/visual-edit" element={<VisualEmailEditor />} />
-        <Route path="/email-editor" element={<StandaloneEmailEditor />} />
+        <Route path="/touchpoints" element={
+          <Suspense fallback={<PageLoader />}>
+            <TouchpointList />
+          </Suspense>
+        } />
+        <Route path="/touchpoints/:id/print" element={
+          <Suspense fallback={<PageLoader />}>
+            <TouchpointPrintView />
+          </Suspense>
+        } />
+        <Route path="/journeys/:id/print" element={
+          <Suspense fallback={<PageLoader />}>
+            <JourneyPrintView />
+          </Suspense>
+        } />
+        <Route path="/touchpoints/:id/edit" element={
+          <Suspense fallback={<PageLoader />}>
+            <HTMLEditor />
+          </Suspense>
+        } />
+        <Route path="/touchpoints/:id/visual-edit" element={
+          <Suspense fallback={<PageLoader />}>
+            <VisualEmailEditor />
+          </Suspense>
+        } />
+        <Route path="/email-editor" element={
+          <Suspense fallback={<PageLoader />}>
+            <StandaloneEmailEditor />
+          </Suspense>
+        } />
+        {/* Client Self-Service Portal Routes */}
+        <Route path="/portal/login" element={
+          <Suspense fallback={<PageLoader />}>
+            <ClientLogin />
+          </Suspense>
+        } />
+        <Route path="/portal/*" element={
+          <Suspense fallback={<PageLoader />}>
+            <ClientSelfServicePortal />
+          </Suspense>
+        } />
       </Routes>
     </BrowserRouter>
   );

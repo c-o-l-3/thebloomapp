@@ -552,3 +552,226 @@
   flex-shrink: 0;
   margin-top: 2px;
 }
+
+/* ====================
+   Context Awareness Styles
+   ==================== */
+
+/* Context Badge in Header */
+.ai-assistant-panel__context-badge {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 500;
+  color: #92400e;
+  margin-left: auto;
+}
+
+/* Context Bar */
+.ai-assistant-panel__context-bar {
+  display: flex;
+  align-items: center;
+  padding: 6px 16px;
+  background: #fef3c7;
+  border-bottom: 1px solid #fcd34d;
+}
+
+.ai-assistant-panel__context-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: #92400e;
+}
+
+.ai-assistant-panel__tone-indicator {
+  padding-left: 8px;
+  border-left: 1px solid #fcd34d;
+  color: #b45309;
+}
+
+/* Tab Badge */
+.ai-assistant-panel__tab-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  background: #ef4444;
+  color: white;
+  font-size: 9px;
+  font-weight: 600;
+  border-radius: 8px;
+  margin-left: 4px;
+}
+
+/* Smart Facts Section */
+.ai-assistant-panel__smart-facts {
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.ai-assistant-panel__fact--smart {
+  background: linear-gradient(135deg, #fef3c7 0%, #fffbeb 100%);
+  border-color: #fcd34d;
+}
+
+.ai-assistant-panel__fact--smart:hover {
+  border-color: #f59e0b;
+}
+
+.ai-assistant-panel__fact-recommendation {
+  font-size: 10px;
+  color: #b45309;
+  font-style: italic;
+}
+
+/* Analysis Info Label */
+.ai-assistant-panel__analysis-label--info {
+  color: #3b82f6;
+}
+
+.ai-assistant-panel__suggestions-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ai-assistant-panel__suggestion-item {
+  font-size: 11px;
+  color: #64748b;
+  padding-left: 16px;
+  position: relative;
+}
+
+.ai-assistant-panel__suggestion-item::before {
+  content: '•';
+  position: absolute;
+  left: 6px;
+  color: #3b82f6;
+}
+
+.ai-assistant-panel__stats {
+  display: flex;
+  gap: 16px;
+  padding-top: 12px;
+  border-top: 1px solid #e2e8f0;
+  margin-top: 12px;
+}
+
+.ai-assistant-panel__stat {
+  font-size: 11px;
+  color: #64748b;
+}
+
+/* History Tab */
+.ai-assistant-panel__history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ai-assistant-panel__history-item {
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 12px;
+}
+
+.ai-assistant-panel__history-item--user {
+  background: #f1f5f9;
+  border-left: 3px solid #64748b;
+}
+
+.ai-assistant-panel__history-item--assistant {
+  background: #eff6ff;
+  border-left: 3px solid #3b82f6;
+}
+
+.ai-assistant-panel__history-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.ai-assistant-panel__history-role {
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.ai-assistant-panel__history-time {
+  font-size: 10px;
+  color: #94a3b8;
+}
+
+.ai-assistant-panel__history-content {
+  margin: 0;
+  color: #334155;
+  line-height: 1.4;
+}
+
+.ai-assistant-panel__history-type {
+  display: inline-block;
+  margin-top: 6px;
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #94a3b8;
+  background: #e2e8f0;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.ai-assistant-panel__clear-history {
+  font-size: 11px;
+  padding: 4px 8px;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  background: #ffffff;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.ai-assistant-panel__clear-history:hover {
+  background: #fee2e2;
+  border-color: #ef4444;
+  color: #dc2626;
+}
+
+.ai-assistant-panel__empty-hint {
+  font-size: 11px;
+  color: #94a3b8;
+  margin-top: 4px;
+}
+
+/* Empty State Enhancement */
+.ai-assistant-panel__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+  color: #94a3b8;
+}
+
+.ai-assistant-panel__empty-icon {
+  color: #cbd5e1;
+  margin-bottom: 12px;
+}
+
+.ai-assistant-panel__empty p {
+  font-size: 13px;
+  line-height: 1.5;
+  margin: 0;
+}

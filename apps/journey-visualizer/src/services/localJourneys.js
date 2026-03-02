@@ -1,12 +1,12 @@
 /**
  * Local Journey Service
  * Reads journey data directly from local JSON files
- * Alternative to Airtable for standalone deployments
+ * Fallback for offline/development mode (Postgres is primary)
  */
 
 import { JOURNEY_STATUS } from '../types';
 
-const DATA_SOURCE = import.meta.env.VITE_DATA_SOURCE || 'airtable';
+const DATA_SOURCE = import.meta.env.VITE_DATA_SOURCE || 'api';
 const DEFAULT_CLIENT_SLUG = import.meta.env.VITE_CLIENT_SLUG || 'promise-farm';
 
 // Vite glob patterns - must be at module level to be analyzed at build time
@@ -26,7 +26,7 @@ export function isLocalMode() {
  * Check if API mode is enabled (production)
  */
 export function isApiMode() {
-  return DATA_SOURCE === 'api' || DATA_SOURCE === 'airtable';
+  return DATA_SOURCE === 'api';
 }
 
 /**
@@ -284,7 +284,7 @@ export async function isLocalModeAvailable() {
 }
 
 /**
- * Mock data for development/testing without Airtable
+ * Mock data for development/testing (PostgreSQL API unavailable)
  */
 function getMockJourneys() {
   return [

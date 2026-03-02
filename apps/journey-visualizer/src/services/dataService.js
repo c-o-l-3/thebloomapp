@@ -1,11 +1,10 @@
 /**
  * Unified Data Service
  * Provides a single interface for all data operations
- * Supports multiple backends: PostgreSQL API, Airtable (legacy), Local files
+ * Uses PostgreSQL API exclusively (Airtable migration completed)
  */
 
 import { getApiClient } from './apiClient';
-import { createAirtableClient } from './airtable';
 import {
   isLocalMode as checkLocalMode,
   getLocalClients,
@@ -18,9 +17,8 @@ import {
 
 // Data source types
 export const DATA_SOURCES = {
-  API: 'api',           // PostgreSQL REST API (new default)
-  AIRTABLE: 'airtable', // Legacy Airtable
-  LOCAL: 'local'        // Local JSON files
+  API: 'api',           // PostgreSQL REST API (default)
+  LOCAL: 'local'        // Local JSON files (fallback only)
 };
 
 // Get data source from environment
@@ -28,12 +26,12 @@ const DEFAULT_DATA_SOURCE = import.meta.env.VITE_DATA_SOURCE || DATA_SOURCES.API
 
 /**
  * Unified Data Service class
+ * PostgreSQL-only after Airtable-to-Postgres migration (P0 Q3 2026)
  */
 class DataService {
   constructor(source = DEFAULT_DATA_SOURCE) {
     this.source = source;
     this.apiClient = null;
-    this.airtableClient = null;
     this.initialized = false;
   }
 
@@ -52,18 +50,6 @@ class DataService {
           console.log('[DataService] Connected to PostgreSQL API');
         } catch (error) {
           console.warn('[DataService] API connection failed, falling back to local mode', error);
-          this.source = DATA_SOURCES.LOCAL;
-        }
-        break;
-
-      case DATA_SOURCES.AIRTABLE:
-        const apiKey = import.meta.env.VITE_AIRTABLE_API_KEY;
-        const baseId = import.meta.env.VITE_AIRTABLE_BASE_ID;
-        if (apiKey && baseId) {
-          this.airtableClient = createAirtableClient(apiKey, baseId);
-          console.log('[DataService] Connected to Airtable (legacy mode)');
-        } else {
-          console.warn('[DataService] Airtable credentials missing, falling back to local mode');
           this.source = DATA_SOURCES.LOCAL;
         }
         break;
@@ -94,13 +80,6 @@ class DataService {
   }
 
   /**
-   * Check if using legacy Airtable mode
-   */
-  isAirtableMode() {
-    return this.source === DATA_SOURCES.AIRTABLE;
-  }
-
-  /**
    * Check if using local mode
    */
   isLocalMode() {
@@ -116,16 +95,6 @@ class DataService {
       case DATA_SOURCES.API:
         return this.apiClient.getClients(options);
 
-      case DATA_SOURCES.AIRTABLE:
-        const records = await this.airtableClient.getClients();
-        return records.map(r => ({
-          id: r.id,
-          name: r.fields.Name,
-          slug: r.fields.Name?.toLowerCase().replace(/\s+/g, '-'),
-          locationId: r.fields['Location ID'],
-          status: r.fields.Status?.toLowerCase() || 'active'
-        }));
-
       case DATA_SOURCES.LOCAL:
         return getLocalClients();
 
@@ -140,11 +109,6 @@ class DataService {
     switch (this.source) {
       case DATA_SOURCES.API:
         return this.apiClient.getClient(slug);
-
-      case DATA_SOURCES.AIRTABLE:
-        // Airtable doesn't support slug lookup directly
-        const clients = await this.getClients();
-        return clients.find(c => c.slug === slug);
 
       case DATA_SOURCES.LOCAL:
         const localClients = await getLocalClients();
@@ -164,10 +128,6 @@ class DataService {
       case DATA_SOURCES.API:
         return this.apiClient.getJourneys(options);
 
-      case DATA_SOURCES.AIRTABLE:
-        const records = await this.airtableClient.getJourneys(options.clientId, options.status);
-        return records.map(r => this.transformAirtableJourney(r));
-
       case DATA_SOURCES.LOCAL:
         return getLocalJourneys(options.clientId || 'promise-farm');
 
@@ -182,10 +142,6 @@ class DataService {
     switch (this.source) {
       case DATA_SOURCES.API:
         return this.apiClient.getJourney(id);
-
-      case DATA_SOURCES.AIRTABLE:
-        const record = await this.airtableClient.getJourney(id);
-        return this.transformAirtableJourney(record);
 
       case DATA_SOURCES.LOCAL:
         return getLocalJourney(id);
@@ -202,10 +158,6 @@ class DataService {
       case DATA_SOURCES.API:
         return this.apiClient.createJourney(journeyData);
 
-      case DATA_SOURCES.AIRTABLE:
-        const record = await this.airtableClient.createJourney(journeyData);
-        return this.transformAirtableJourney(record);
-
       case DATA_SOURCES.LOCAL:
         return createLocalJourney(journeyData);
 
@@ -220,10 +172,6 @@ class DataService {
     switch (this.source) {
       case DATA_SOURCES.API:
         return this.apiClient.updateJourney(id, journeyData);
-
-      case DATA_SOURCES.AIRTABLE:
-        const record = await this.airtableClient.updateJourney(id, journeyData);
-        return this.transformAirtableJourney(record);
 
       case DATA_SOURCES.LOCAL:
         return updateLocalJourney(id, journeyData);
@@ -240,10 +188,6 @@ class DataService {
       case DATA_SOURCES.API:
         return this.apiClient.updateJourneyStatus(id, status);
 
-      case DATA_SOURCES.AIRTABLE:
-        const record = await this.airtableClient.updateJourneyStatus(id, status);
-        return this.transformAirtableJourney(record);
-
       case DATA_SOURCES.LOCAL:
         return updateLocalJourney(id, { status });
 
@@ -259,9 +203,6 @@ class DataService {
       case DATA_SOURCES.API:
         return this.apiClient.deleteJourney(id);
 
-      case DATA_SOURCES.AIRTABLE:
-        return this.airtableClient.deleteRecord('Journeys', id);
-
       case DATA_SOURCES.LOCAL:
         return deleteLocalJourney(id);
 
@@ -276,16 +217,6 @@ class DataService {
     switch (this.source) {
       case DATA_SOURCES.API:
         return this.apiClient.duplicateJourney(id, name);
-
-      case DATA_SOURCES.AIRTABLE:
-        // Get original journey
-        const original = await this.getJourney(id);
-        // Create new with copied data
-        return this.createJourney({
-          ...original,
-          name: name || `${original.name} (Copy)`,
-          status: 'Draft'
-        });
 
       case DATA_SOURCES.LOCAL:
         const localOriginal = await getLocalJourney(id);
@@ -308,10 +239,6 @@ class DataService {
       case DATA_SOURCES.API:
         return this.apiClient.getTouchpoints(journeyId);
 
-      case DATA_SOURCES.AIRTABLE:
-        const records = await this.airtableClient.getTouchpoints(journeyId);
-        return records.map(r => this.transformAirtableTouchpoint(r));
-
       case DATA_SOURCES.LOCAL:
         const journey = await getLocalJourney(journeyId);
         return journey?.touchpoints || [];
@@ -327,10 +254,6 @@ class DataService {
     switch (this.source) {
       case DATA_SOURCES.API:
         return this.apiClient.createTouchpoint(touchpointData);
-
-      case DATA_SOURCES.AIRTABLE:
-        const record = await this.airtableClient.createTouchpoint(touchpointData);
-        return this.transformAirtableTouchpoint(record);
 
       case DATA_SOURCES.LOCAL:
         // Local mode doesn't support creating touchpoints
@@ -349,10 +272,6 @@ class DataService {
       case DATA_SOURCES.API:
         return this.apiClient.updateTouchpoint(id, touchpointData);
 
-      case DATA_SOURCES.AIRTABLE:
-        const record = await this.airtableClient.updateTouchpoint(id, touchpointData);
-        return this.transformAirtableTouchpoint(record);
-
       case DATA_SOURCES.LOCAL:
         console.warn('[DataService] Update touchpoint not supported in local mode');
         return touchpointData;
@@ -368,9 +287,6 @@ class DataService {
     switch (this.source) {
       case DATA_SOURCES.API:
         return this.apiClient.deleteTouchpoint(id);
-
-      case DATA_SOURCES.AIRTABLE:
-        return this.airtableClient.deleteTouchpoint(id);
 
       case DATA_SOURCES.LOCAL:
         console.warn('[DataService] Delete touchpoint not supported in local mode');
@@ -390,11 +306,6 @@ class DataService {
       case DATA_SOURCES.API:
         return this.apiClient.getTemplates(options);
 
-      case DATA_SOURCES.AIRTABLE:
-        // Airtable doesn't have a direct templates table in the schema
-        console.warn('[DataService] Templates not available in Airtable mode');
-        return [];
-
       case DATA_SOURCES.LOCAL:
         return [];
 
@@ -403,63 +314,86 @@ class DataService {
     }
   }
 
-  // ==================== TRANSFORMERS ====================
+  // ==================== APPROVALS ====================
 
-  /**
-   * Transform Airtable journey record to standard format
-   */
-  transformAirtableJourney(record) {
-    return {
-      id: record.id,
-      name: record.fields.Name || record.fields['Journey Name'],
-      description: record.fields.Description || '',
-      status: (record.fields.Status || 'Draft').toLowerCase().replace(' ', '_'),
-      clientId: record.fields.Client?.[0],
-      client: record.fields.Client?.[0],
-      category: record.fields.Type?.toLowerCase() || 'nurture',
-      version: record.fields.Version || 1,
-      pipelineId: record.fields.Pipeline?.[0],
-      ghlWorkflowId: record.fields['GHL Workflow ID'],
-      syncStatus: record.fields['Sync Status'],
-      lastSync: record.fields['Last Sync'],
-      touchpoints: [] // Loaded separately
-    };
+  async getApprovals(journeyId) {
+    await this.initialize();
+
+    switch (this.source) {
+      case DATA_SOURCES.API:
+        return this.apiClient.getApprovals(journeyId);
+
+      default:
+        console.warn('[DataService] Approvals not supported in local mode');
+        return [];
+    }
   }
 
-  /**
-   * Transform Airtable touchpoint record to standard format
-   */
-  transformAirtableTouchpoint(record) {
-    const content = record.fields.Content 
-      ? JSON.parse(record.fields.Content) 
-      : {};
+  async requestApproval(journeyId, comments) {
+    await this.initialize();
 
-    return {
-      id: record.id,
-      name: record.fields.Name,
-      type: record.fields.Type || 'Email',
-      order: record.fields.Order || 0,
-      journeyId: record.fields.Journey?.[0],
-      content: {
-        subject: content.subject || '',
-        greeting: content.greeting || '',
-        body: content.body || '',
-        cta: content.cta || null,
-        templateType: content.templateType || ''
-      },
-      config: {
-        delay: record.fields.Delay || 0,
-        delayUnit: record.fields['Delay Unit'] || 'hours',
-        condition: record.fields.Condition || '',
-        assignee: record.fields.Assignee || '',
-        dueIn: record.fields['Due In'] || 24
-      },
-      position: {
-        x: record.fields.PositionX || 0,
-        y: record.fields.PositionY || 0
-      },
-      nextTouchpointId: record.fields['Next Touchpoint']?.[0] || null
-    };
+    switch (this.source) {
+      case DATA_SOURCES.API:
+        return this.apiClient.requestApproval(journeyId, comments);
+
+      default:
+        console.warn('[DataService] Request approval not supported in local mode');
+        return null;
+    }
+  }
+
+  async approveJourney(journeyId, comments) {
+    await this.initialize();
+
+    switch (this.source) {
+      case DATA_SOURCES.API:
+        return this.apiClient.approveJourney(journeyId, comments);
+
+      default:
+        console.warn('[DataService] Approve journey not supported in local mode');
+        return null;
+    }
+  }
+
+  async rejectJourney(journeyId, comments) {
+    await this.initialize();
+
+    switch (this.source) {
+      case DATA_SOURCES.API:
+        return this.apiClient.rejectJourney(journeyId, comments);
+
+      default:
+        console.warn('[DataService] Reject journey not supported in local mode');
+        return null;
+    }
+  }
+
+  // ==================== ANALYTICS ====================
+
+  async getJourneyAnalytics(journeyId, options = {}) {
+    await this.initialize();
+
+    switch (this.source) {
+      case DATA_SOURCES.API:
+        return this.apiClient.getJourneyAnalytics(journeyId, options);
+
+      default:
+        console.warn('[DataService] Analytics not supported in local mode');
+        return null;
+    }
+  }
+
+  async getClientAnalytics(clientId, options = {}) {
+    await this.initialize();
+
+    switch (this.source) {
+      case DATA_SOURCES.API:
+        return this.apiClient.getClientAnalytics(clientId, options);
+
+      default:
+        console.warn('[DataService] Analytics not supported in local mode');
+        return null;
+    }
   }
 }
 

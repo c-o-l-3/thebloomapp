@@ -1,0 +1,314 @@
+/**
+ * SmartTemplateSelector Component Styles
+ */
+
+.smart-template-selector {
+  position: relative;
+  display: inline-block;
+}
+
+/* Trigger Button */
+.smart-template-selector__trigger {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.smart-template-selector__trigger:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.smart-template-selector__trigger:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Panel */
+.smart-template-selector__panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 400px;
+  max-height: 500px;
+  overflow-y: auto;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  animation: slideDown 0.2s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Sections */
+.smart-template-selector__section {
+  padding: 16px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.smart-template-selector__section:last-child {
+  border-bottom: none;
+}
+
+.smart-template-selector__section--ai {
+  background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
+}
+
+/* Section Header */
+.smart-template-selector__section-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.smart-template-selector__section-icon {
+  color: #667eea;
+}
+
+.smart-template-selector__refresh {
+  margin-left: auto;
+  padding: 4px;
+  background: none;
+  border: none;
+  color: #666;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.smart-template-selector__refresh:hover:not(:disabled) {
+  background: #e4e8ec;
+  color: #333;
+}
+
+.smart-template-selector__refresh:disabled {
+  opacity: 0.5;
+}
+
+.smart-template-selector__spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Suggestions */
+.smart-template-selector__suggestions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.smart-template-selector__suggestion {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  background: white;
+  border: 1px solid #e4e8ec;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+}
+
+.smart-template-selector__suggestion:hover {
+  border-color: #667eea;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15);
+}
+
+.smart-template-selector__suggestion-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.smart-template-selector__suggestion-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: #333;
+}
+
+.smart-template-selector__suggestion-reason {
+  font-size: 11px;
+  color: #888;
+}
+
+.smart-template-selector__suggestion-score {
+  font-size: 11px;
+  font-weight: 600;
+  color: #667eea;
+  background: rgba(102, 126, 234, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+/* Empty State */
+.smart-template-selector__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 20px;
+  color: #888;
+  font-size: 13px;
+}
+
+/* Categories */
+.smart-template-selector__categories {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.smart-template-selector__category {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+}
+
+.smart-template-selector__category:hover {
+  background: #f8f9fa;
+}
+
+.smart-template-selector__category--selected {
+  background: rgba(102, 126, 234, 0.1);
+  border-color: #667eea;
+}
+
+.smart-template-selector__category-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: #f0f0f0;
+  border-radius: 8px;
+  color: #666;
+}
+
+.smart-template-selector__category--selected .smart-template-selector__category-icon {
+  background: #667eea;
+  color: white;
+}
+
+.smart-template-selector__category-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.smart-template-selector__category-name {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: #333;
+}
+
+.smart-template-selector__category-preview {
+  display: block;
+  font-size: 11px;
+  color: #888;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.smart-template-selector__category-arrow {
+  color: #ccc;
+  opacity: 0;
+  transition: all 0.2s ease;
+}
+
+.smart-template-selector__category:hover .smart-template-selector__category-arrow,
+.smart-template-selector__category--selected .smart-template-selector__category-arrow {
+  opacity: 1;
+}
+
+/* Preview */
+.smart-template-selector__preview {
+  background: #f8f9fa;
+  padding: 12px 16px;
+  border-top: 1px solid #e4e8ec;
+}
+
+.smart-template-selector__preview-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #666;
+}
+
+.smart-template-selector__use-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  background: #667eea;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.smart-template-selector__use-btn:hover {
+  background: #5a6fd6;
+}
+
+.smart-template-selector__preview-content {
+  font-size: 12px;
+  color: #666;
+}
+
+.smart-template-selector__preview-subject,
+.smart-template-selector__preview-text {
+  margin-bottom: 6px;
+}
+
+.smart-template-selector__preview-subject strong,
+.smart-template-selector__preview-text strong {
+  color: #333;
+}

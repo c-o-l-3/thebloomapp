@@ -65,7 +65,7 @@ export function JourneyFlow({
 
   // Convert journey touchpoints to React Flow nodes
   useEffect(() => {
-    if (journey?.touchpoints) {
+    if (journey?.touchpoints && Array.isArray(journey.touchpoints)) {
       const flowNodes = journey.touchpoints.map((touchpoint, index) => ({
         id: touchpoint.id,
         type: 'journeyNode',
@@ -75,11 +75,10 @@ export function JourneyFlow({
         },
         data: {
           label: touchpoint.name,
-          touchpointType: touchpoint.type,
+          // Normalize touchpoint type to match TOUCHPOINT_TYPE enum (capitalize first letter)
+          touchpointType: touchpoint.type?.charAt(0).toUpperCase() + touchpoint.type?.slice(1).toLowerCase() || 'Note',
           content: touchpoint.content,
-          order: touchpoint.order || index,
-          onEdit: () => handleEditTouchpoint(touchpoint),
-          onDelete: () => handleDeleteTouchpoint(touchpoint.id)
+          order: touchpoint.order || index
         }
       }));
       
@@ -95,7 +94,7 @@ export function JourneyFlow({
       setNodes(flowNodes);
       setEdges(flowEdges);
     }
-  }, [journey]);
+  }, [journey, setNodes, setEdges]);
 
   // Handle node selection
   const onNodeClick = useCallback((event, node) => {

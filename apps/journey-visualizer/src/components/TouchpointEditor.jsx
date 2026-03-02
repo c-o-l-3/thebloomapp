@@ -482,6 +482,23 @@ export function TouchpointEditor({
             onReplaceContent={(text) => {
               handleBodyChange(text);
             }}
+            context={{
+              journeyStage: touchpoint?.journey?.stage || touchpoint?.stage || 'nurturing',
+              touchpointNumber: touchpoint?.order || touchpoint?.sequenceNumber,
+              totalTouchpoints: touchpoint?.journey?.totalTouchpoints || 10,
+              touchpointType: touchpoint?.type || 'email',
+              journey: touchpoint?.journey,
+              touchpoint: {
+                id: touchpoint?.id,
+                name: touchpoint?.name,
+                type: touchpoint?.type,
+                order: touchpoint?.order
+              },
+              contactData: touchpoint?.contact || {
+                first_name: '{{first_name}}',
+                venue_name: '{{venue_name}}'
+              }
+            }}
           />
         )}
       </div>

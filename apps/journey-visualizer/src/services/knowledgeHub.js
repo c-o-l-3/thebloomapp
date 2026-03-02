@@ -5,6 +5,7 @@
  */
 
 import axios from 'axios';
+import { semanticSearch, getSemanticSearchClient } from './semanticSearchClient';
 
 const API_BASE_URL = import.meta.env.VITE_KNOWLEDGE_HUB_API_URL || 'http://localhost:3001/api';
 const DATA_SOURCE = import.meta.env.VITE_DATA_SOURCE || 'airtable';
@@ -92,22 +93,71 @@ export class KnowledgeHubClient {
    * Search facts using semantic search
    * @param {string} query - Search query
    * @param {AbortSignal} signal - AbortController signal for cancellation
-   * @returns {Promise<Array>} Array of search results with facts
+   * @returns {Promise<Array>} Array of search results with facts and pages
    */
   async searchFacts(query, signal = null) {
+    // Try semantic search first in local mode
     if (this.usingLocalMode) {
-      // In local mode, do simple text search on facts
-      const facts = await this.fetchLocalFacts(this.clientSlug);
+      try {
+        // Use semantic search with vector similarity
+        const semanticResults = await semanticSearch(query, this.clientSlug, {
+          threshold: 0.25,
+          limit: 10
+        });
+        
+        if (semanticResults && semanticResults.results && semanticResults.results.length > 0) {
+          return semanticResults.results;
+        }
+      } catch (error) {
+        console.warn('Semantic search failed, falling back to keyword search:', error.message);
+      }
+      
+      // Fallback to keyword search
+      const [facts, goldenPages] = await Promise.all([
+        this.fetchLocalFacts(this.clientSlug),
+        this.fetchLocalGoldenPages(this.clientSlug)
+      ]);
+      
       const queryLower = query.toLowerCase();
-      return facts
+      
+      // Search facts
+      const factResults = facts
         .filter(f => f.statement?.toLowerCase().includes(queryLower))
         .map(f => ({
           id: f.id,
           type: 'fact',
           similarity: 0.8,
           text: f.statement,
-          fact: f
+          fact: f,
+          category: f.category
         }))
+        .slice(0, 8);
+      
+      // Search golden pages
+      const pageResults = goldenPages
+        .filter(p => 
+          p.title?.toLowerCase().includes(queryLower) ||
+          p.description?.toLowerCase().includes(queryLower) ||
+          p.textSample?.toLowerCase().includes(queryLower)
+        )
+        .map(p => ({
+          id: p.id,
+          type: 'page',
+          similarity: 0.7,
+          text: p.textSample || p.description,
+          metadata: {
+            title: p.title,
+            url: p.url,
+            category: p.category,
+            importance: p.importance
+          },
+          category: p.category
+        }))
+        .slice(0, 5);
+      
+      // Combine and sort by similarity
+      return [...factResults, ...pageResults]
+        .sort((a, b) => b.similarity - a.similarity)
         .slice(0, 10);
     }
 
@@ -300,6 +350,358 @@ export class KnowledgeHubClient {
     }
   }
 
+  /**
+   * Search golden pages only
+   * @param {string} query - Search query
+   * @param {AbortSignal} signal - AbortController signal for cancellation
+   * @returns {Promise<Array>} Array of golden page search results
+   */
+  async searchGoldenPages(query, signal = null) {
+    if (this.usingLocalMode) {
+      // Try semantic search first
+      try {
+        const client = getSemanticSearchClient(this.clientSlug);
+        const semanticResults = await client.searchPages(query, {
+          threshold: 0.25,
+          limit: 10
+        });
+        
+        if (semanticResults && semanticResults.results && semanticResults.results.length > 0) {
+          return semanticResults.results;
+        }
+      } catch (error) {
+        console.warn('Semantic search failed, falling back to keyword search:', error.message);
+      }
+      
+      // Fallback to keyword search
+      const goldenPages = await this.fetchLocalGoldenPages(this.clientSlug);
+      const queryLower = query.toLowerCase();
+      
+      return goldenPages
+        .filter(p => 
+          p.title?.toLowerCase().includes(queryLower) ||
+          p.description?.toLowerCase().includes(queryLower) ||
+          p.textSample?.toLowerCase().includes(queryLower)
+        )
+        .map(p => ({
+          id: p.id,
+          type: 'page',
+          similarity: 0.7,
+          text: p.textSample || p.description,
+          metadata: {
+            title: p.title,
+            url: p.url,
+            category: p.category,
+            importance: p.importance
+          },
+          category: p.category
+        }))
+        .slice(0, 10);
+    }
+
+    try {
+      const config = {};
+      if (signal) {
+        config.signal = signal;
+      }
+      const response = await this.client.post(`/clients/${this.clientSlug}/search/pages`, {
+        query,
+        limit: 10
+      }, config);
+      return response.data?.results || [];
+    } catch (error) {
+      if (error.name === 'AbortError' || error.code === 'ERR_CANCELED') {
+        throw error;
+      }
+      console.warn('Failed to search golden pages:', error.message);
+      return this.getMockSearchResults(query).filter(r => r.type === 'page');
+    }
+  }
+
+  /**
+   * Search facts only
+   * @param {string} query - Search query
+   * @param {string} category - Optional category filter
+   * @param {AbortSignal} signal - AbortController signal for cancellation
+   * @returns {Promise<Array>} Array of fact search results
+   */
+  async searchFactsOnly(query, category = null, signal = null) {
+    if (this.usingLocalMode) {
+      // Try semantic search first
+      try {
+        const client = getSemanticSearchClient(this.clientSlug);
+        const semanticResults = await client.searchFacts(query, {
+          threshold: 0.25,
+          limit: 10
+        });
+        
+        if (semanticResults && semanticResults.results && semanticResults.results.length > 0) {
+          // Filter by category if specified
+          let results = semanticResults.results;
+          if (category) {
+            results = results.filter(r => r.category === category);
+          }
+          return results;
+        }
+      } catch (error) {
+        console.warn('Semantic search failed, falling back to keyword search:', error.message);
+      }
+      
+      // Fallback to keyword search
+      let facts = await this.fetchLocalFacts(this.clientSlug);
+      
+      // Filter by category if specified
+      if (category) {
+        facts = facts.filter(f => f.category === category);
+      }
+      
+      const queryLower = query.toLowerCase();
+      return facts
+        .filter(f => f.statement?.toLowerCase().includes(queryLower))
+        .map(f => ({
+          id: f.id,
+          type: 'fact',
+          similarity: 0.8,
+          text: f.statement,
+          fact: f,
+          category: f.category
+        }))
+        .slice(0, 10);
+    }
+
+    try {
+      const config = { params: {} };
+      if (category) {
+        config.params.category = category;
+      }
+      if (signal) {
+        config.signal = signal;
+      }
+      const response = await this.client.post(`/clients/${this.clientSlug}/search/facts`, {
+        query,
+        category,
+        limit: 10
+      }, config);
+      return response.data?.results || [];
+    } catch (error) {
+      if (error.name === 'AbortError' || error.code === 'ERR_CANCELED') {
+        throw error;
+      }
+      console.warn('Failed to search facts:', error.message);
+      return this.getMockSearchResults(query).filter(r => r.type === 'fact');
+    }
+  }
+
+  /**
+   * Search facts with context awareness
+   * @param {string} query - Search query
+   * @param {Object} context - Context for search (journeyStage, touchpointNumber, etc.)
+   * @param {AbortSignal} signal - AbortController signal for cancellation
+   * @returns {Promise<Array>} Array of contextually relevant search results
+   */
+  async searchFactsWithContext(query, context = {}, signal = null) {
+    const { journeyStage, touchpointNumber, touchpointType } = context;
+    
+    // Define fact categories by journey stage
+    const stageToCategories = {
+      'new_lead': ['venue-details', 'team', 'services', 'amenities'],
+      'nurturing': ['venue-details', 'testimonials', 'amenities', 'services'],
+      'qualified': ['pricing', 'packages', 'services', 'amenities'],
+      'proposal': ['pricing', 'packages', 'calendar', 'team'],
+      'booked': ['services', 'team', 'amenities', 'timeline'],
+      'post_booking': ['services', 'team', 'referrals']
+    };
+
+    // Get relevant categories for this stage
+    const relevantCategories = journeyStage
+      ? stageToCategories[journeyStage] || ['venue-details', 'services']
+      : null;
+
+    // First try semantic search
+    let results = [];
+    
+    try {
+      if (this.usingLocalMode) {
+        // Try semantic search first
+        const client = getSemanticSearchClient(this.clientSlug);
+        const semanticResults = await client.searchFacts(query || '', {
+          threshold: 0.2,
+          limit: 15
+        });
+        
+        if (semanticResults?.results?.length > 0) {
+          results = semanticResults.results;
+        }
+        
+        // If no semantic results, fall back to keyword search
+        if (results.length === 0) {
+          const allFacts = await this.fetchLocalFacts(this.clientSlug);
+          const queryLower = (query || '').toLowerCase();
+          
+          results = allFacts
+            .filter(f => !query || f.statement?.toLowerCase().includes(queryLower))
+            .map(f => ({
+              id: f.id,
+              type: 'fact',
+              similarity: query ? 0.7 : 0.5,
+              text: f.statement,
+              fact: f,
+              category: f.category
+            }));
+        }
+      } else {
+        // API mode
+        const config = {};
+        if (signal) config.signal = signal;
+        
+        const response = await this.client.post(`/clients/${this.clientSlug}/search/facts`, {
+          query: query || '',
+          limit: 15,
+          context: { journeyStage, touchpointNumber }
+        }, config);
+        
+        results = response.data?.results || [];
+      }
+    } catch (error) {
+      if (error.name === 'AbortError' || error.code === 'ERR_CANCELED') {
+        throw error;
+      }
+      console.warn('Context-aware search failed, using fallback:', error.message);
+      results = this.getMockSearchResults(query || '').filter(r => r.type === 'fact');
+    }
+
+    // Score and sort results by contextual relevance
+    results = results.map(result => {
+      let contextScore = result.similarity || 0.5;
+      
+      // Boost score for facts in relevant categories
+      if (relevantCategories && result.category) {
+        const categoryIndex = relevantCategories.indexOf(result.category);
+        if (categoryIndex !== -1) {
+          // Boost by relevance position (earlier = more relevant)
+          contextScore += (relevantCategories.length - categoryIndex) * 0.1;
+        }
+      }
+      
+      // Boost for verified facts
+      if (result.fact?.verificationStatus === 'verified') {
+        contextScore += 0.05;
+      }
+      
+      // Boost for high confidence
+      if (result.fact?.confidence > 0.9) {
+        contextScore += 0.03;
+      }
+      
+      return {
+        ...result,
+        contextScore: Math.min(1, contextScore)
+      };
+    });
+
+    // Sort by context score
+    results.sort((a, b) => b.contextScore - a.contextScore);
+
+    // Add contextual metadata
+    return results.slice(0, 10).map(result => ({
+      ...result,
+      contextRelevance: {
+        stage: journeyStage,
+        categoryMatch: relevantCategories?.includes(result.category) || false,
+        recommendedUse: this.getRecommendedFactUse(result, context)
+      }
+    }));
+  }
+
+  /**
+   * Get recommended use for a fact based on context
+   */
+  getRecommendedFactUse(result, context) {
+    const { journeyStage, touchpointType } = context;
+    const category = result.category;
+    
+    const recommendations = {
+      'venue-details': {
+        'new_lead': 'Great for welcome emails - helps introduce the venue',
+        'nurturing': 'Use to paint a picture of the venue experience',
+        'qualified': 'Share specific details to help with decision-making'
+      },
+      'pricing': {
+        'qualified': 'Share when they\'re actively considering options',
+        'proposal': 'Use in proposal discussions and follow-ups'
+      },
+      'testimonials': {
+        'nurturing': 'Perfect for building trust and social proof',
+        'qualified': 'Helps validate their decision to consider you'
+      },
+      'team': {
+        'new_lead': 'Introduce the team they\'ll be working with',
+        'booked': 'Reassure them about who will handle their event'
+      },
+      'services': {
+        'nurturing': 'Highlight what\'s included in your packages',
+        'qualified': 'Detail your service offerings'
+      }
+    };
+
+    const categoryRecs = recommendations[category];
+    if (categoryRecs) {
+      return categoryRecs[journeyStage] || categoryRecs['nurturing'] || 'Relevant for this stage';
+    }
+    
+    return 'Consider using this fact to add credibility';
+  }
+
+  /**
+   * Get smart facts based on journey context (no query needed)
+   */
+  async getSmartFacts(context = {}, signal = null) {
+    const { journeyStage, touchpointNumber, limit = 5 } = context;
+    
+    // Define smart queries based on stage
+    const stageQueries = {
+      'new_lead': ['venue capacity', 'welcome', 'beautiful location', 'wedding venue'],
+      'nurturing': ['couples love', 'testimonials', 'beautiful ceremony', 'reception space'],
+      'qualified': ['packages', 'pricing', 'includes', 'coordinator'],
+      'proposal': ['availability', 'booking', 'reserve date', 'next steps'],
+      'booked': ['planning', 'timeline', 'coordinator', 'details']
+    };
+
+    const queries = stageQueries[journeyStage] || ['venue details'];
+    
+    // Use the first query for semantic search
+    const primaryQuery = queries[0];
+    
+    try {
+      const results = await this.searchFactsWithContext(primaryQuery, context, signal);
+      
+      // If we need more results, try other queries
+      if (results.length < limit && queries.length > 1) {
+        const additionalResults = [];
+        
+        for (let i = 1; i < queries.length && results.length + additionalResults.length < limit; i++) {
+          const moreResults = await this.searchFactsWithContext(queries[i], context, signal);
+          
+          // Add unique results
+          for (const result of moreResults) {
+            if (!results.find(r => r.id === result.id) &&
+                !additionalResults.find(r => r.id === result.id)) {
+              additionalResults.push(result);
+            }
+          }
+        }
+        
+        return [...results, ...additionalResults].slice(0, limit);
+      }
+      
+      return results.slice(0, limit);
+    } catch (error) {
+      if (error.name === 'AbortError') throw error;
+      console.warn('Smart facts retrieval failed:', error);
+      return [];
+    }
+  }
+
   // ==================== MOCK DATA ====================
 
   getMockGoldenPages() {
@@ -389,7 +791,8 @@ export class KnowledgeHubClient {
   }
 
   getMockSearchResults(query) {
-    const results = [
+    // Combine facts and golden pages in mock results
+    const facts = [
       {
         id: 'emb-fact-1',
         type: 'fact',
@@ -401,7 +804,8 @@ export class KnowledgeHubClient {
           category: 'venue-details',
           confidence: 0.95,
           verificationStatus: 'verified'
-        }
+        },
+        category: 'venue-details'
       },
       {
         id: 'emb-fact-3',
@@ -414,8 +818,12 @@ export class KnowledgeHubClient {
           category: 'services',
           confidence: 0.88,
           verificationStatus: 'ai-extracted'
-        }
-      },
+        },
+        category: 'services'
+      }
+    ];
+    
+    const pages = [
       {
         id: 'emb-page-1',
         type: 'page',
@@ -423,18 +831,47 @@ export class KnowledgeHubClient {
         text: 'Our venue offers a stunning backdrop for your special day with capacity for up to 200 guests.',
         metadata: {
           title: 'Wedding Venue Information',
-          url: 'https://example.com/weddings'
-        }
+          url: 'https://example.com/weddings',
+          category: 'venue',
+          importance: 'critical'
+        },
+        category: 'venue'
+      },
+      {
+        id: 'emb-page-2',
+        type: 'page',
+        similarity: 0.65,
+        text: 'We offer three wedding packages starting from $5,000, each customizable to your needs.',
+        metadata: {
+          title: 'Pricing & Packages',
+          url: 'https://example.com/pricing',
+          category: 'pricing',
+          importance: 'high'
+        },
+        category: 'pricing'
       }
     ];
 
     // Filter based on query relevance simulation
     const queryLower = query.toLowerCase();
-    return results.filter(r => 
+    const filteredFacts = facts.filter(r => 
       r.text.toLowerCase().includes(queryLower) ||
       queryLower.includes('venue') ||
-      queryLower.includes('wedding')
+      queryLower.includes('wedding') ||
+      queryLower.includes('catering')
     );
+    
+    const filteredPages = pages.filter(r => 
+      r.text.toLowerCase().includes(queryLower) ||
+      r.metadata?.title?.toLowerCase().includes(queryLower) ||
+      queryLower.includes('venue') ||
+      queryLower.includes('wedding') ||
+      queryLower.includes('pricing')
+    );
+    
+    return [...filteredFacts, ...filteredPages]
+      .sort((a, b) => b.similarity - a.similarity)
+      .slice(0, 10);
   }
 
   getMockBrandVoice() {
@@ -562,5 +999,22 @@ export async function fetchLocalBrandVoice(clientSlug) {
   const client = new KnowledgeHubClient(clientSlug);
   return client.fetchLocalBrandVoice(clientSlug);
 }
+
+export async function fetchLocalGoldenPages(clientSlug) {
+  const client = new KnowledgeHubClient(clientSlug);
+  return client.fetchLocalGoldenPages(clientSlug);
+}
+
+export async function searchGoldenPages(query, clientSlug = DEFAULT_CLIENT_SLUG) {
+  const client = new KnowledgeHubClient(clientSlug);
+  return client.searchGoldenPages(query);
+}
+
+export async function searchFactsOnly(query, category = null, clientSlug = DEFAULT_CLIENT_SLUG) {
+  const client = new KnowledgeHubClient(clientSlug);
+  return client.searchFactsOnly(query, category);
+}
+
+export { SemanticSearchClient, getSemanticSearchClient, semanticSearch } from './semanticSearchClient';
 
 export default KnowledgeHubClient;

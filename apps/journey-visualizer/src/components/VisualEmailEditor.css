@@ -186,6 +186,20 @@
   color: #28a745;
 }
 
+.visual-editor__tool-btn--ai {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.visual-editor__tool-btn--ai:hover:not(:disabled) {
+  background: linear-gradient(135deg, #5a6fd6 0%, #6a4190 100%);
+  color: white;
+}
+
+.visual-editor__tool-btn--ai:disabled {
+  opacity: 0.5;
+}
+
 .visual-editor__save-btn {
   display: flex;
   align-items: center;

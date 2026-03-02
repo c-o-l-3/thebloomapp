@@ -39,6 +39,7 @@ class SyncOrchestration {
     this.journeyId = null;
     this.syncHistory = [];
     this.batchSize = parseInt(process.env.SYNC_BATCH_SIZE) || 10;
+    this.failFast = process.env.SYNC_FAIL_FAST !== 'true'; // Default to graceful degradation
     this.stats = {
       synced: 0,
       conflicts: 0,
@@ -53,27 +54,54 @@ class SyncOrchestration {
 
   /**
    * Initialize sync with all services
+   * Now supports graceful degradation - continues even if some services fail
    */
   async initialize(options = {}) {
     this.dryRun = options.dryRun || process.env.SYNC_DRY_RUN === 'true';
     this.clientId = options.client || null;
     this.journeyId = options.journey || null;
+    this.failFast = options.failFast ?? (process.env.SYNC_FAIL_FAST !== 'true');
 
     logger.info('Initializing sync engine', { 
       dryRun: this.dryRun, 
       clientId: this.clientId,
-      journeyId: this.journeyId
+      journeyId: this.journeyId,
+      failFast: this.failFast
     });
 
-    // Connect to services
-    const dbConnected = await databaseService.connect();
-    const ghlConnected = await ghlService.connect();
+    // Connect to services - allow partial connectivity
+    const results = {
+      dbConnected: false,
+      ghlConnected: false
+    };
 
-    if (!dbConnected || !ghlConnected) {
-      throw new Error('Failed to connect to required services');
+    try {
+      results.dbConnected = await databaseService.connect();
+    } catch (error) {
+      logger.error('Database connection failed', { error: error.message });
+      if (this.failFast) throw new Error('Failed to connect to database');
     }
 
-    return { dbConnected, ghlConnected };
+    try {
+      results.ghlConnected = await ghlService.connect();
+    } catch (error) {
+      logger.error('GHL connection failed', { error: error.message });
+      if (this.failFast) throw new Error('Failed to connect to GHL');
+    }
+
+    // If failFast is false, we can still proceed with available services
+    if (!results.dbConnected && !results.ghlConnected) {
+      throw new Error('Failed to connect to all required services');
+    }
+
+    if (!results.dbConnected) {
+      logger.warn('Database not connected - sync will be read-only');
+    }
+    if (!results.ghlConnected) {
+      logger.warn('GHL not connected - sync will use database only');
+    }
+
+    return results;
   }
 
   /**
@@ -149,9 +177,11 @@ class SyncOrchestration {
 
   /**
    * Process a batch of journeys
+   * Now continues processing other journeys even if one fails (graceful degradation)
    */
   async processBatch(journeys) {
     const results = [];
+    let hasCriticalFailure = false;
 
     for (let i = 0; i < journeys.length; i++) {
       const journey = journeys[i];
@@ -176,10 +206,44 @@ class SyncOrchestration {
           success: false,
           error: error.message
         });
+
+        // If failFast is enabled and we hit a critical error, stop processing
+        if (this.failFast && this.isCriticalError(error)) {
+          logger.error('Critical error encountered, stopping batch processing', {
+            error: error.message
+          });
+          hasCriticalFailure = true;
+          break;
+        }
       }
     }
 
+    // Log summary if we had any failures
+    if (hasCriticalFailure) {
+      logger.warn('Batch processing stopped early due to critical error');
+    }
+
     return results;
+  }
+
+  /**
+   * Check if error is critical (should stop batch processing)
+   * @param {Error} error - Error to check
+   * @returns {boolean} True if critical
+   */
+  isCriticalError(error) {
+    // Authentication errors, rate limit exhaustion, etc.
+    const criticalPatterns = [
+      '401',
+      '403',
+      'authentication',
+      'unauthorized',
+      'api key',
+      'invalid credentials'
+    ];
+    
+    const errorMessage = (error.message || '').toLowerCase();
+    return criticalPatterns.some(pattern => errorMessage.includes(pattern));
   }
 
   /**

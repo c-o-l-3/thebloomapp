@@ -6,6 +6,51 @@ This guide covers the complete workflow for creating customer journeys and publi
 
 ---
 
+## The Onboarding Wizard
+
+The CLI onboarding wizard (`npm run onboard`) provides an interactive, step-by-step process for setting up new clients:
+
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                      ONBOARDING WIZARD FLOW                              │
+└─────────────────────────────────────────────────────────────────────────┘
+
+  ┌─────────────┐     ┌─────────────┐     ┌─────────────┐     ┌─────────────┐
+  │   WELCOME   │ ──▶ │   GHL API   │ ──▶ │  AIRTABLE   │ ──▶ │  BRAND VOICE│
+  └─────────────┘     └─────────────┘     └─────────────┘     └─────────────┘
+        │                   │                   │                   │
+        ▼                   ▼                   ▼                   ▼
+  Client          Credentials         Connection          Analysis
+  Selection       Validation          Validation          Configuration
+
+  ┌─────────────┐     ┌─────────────┐     ┌─────────────┐     ┌─────────────┐
+  │   EMAIL    │ ──▶ │  LOCATION   │ ──▶ │   REVIEW    │ ──▶ │  EXECUTE    │
+  │ TEMPLATES  │     │   CONFIG    │     │             │     │             │
+  └─────────────┘     └─────────────┘     └─────────────┘     └─────────────┘
+        │                   │                   │                   │
+        ▼                   ▼                   ▼                   ▼
+  Template         Timezone,         Confirm           Create Client
+  Selection        Hours,            Settings          Directory
+  Contact Info
+```
+
+### Running the Wizard
+
+```bash
+cd scripts/sync-engine
+npm run onboard
+```
+
+**Options:**
+- `--client <slug>` - Client folder name (non-interactive mode)
+- `--website <url>` - Client website URL
+- `--ghl-location-id <id>` - GoHighLevel Location ID
+- `--dry-run` - Show what would be done without making changes
+- `--skip-validation` - Skip validation for faster iteration
+- `--resume` - Resume from saved progress
+
+---
+
 ## The Journey Builder Workflow
 
 ```
@@ -281,6 +326,28 @@ In GoHighLevel, connect templates to workflows:
 - Journey linked to Client
 - Touchpoint linked to Journey
 - Record IDs correct
+
+### Location Config Incomplete
+
+The wizard now shows a completeness score for location configuration. To improve:
+
+1. Run the wizard with location config step: `npm run onboard -- --client <slug>`
+2. Manually edit `clients/<slug>/location-config.json`
+3. Ensure these fields are populated:
+   - `locationId` - GHL Location ID
+   - `name` - Venue/location name
+   - `timezone` - Valid IANA timezone (e.g., "America/New_York")
+   - `contact.email` - Business email
+   - `contact.phone` - Business phone
+   - `contact.website` - Website URL
+   - `address.city`, `address.state` - Location details
+
+### Invalid Timezone
+
+**Check:**
+- Timezone is a valid IANA timezone format
+- Common valid values: `America/New_York`, `America/Chicago`, `America/Denver`, `America/Los_Angeles`, `Pacific/Honolulu`
+- Run validation to check: `npm run validate -- --client <slug>`
 
 ---
 

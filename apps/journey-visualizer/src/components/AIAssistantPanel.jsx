@@ -1,17 +1,18 @@
 /**
  * AIAssistantPanel Component
- * AI-powered writing sidebar with Knowledge Hub integration
+ * AI-powered writing sidebar with Knowledge Hub integration and context awareness
  */
 
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { getKnowledgeHubClient } from '../services/knowledgeHub';
-import { 
-  Sparkles, 
-  Search, 
-  Check, 
-  X, 
-  Copy, 
-  RefreshCw, 
+import { getBrandVoiceAnalyzer } from '../services/brand-voice-analyzer';
+import {
+  Sparkles,
+  Search,
+  Check,
+  X,
+  Copy,
+  RefreshCw,
   Lightbulb,
   Quote,
   BookOpen,
@@ -19,20 +20,30 @@ import {
   Loader2,
   ChevronRight,
   CheckCircle2,
-  AlertCircle
+  AlertCircle,
+  History,
+  Target,
+  Compass
 } from 'lucide-react';
 import './AIAssistantPanel.css';
 
 /**
- * AIAssistantPanel - AI-powered writing assistant
+ * AIAssistantPanel - AI-powered writing assistant with context awareness
+ *
+ * @param {string} clientSlug - Client identifier
+ * @param {string} currentContent - Current editor content
+ * @param {Function} onInsertSuggestion - Callback to insert suggestion
+ * @param {Function} onReplaceContent - Callback to replace content
+ * @param {Object} context - Context object with journeyStage, touchpointNumber, touchpointType, journey, touchpoint
  */
-export function AIAssistantPanel({ 
-  clientSlug, 
+export function AIAssistantPanel({
+  clientSlug,
   currentContent,
   onInsertSuggestion,
-  onReplaceContent
+  onReplaceContent,
+  context = {}
 }) {
-  const [activeTab, setActiveTab] = useState('suggest'); // suggest, facts, voice
+  const [activeTab, setActiveTab] = useState('suggest'); // suggest, facts, voice, context, history
   const [query, setQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
@@ -41,10 +52,15 @@ export function AIAssistantPanel({
   const [contentAnalysis, setContentAnalysis] = useState(null);
   const [selectedSuggestion, setSelectedSuggestion] = useState(null);
   const [knowledgeHub, setKnowledgeHub] = useState(null);
+  const [brandVoiceAnalyzer, setBrandVoiceAnalyzer] = useState(null);
+  const [conversationHistory, setConversationHistory] = useState([]);
+  const [contextAwareness, setContextAwareness] = useState(null);
+  const [smartFacts, setSmartFacts] = useState([]);
 
   // Refs for cleanup
   const isMountedRef = useRef(true);
   const abortControllerRef = useRef(null);
+  const historyEndRef = useRef(null);
 
   // Cleanup on unmount
   useEffect(() => {
@@ -57,18 +73,32 @@ export function AIAssistantPanel({
     };
   }, []);
 
-  // Initialize Knowledge Hub client
+  // Initialize Knowledge Hub and Brand Voice Analyzer clients
   useEffect(() => {
     if (clientSlug) {
       setKnowledgeHub(getKnowledgeHubClient(clientSlug));
+      const analyzer = getBrandVoiceAnalyzer(clientSlug);
+      analyzer.initialize(clientSlug).then(() => {
+        if (isMountedRef.current) {
+          setBrandVoiceAnalyzer(analyzer);
+        }
+      });
     }
   }, [clientSlug]);
+
+  // Build context awareness when context changes
+  useEffect(() => {
+    if (brandVoiceAnalyzer && context) {
+      const awareness = brandVoiceAnalyzer.buildContext(context);
+      setContextAwareness(awareness);
+    }
+  }, [brandVoiceAnalyzer, context]);
 
   // Load initial data
   useEffect(() => {
     if (knowledgeHub) {
       loadBrandVoice();
-      loadFacts();
+      loadSmartFacts();
     }
     // Cleanup function to abort pending requests when knowledgeHub changes
     return () => {
@@ -81,10 +111,17 @@ export function AIAssistantPanel({
 
   // Analyze current content when it changes
   useEffect(() => {
-    if (currentContent && brandVoice) {
-      analyzeContent();
+    if (currentContent && brandVoice && brandVoiceAnalyzer) {
+      performContentAnalysis();
     }
-  }, [currentContent, brandVoice]);
+  }, [currentContent, brandVoice, brandVoiceAnalyzer]);
+
+  // Scroll to bottom of history when it changes
+  useEffect(() => {
+    if (historyEndRef.current && activeTab === 'history') {
+      historyEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [conversationHistory, activeTab]);
 
   const loadBrandVoice = async () => {
     // Abort any pending request
@@ -105,7 +142,7 @@ export function AIAssistantPanel({
     }
   };
 
-  const loadFacts = async () => {
+  const loadSmartFacts = async () => {
     // Abort any pending request
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
@@ -113,32 +150,50 @@ export function AIAssistantPanel({
     abortControllerRef.current = new AbortController();
 
     try {
-      const factsData = await knowledgeHub.fetchFacts(null, abortControllerRef.current.signal);
+      // Use context-aware fact retrieval
+      const factsData = await knowledgeHub.getSmartFacts(context, abortControllerRef.current.signal);
       if (isMountedRef.current) {
-        setFacts(factsData.slice(0, 10)); // Show top 10 facts
+        setSmartFacts(factsData);
+        // Also load general facts as backup
+        const generalFacts = await knowledgeHub.fetchFacts(null, abortControllerRef.current.signal);
+        setFacts(generalFacts.slice(0, 10));
       }
     } catch (error) {
       if (error.name !== 'AbortError' && isMountedRef.current) {
-        console.error('Failed to load facts:', error);
+        console.error('Failed to load smart facts:', error);
+        // Fallback to regular facts
+        try {
+          const factsData = await knowledgeHub.fetchFacts(null, abortControllerRef.current.signal);
+          if (isMountedRef.current) {
+            setFacts(factsData.slice(0, 10));
+          }
+        } catch (fallbackError) {
+          console.error('Failed to load facts:', fallbackError);
+        }
       }
     }
   };
 
-  const analyzeContent = () => {
-    if (!currentContent || !brandVoice) return;
+  const performContentAnalysis = () => {
+    if (!currentContent || !brandVoiceAnalyzer) return;
     
-    const contentText = currentContent.replace(/<[^>]*>/g, ' ').toLowerCase();
-    const preferredWords = brandVoice.vocabulary?.preferred || [];
-    const avoidedWords = brandVoice.vocabulary?.avoided || [];
+    const analysis = brandVoiceAnalyzer.analyzeContent(currentContent, context);
+    setContentAnalysis(analysis);
+  };
+
+  const addToHistory = (role, content, metadata = {}) => {
+    const newEntry = {
+      role,
+      content,
+      timestamp: new Date().toISOString(),
+      metadata
+    };
+    setConversationHistory(prev => [...prev.slice(-19), newEntry]);
     
-    const usedPreferred = preferredWords.filter(word => contentText.includes(word.toLowerCase()));
-    const usedAvoided = avoidedWords.filter(word => contentText.includes(word.toLowerCase()));
-    
-    setContentAnalysis({
-      preferredUsed: usedPreferred,
-      avoidedUsed: usedAvoided,
-      score: Math.max(0, 100 - (usedAvoided.length * 10) + (usedPreferred.length * 5))
-    });
+    // Also add to analyzer history if available
+    if (brandVoiceAnalyzer) {
+      brandVoiceAnalyzer.addToHistory(role, content, metadata);
+    }
   };
 
   const handleSearch = useCallback(async () => {
@@ -153,17 +208,39 @@ export function AIAssistantPanel({
     if (isMountedRef.current) {
       setIsLoading(true);
     }
+    
+    // Add user query to history
+    addToHistory('user', query, { type: 'search' });
+    
     try {
-      const results = await knowledgeHub.searchFacts(query, abortControllerRef.current.signal);
+      // Use context-aware search
+      const results = await knowledgeHub.searchFactsWithContext(
+        query,
+        context,
+        abortControllerRef.current.signal
+      );
+      
       if (isMountedRef.current) {
-        setSuggestions(results.map(r => ({
+        const mappedResults = results.map(r => ({
           id: r.id,
           text: r.fact?.statement || r.text,
           source: r.fact?.source?.reference || r.metadata?.title || 'Knowledge Hub',
           type: r.type,
-          confidence: r.fact?.confidence || r.similarity,
-          category: r.fact?.category || r.metadata?.category
-        })));
+          confidence: r.contextScore || r.fact?.confidence || r.similarity,
+          category: r.fact?.category || r.metadata?.category,
+          contextRelevance: r.contextRelevance
+        }));
+        
+        setSuggestions(mappedResults);
+        
+        // Add results to history
+        if (mappedResults.length > 0) {
+          addToHistory('assistant', `Found ${mappedResults.length} relevant facts for your search`, {
+            type: 'search_results',
+            query,
+            resultCount: mappedResults.length
+          });
+        }
       }
     } catch (error) {
       if (error.name !== 'AbortError' && isMountedRef.current) {
@@ -174,10 +251,10 @@ export function AIAssistantPanel({
         setIsLoading(false);
       }
     }
-  }, [query, knowledgeHub]);
+  }, [query, knowledgeHub, context]);
 
   const handleGenerate = useCallback(async () => {
-    if (!knowledgeHub) return;
+    if (!knowledgeHub || !brandVoiceAnalyzer) return;
     
     // Abort any pending request
     if (abortControllerRef.current) {
@@ -188,23 +265,44 @@ export function AIAssistantPanel({
     if (isMountedRef.current) {
       setIsLoading(true);
     }
+    
+    // Add user request to history
+    addToHistory('user', query || 'Generate content suggestions', { type: 'generate' });
+    
     try {
-      const generated = await knowledgeHub.generateSuggestions(
+      // Build context-aware prompt
+      const prompt = brandVoiceAnalyzer.buildGenerationPrompt(
         query || 'engaging wedding email content',
+        context
+      );
+      
+      const generated = await knowledgeHub.generateSuggestions(
+        prompt,
         {
           tone: brandVoice?.tone?.formality || 'friendly',
           count: 3
         },
         abortControllerRef.current.signal
       );
+      
       if (isMountedRef.current) {
-        setSuggestions(generated.map((s, i) => ({
+        const mappedResults = generated.map((s, i) => ({
           id: `gen-${i}`,
           text: s.text,
           source: s.source,
           type: 'generated',
-          tone: s.tone
-        })));
+          tone: s.tone,
+          contextAware: true
+        }));
+        
+        setSuggestions(mappedResults);
+        
+        // Add generation to history
+        addToHistory('assistant', `Generated ${mappedResults.length} context-aware suggestions`, {
+          type: 'generation',
+          query: prompt.substring(0, 100) + '...',
+          resultCount: mappedResults.length
+        });
       }
     } catch (error) {
       if (error.name !== 'AbortError' && isMountedRef.current) {
@@ -215,7 +313,7 @@ export function AIAssistantPanel({
         setIsLoading(false);
       }
     }
-  }, [query, knowledgeHub, brandVoice]);
+  }, [query, knowledgeHub, brandVoice, brandVoiceAnalyzer, context]);
 
   const insertSuggestion = (text) => {
     onInsertSuggestion?.(`<p>${text}</p>`);
@@ -231,13 +329,47 @@ export function AIAssistantPanel({
     navigator.clipboard.writeText(text);
   };
 
+  // Get context display info
+  const getContextDisplay = () => {
+    if (!contextAwareness) return null;
+    const { stage, position } = contextAwareness;
+    return {
+      stage: stage?.name || 'Unknown Stage',
+      position: position?.label || 'General',
+      tone: contextAwareness.effectiveTone
+    };
+  };
+
+  const contextDisplay = getContextDisplay();
+
   return (
     <div className="ai-assistant-panel">
       {/* Header */}
       <div className="ai-assistant-panel__header">
         <Sparkles size={18} className="ai-assistant-panel__header-icon" />
         <h3 className="ai-assistant-panel__title">AI Writing Assistant</h3>
+        {contextDisplay && (
+          <div className="ai-assistant-panel__context-badge" title={`${contextDisplay.stage} • ${contextDisplay.position}`}>
+            <Target size={12} />
+            <span>{contextDisplay.stage}</span>
+          </div>
+        )}
       </div>
+
+      {/* Context Bar */}
+      {contextDisplay && (
+        <div className="ai-assistant-panel__context-bar">
+          <div className="ai-assistant-panel__context-info">
+            <Compass size={12} />
+            <span>{contextDisplay.position}</span>
+            {contextDisplay.tone && (
+              <span className="ai-assistant-panel__tone-indicator">
+                Formality: {Math.round(contextDisplay.tone.formality * 100)}%
+              </span>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Tabs */}
       <div className="ai-assistant-panel__tabs">
@@ -261,6 +393,16 @@ export function AIAssistantPanel({
         >
           <MessageSquare size={14} />
           Voice
+        </button>
+        <button
+          className={`ai-assistant-panel__tab ${activeTab === 'history' ? 'ai-assistant-panel__tab--active' : ''}`}
+          onClick={() => setActiveTab('history')}
+        >
+          <History size={14} />
+          History
+          {conversationHistory.length > 0 && (
+            <span className="ai-assistant-panel__tab-badge">{conversationHistory.length}</span>
+          )}
         </button>
       </div>
 
@@ -371,11 +513,56 @@ export function AIAssistantPanel({
       {/* Facts Tab */}
       {activeTab === 'facts' && (
         <div className="ai-assistant-panel__section">
+          {/* Smart Facts Section */}
+          {smartFacts.length > 0 && (
+            <div className="ai-assistant-panel__smart-facts">
+              <div className="ai-assistant-panel__section-header">
+                <h4 className="ai-assistant-panel__section-title">
+                  <Sparkles size={14} />
+                  Recommended for {contextDisplay?.stage || 'Current Stage'}
+                </h4>
+                <span className="ai-assistant-panel__section-count">{smartFacts.length} facts</span>
+              </div>
+
+              <div className="ai-assistant-panel__facts-list">
+                {smartFacts.map((fact) => (
+                  <div key={`smart-${fact.id}`} className="ai-assistant-panel__fact ai-assistant-panel__fact--smart">
+                    <div className="ai-assistant-panel__fact-status">
+                      {fact.fact?.verificationStatus === 'verified' ? (
+                        <CheckCircle2 size={14} className="ai-assistant-panel__fact-verified" />
+                      ) : (
+                        <AlertCircle size={14} className="ai-assistant-panel__fact-pending" />
+                      )}
+                    </div>
+                    <div className="ai-assistant-panel__fact-content">
+                      <p className="ai-assistant-panel__fact-text">{fact.fact?.statement || fact.text}</p>
+                      <div className="ai-assistant-panel__fact-meta">
+                        <span className="ai-assistant-panel__fact-category">{fact.category}</span>
+                        {fact.contextRelevance?.recommendedUse && (
+                          <span className="ai-assistant-panel__fact-recommendation" title={fact.contextRelevance.recommendedUse}>
+                            {fact.contextRelevance.recommendedUse.substring(0, 40)}...
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <button
+                      className="ai-assistant-panel__fact-insert"
+                      onClick={() => insertSuggestion(fact.fact?.statement || fact.text)}
+                      title="Insert fact"
+                    >
+                      <ChevronRight size={14} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div className="ai-assistant-panel__section-header">
-            <h4 className="ai-assistant-panel__section-title">Verified Facts</h4>
+            <h4 className="ai-assistant-panel__section-title">All Verified Facts</h4>
             <span className="ai-assistant-panel__section-count">{facts.length} facts</span>
           </div>
-          
+
           <div className="ai-assistant-panel__facts-list">
             {facts.map((fact) => (
               <div key={fact.id} className="ai-assistant-panel__fact">
@@ -501,6 +688,63 @@ export function AIAssistantPanel({
               </ul>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* History Tab */}
+      {activeTab === 'history' && (
+        <div className="ai-assistant-panel__section">
+          <div className="ai-assistant-panel__section-header">
+            <h4 className="ai-assistant-panel__section-title">
+              <History size={14} />
+              Conversation History
+            </h4>
+            {conversationHistory.length > 0 && (
+              <button
+                className="ai-assistant-panel__clear-history"
+                onClick={() => setConversationHistory([])}
+              >
+                Clear
+              </button>
+            )}
+          </div>
+
+          {conversationHistory.length === 0 ? (
+            <div className="ai-assistant-panel__empty">
+              <History size={32} className="ai-assistant-panel__empty-icon" />
+              <p>No conversation history yet</p>
+              <p className="ai-assistant-panel__empty-hint">
+                Your searches and generations will appear here
+              </p>
+            </div>
+          ) : (
+            <div className="ai-assistant-panel__history-list">
+              {conversationHistory.map((entry, index) => (
+                <div
+                  key={index}
+                  className={`ai-assistant-panel__history-item ai-assistant-panel__history-item--${entry.role}`}
+                >
+                  <div className="ai-assistant-panel__history-header">
+                    <span className="ai-assistant-panel__history-role">
+                      {entry.role === 'user' ? 'You' : 'AI Assistant'}
+                    </span>
+                    <span className="ai-assistant-panel__history-time">
+                      {new Date(entry.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </span>
+                  </div>
+                  <p className="ai-assistant-panel__history-content">
+                    {entry.content}
+                  </p>
+                  {entry.metadata?.type && (
+                    <span className="ai-assistant-panel__history-type">
+                      {entry.metadata.type}
+                    </span>
+                  )}
+                </div>
+              ))}
+              <div ref={historyEndRef} />
+            </div>
+          )}
         </div>
       )}
     </div>

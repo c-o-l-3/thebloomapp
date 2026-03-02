@@ -7,6 +7,7 @@ const router = Router();
 const prisma = new PrismaClient();
 
 const touchpointSchema = z.object({
+  id: z.string().uuid().optional(),
   journeyId: z.string().uuid(),
   name: z.string().min(1).max(255),
   type: z.enum(['email', 'sms', 'task', 'wait', 'condition', 'trigger', 'form', 'call', 'note']),

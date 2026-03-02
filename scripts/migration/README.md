@@ -1,122 +1,149 @@
-# Airtable to PostgreSQL Migration Guide
+# Airtable to PostgreSQL Migration Scripts
 
-This directory contains scripts and tools for migrating data from Airtable to PostgreSQL.
+This directory contains migration scripts for moving data from Airtable to PostgreSQL.
 
-## Prerequisites
+## Files
 
-1. PostgreSQL running (via Docker Compose)
-2. Prisma migrations applied
-3. Airtable API key with access to the base
+- `migrate-airtable-to-postgres.js` - Original script that uses Airtable API (requires AIRTABLE_API_KEY)
+- The active migration script is now located at `apps/journey-api/src/migrate-airtable-to-postgres.js`
 
-## Migration Steps
+## Quick Start
 
-### 1. Start PostgreSQL
+### Prerequisites
 
-```bash
-cd /path/to/project
-docker-compose up -d postgres
-```
+1. **Database Setup**: Ensure PostgreSQL is running and migrations are applied
+   ```bash
+   cd apps/journey-api
+   npm run db:migrate
+   ```
 
-### 2. Install API Dependencies
+2. **Environment Variables**: Ensure `DATABASE_URL` is set in `apps/journey-api/.env`
 
-```bash
-cd apps/journey-api
-npm install
-```
+3. **CSV Data**: Ensure CSV files are in `data/migration/airtable-export/`
 
-### 3. Apply Database Migrations
+### Running the Migration
 
 ```bash
-npx prisma migrate dev --name init
-npx prisma generate
+# From project root
+cd apps/journey-api && node src/migrate-airtable-to-postgres.js
+
+# Or with npm (if script is added to package.json)
+npm run db:migrate-airtable
 ```
 
-### 4. Set Environment Variables
+## CSV File Requirements
 
-Ensure your `.env` file has:
+The migration script reads from these CSV files in `data/migration/airtable-export/`:
 
-```env
-DATABASE_URL="postgresql://bloom:bloom_password@localhost:5432/journey_builder"
-AIRTABLE_API_KEY="your_airtable_api_key"
-AIRTABLE_BASE_ID="app66pKRuzhlUzy3j"
-```
+| File | Required | Description |
+|------|----------|-------------|
+| `Clients-Grid view.csv` | Yes | Client records |
+| `Journeys-Grid view.csv` | Yes | Journey definitions |
+| `Touchpoints-Grid view.csv` | Yes | Touchpoint content |
 
-### 5. Run Migration
+### CSV Column Mappings
 
-```bash
-node scripts/migration/migrate-airtable-to-postgres.js
-```
+#### Clients CSV
+| CSV Column | Prisma Field | Notes |
+|------------|--------------|-------|
+| Name | name | Required |
+| Location ID | locationId | GHL Location ID |
+| PIT Token | ghlLocationId | GHL API Token |
+| Website | website | URL |
+| Status | status | Maps: Active→active, Inactive→inactive |
+| Notes | config.notes | Stored in config JSON |
 
-This will:
-- Fetch all data from Airtable
-- Transform and map data to PostgreSQL schema
-- Insert data maintaining referential integrity
-- Create initial versions for journeys
-- Log migration results
+#### Journeys CSV
+| CSV Column | Prisma Field | Notes |
+|------------|--------------|-------|
+| Journey Name | name | Required |
+| Type | category | Maps: Wedding→wedding, etc. |
+| Status | status | Maps: Draft→draft, Active→published |
+| Description | description | Text |
+| Tags | metadata.tags | Comma-separated |
+| Client | clientId | Linked by name matching |
 
-### 6. Verify Migration
+#### Touchpoints CSV
+| CSV Column | Prisma Field | Notes |
+|------------|--------------|-------|
+| Internal Name | name | Required |
+| Type | type | Maps: Email→email, SMS→sms |
+| Day | orderIndex | Numeric day |
+| Order | orderIndex | Fallback if Day missing |
+| Subject | content.subject | Email subject |
+| Body Content | content.body | Email body |
+| GHL Template ID | ghlTemplateId | GHL template reference |
+| Status | status | Maps: Draft→draft, etc. |
 
-Check the database:
+## Data Linking Strategy
 
-```bash
-cd apps/journey-api
-npx prisma studio
-```
+Since CSV exports don't include Airtable record IDs, the script uses intelligent matching:
 
-Or query directly:
+1. **Clients**: Created first, stored in name→ID map
+2. **Journeys**: Linked to clients by:
+   - Direct name match in Client field
+   - Fuzzy match: Journey name contains client name
+3. **Touchpoints**: Linked to clients by:
+   - Content analysis: Detects venue names in subject/body
+   - Signature detection: "Lisa from Cameron Estate"
+   - Then assigned to client's journey
 
-```bash
-psql postgresql://bloom:bloom_password@localhost:5432/journey_builder
-```
+## Known Data Gaps
 
-### 7. Start the API
+Based on the current CSV export:
 
-```bash
-cd apps/journey-api
-npm run dev
-```
+1. **Missing Clients**: CSV shows 2 clients, metadata shows 4
+   - Only "Maison Albion" and "Cameron Estate Inn" in export
+   - Missing: "Maui Pineapple Chapel", "Maravilla Gardens"
 
-Test the health endpoint:
+2. **Unlinked Journeys**: "New Lead 14-Day Nurture Sequence" has no client
+   - Needs manual assignment or additional client data
 
-```bash
-curl http://localhost:3001/health
-```
-
-## Rollback
-
-If you need to rollback the migration:
-
-```bash
-cd apps/journey-api
-npx prisma migrate reset --force
-```
+3. **Unlinked Touchpoints**: Some touchpoints don't mention venue names
+   - SMS touchpoints with generic content can't be auto-linked
+   - Requires manual review
 
 ## Troubleshooting
 
-### Connection Issues
-
-Ensure PostgreSQL is running:
+### "Cannot find package '@prisma/client'"
+Run the script from the `apps/journey-api` directory:
 ```bash
-docker-compose ps
+cd apps/journey-api && node src/migrate-airtable-to-postgres.js
 ```
 
-### Missing Airtable Data
+### "CSV file not found"
+Check that CSV files exist in `data/migration/airtable-export/`:
+```bash
+ls -la data/migration/airtable-export/
+```
 
-Check Airtable API permissions and base ID.
+### "DATABASE_URL not set"
+Ensure the `.env` file exists:
+```bash
+cat apps/journey-api/.env | grep DATABASE_URL
+```
 
-### Foreign Key Errors
+## Post-Migration Steps
 
-The migration script maintains ID mappings. If you see FK errors, it may be due to:
-- Missing linked records in Airtable
-- Circular references
-- Data inconsistencies
+1. **Verify Data**: Check record counts match expectations
+2. **Fix Broken Links**: Review issues report and manually fix unlinked records
+3. **Update Slugs**: Ensure URL-safe slugs are unique
+4. **Test API**: Verify data is accessible via the API
 
-## Post-Migration
+## Migration Report
 
-After successful migration:
+The script outputs a detailed report including:
+- Records migrated per entity
+- Broken links (records that couldn't be linked)
+- Data transforms (inferred relationships)
+- Skipped records (missing required fields)
 
-1. Update frontend to use the new API
-2. Test all CRUD operations
-3. Update sync engine configuration
-4. Archive Airtable base (read-only)
-5. Remove Airtable API keys from active codebase
+Example:
+```
+📊 Summary:
+  Clients:     2 migrated
+  Journeys:    1 migrated
+  Touchpoints: 3 migrated
+
+⚠️  Note: Some records had issues. Review the report above.
+```

@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cameron Estate Inn - Customer Journey Printout</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      font-size: 12px;
+      line-height: 1.5;
+      color: #1a1a1a;
+      max-width: 8.5in;
+      margin: 0 auto;
+      padding: 0.5in;
+    }
+    
+    @media print {
+      body {
+        padding: 0;
+      }
+      .page-break {
+        page-break-before: always;
+      }
+    }
+    
+    .header {
+      background: linear-gradient(135deg, #1e3a5f 0%, #2d5a87 100%);
+      color: white;
+      padding: 30px;
+      margin: -0.5in -0.5in 20px -0.5in;
+      max-width: 8.5in;
+    }
+    
+    .header h1 {
+      font-size: 28px;
+      margin-bottom: 5px;
+    }
+    
+    .header .subtitle {
+      font-size: 14px;
+      opacity: 0.9;
+    }
+    
+    .header .meta {
+      display: flex;
+      gap: 20px;
+      margin-top: 15px;
+      font-size: 12px;
+    }
+    
+    .header .meta span {
+      background: rgba(255,255,255,0.2);
+      padding: 5px 12px;
+      border-radius: 15px;
+    }
+    
+    .summary {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 30px;
+      padding: 15px;
+      background: #f8f9fa;
+      border-radius: 8px;
+    }
+    
+    .summary .count {
+      font-weight: bold;
+      color: #2d5a87;
+    }
+    
+    .touchpoint {
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      page-break-inside: avoid;
+    }
+    
+    .touchpoint-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 15px;
+      background: #f8f9fa;
+      border-bottom: 1px solid #e0e0e0;
+      border-radius: 8px 8px 0 0;
+    }
+    
+    .touchpoint-number {
+      width: 30px;
+      height: 30px;
+      background: #2d5a87;
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      margin-right: 12px;
+    }
+    
+    .touchpoint-title {
+      display: flex;
+      align-items: center;
+      flex: 1;
+    }
+    
+    .touchpoint-title h3 {
+      font-size: 16px;
+    }
+    
+    .touchpoint-type {
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+    
+    .touchpoint-type.email {
+      background: #dbeafe;
+      color: #1d4ed8;
+    }
+    
+    .touchpoint-type.sms {
+      background: #d1fae5;
+      color: #047857;
+    }
+    
+    .touchpoint-timing {
+      font-size: 12px;
+      color: #666;
+      text-align: right;
+    }
+    
+    .touchpoint-content {
+      padding: 15px;
+    }
+    
+    .field {
+      margin-bottom: 12px;
+    }
+    
+    .field label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #666;
+      font-weight: bold;
+    }
+    
+    .field-value {
+      margin-top: 3px;
+      font-size: 13px;
+      white-space: pre-wrap;
+    }
+    
+    .field-value.subject {
+      font-weight: bold;
+      font-size: 14px;
+      color: #1a1a1a;
+    }
+    
+    .notes-section {
+      margin-top: 15px;
+      padding-top: 15px;
+      border-top: 1px dashed #ccc;
+    }
+    
+    .notes-section label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #666;
+      font-weight: bold;
+    }
+    
+    .notes-lines {
+      margin-top: 8px;
+    }
+    
+    .note-line {
+      border-bottom: 1px solid #ddd;
+      height: 24px;
+    }
+    
+    .approval-section {
+      margin-top: 30px;
+      padding: 20px;
+      background: #f8f9fa;
+      border-radius: 8px;
+    }
+    
+    .approval-section h2 {
+      font-size: 16px;
+      margin-bottom: 15px;
+    }
+    
+    .approval-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+    
+    .approval-box label {
+      display: block;
+      font-size: 10px;
+      text-transform: uppercase;
+      color: #666;
+      margin-bottom: 5px;
+    }
+    
+    .approval-line {
+      border-bottom: 2px solid #333;
+      height: 30px;
+    }
+    
+    .checklist {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    
+    .check-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .checkbox {
+      width: 18px;
+      height: 18px;
+      border: 2px solid #999;
+      border-radius: 3px;
+    }
+    
+    .footer {
+      margin-top: 30px;
+      padding-top: 15px;
+      border-top: 1px solid #ddd;
+      font-size: 10px;
+      color: #999;
+      display: flex;
+      justify-content: space-between;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Cameron Estate Inn</h1>
+    <div class="subtitle">New Lead Customer Journey - 14-Day Nurture Sequence</div>
+    <div class="meta">
+      <span>📧 9 Emails</span>
+      <span>💬 5 SMS</span>
+      <span>📅 14 Touchpoints Total</span>
+    </div>
+  </div>
+
+  <div class="summary">
+    <div>Goal: <strong>Convert leads to booked tours</strong></div>
+  </div>
+
+  <!-- Touchpoint 1 -->
+  <div class="touchpoint">
+    <div class="touchpoint-header">
+      <div class="touchpoint-title">
+        <div class="touchpoint-number">1</div>
+        <h3>Welcome Email - Immediate</h3>
+      </div>
+      <div>
+        <span class="touchpoint-type email">Email</span>
+        <div class="touchpoint-timing">Day 0 (Immediate)</div>
+      </div>
+    </div>
+    <div class="touchpoint-content">
+      <div class="field">
+        <label>Subject Line</label>
+        <div class="field-value subject">Inside your Cameron Estate wedding, {{first_name}}</div>
+      </div>
+      <div class="field">
+        <label>Preview Text</label>
+        <div class="field-value">Your fairy tale has a home at Cameron Estate.</div>
+      </div>
+      <div class="field">
+        <label>Email Body</label>
+        <div class="field-value">Hi there {{first_name}}, congratulations! I imagine you are hearing from quite a few venues right now, so let me share what makes Cameron Estate different. We are a historic inn (more than 225 years old!) where your entire wedding unfolds in one place. Your ceremony, reception, and guest accommodations—all here on the estate. Ready to visit? Most couples tell us they know within the first few minutes whether Cameron Estate feels right. I would love to give you that experience. View our complete details and pricing: https://cameronestateinn.com. To schedule your private tour, simply reply with 2-3 dates and times that work for you, and I will get you on the calendar. Warmly, Lisa, Wedding Specialist, Cameron Estate Inn, 717-725-4831, cameronsstateinn.com</div>
+      </div>
+      <div class="notes-section">
+        <label>Review Notes:</label>
+        <div class="notes-lines">
+          <div class="note-line"></div>
+          <div class="note-line"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Touchpoint 2 -->
+  <div class="touchpoint">
+    <div class="touchpoint-header">
+      <div class="touchpoint-title">
+        <div class="touchpoint-number">2</div>
+        <h3>Initial Text - Immediate</h3>
+      </div>
+      <div>
+        <span class="touchpoint-type sms">SMS</span>
+        <div class="touchpoint-timing">Day 0 (Immediate)</div>
+      </div>
+    </div>
+    <div class="touchpoint-content">
+      <div class="field">
+        <label>SMS Message</label>
+        <div class="field-value">{{first_name}}, Hi! This is Lisa from Cameron Estate Inn. I just sent over our wedding information and pricing—everything should be in your inbox now. If texting is easier for questions, I am happy to answer here. Congratulations again on your engagement! - Lisa</div>
+      </div>
+      <div class="notes-section">
+        <label>Review Notes:</label>
+        <div class="notes-lines">
+          <div class="note-line"></div>
+          <div class="note-line"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Touchpoint 3 -->
+  <div class="touchpoint">
+    <div class="touchpoint-header">
+      <div class="touchpoint-title">
+        <div class="touchpoint-number">3</div>
+        <h3>Morning Text - Day 2</h3>
+      </div>
+      <div>
+        <span class="touchpoint-type sms">SMS</span>
+        <div class="touchpoint-timing">Day 2</div>
+      </div>
+    </div>
+    <div class="touchpoint-content">
+      <div class="field">
+        <label>SMS Message</label>
+        <div class="field-value">Hi {{first_name}}, what questions can I answer about Cameron Estate? Most couples want to know about pricing, availability, or what is included in our all-inclusive packages. I am here to help! - Lisa</div>
+      </div>
+      <div class="notes-section">
+        <label>Review Notes:</label>
+        <div class="notes-lines">
+          <div class="note-line"></div>
+          <div class="note-line"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Touchpoint 4 -->
+  <div class="touchpoint">
+    <div class="touchpoint-header">
+      <div class="touchpoint-title">
+        <div class="touchpoint-number">4</div>
+        <h3>Afternoon Email - Day 2</h3>
+      </div>
+      <div>
+        <span class="touchpoint-type email">Email</span>
+        <div class="touchpoint-timing">Day 2</div>
+      </div>
+    </div>
+    <div class="touchpoint-content">
+      <div class="field">
+        <label>Subject Line</label>
+        <div class="field-value subject">A few things I wish every couple knew before touring venues</div>
+      </div>
+      <div class="field">
+        <label>Preview Text</label>
+        <div class="field-value">You are about to see a lot of beautiful spaces. Here is what to actually pay attention to...</div>
+      </div>
+      <div class="field">
+        <label>Email Body</label>
+        <div class="field-value">{{first_name}}, you are probably about to visit several venues over the next few weeks, and honestly? They are all going to look gorgeous. That is the easy part. Here is what I encourage couples to focus on instead—the stuff that actually affects your wedding day and the months leading up to it. Trust your gut when you walk in - Photos only tell you so much. When you visit in person, pay attention to: Can you actually see your wedding happening here? Does the space feel right for your vibe and guest count? Do you feel welcomed, or like you are being sold to? That last one matters more than you would think. Get clarity on what all-inclusive actually means - Every venue defines this differently, and it is where hidden costs love to hide. Worth asking everywhere you visit: What is included in your base price vs. what costs extra? At Cameron Estate, our per-person price covers everything—venue, catering, full bar, all rentals, and our team managing the details. Want to see how this works at Cameron Estate? I would love to show you around. Best, Lisa, Wedding Specialist, Cameron Estate Inn, 717-725-4831</div>
+      </div>
+      <div class="notes-section">
+        <label>Review Notes:</label>
+        <div class="notes-lines">
+          <div class="note-line"></div>
+          <div class="note-line"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Touchpoint 5 -->
+  <div class="touchpoint">
+    <div class="touchpoint-header">
+      <div class="touchpoint-title">
+        <div class="touchpoint-number">5</div>
+        <h3>Morning Email - Day 3</h3>
+      </div>
+      <div>
+        <span class="touchpoint-type email">Email</span>
+        <div class="touchpoint-timing">Day 3</div>
+      </div>
+    </div>
+    <div class="touchpoint-content">
+      <div class="field">
+        <label>Subject Line</label>
+        <div class="field-value subject">We knew within minutes</div>
+      </div>
+      <div class="field">
+        <label>Preview Text</label>
+        <div class="field-value">Three couples share what made them choose Cameron Estate. Their stories might help you decide...</div>
+      </div>
+      <div class="field">
+        <label>Email Body</label>
+        <div class="field-value">{{first_name}}, when couples tour Cameron Estate, they often tell me they knew within the first few minutes whether it was right for them. Not because we have the fanciest ballroom or the most acres—but because they could genuinely picture their wedding happening here. Here is what three recent couples told me about their decision: Jennifer & Michael said: We looked at five venues. Cameron Estate was the only one where we could actually see our day unfolding. The all-inclusive approach meant we were not stressed about coordinating vendors—we could just enjoy planning. Rachel & David said: Our families loved it as much as we did. Having everyone stay on-site for the weekend made our wedding feel less like an event and more like a celebration with the people we love most. Amanda & Chris said: The pricing was crystal clear from our first conversation. No surprises, no hidden fees. That peace of mind was worth everything. I do not know if Cameron Estate is the right fit for your celebration—only you can decide that. But if you are still exploring options, I would love to give you the same experience these couples had. Warmly, Lisa, Wedding Specialist, Cameron Estate Inn, 717-725-4831</div>
+      </div>
+      <div class="notes-section">
+        <label>Review Notes:</label>
+        <div class="notes-lines">
+          <div class="note-line"></div>
+          <div class="note-line"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Touchpoint 6 -->
+  <div class="touchpoint">
+    <div class="touchpoint-header">
+      <div class="touchpoint-title">
+        <div class="touchpoint-number">6</div>
+        <h3>Evening Text - Day 3</h3>
+      </div>
+      <div>
+        <span class="touchpoint-type sms">SMS</span>
+        <div class="touchpoint-timing">Day 3</div>
+      </div>
+    </div>
+    <div class="touchpoint-content">
+      <div class="field">
+        <label>SMS Message</label>
+        <div class="field-value">{{first_name}}, I know you are probably looking at several venues right now. If Cameron Estate should be on your tour list, I would love to find a time that works. - Lisa</div>
+      </div>
+      <div class="notes-section">
+        <label>Review Notes:</label>
+        <div class="notes-lines">
+          <div class="note-line"></div>
+          <div class="note-line"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Touchpoint 7 -->
+  <div class="touchpoint">
+    <div class="touchpoint-header">
+      <div class="touchpoint-title">
+        <div class="touchpoint-number">7</div>
+        <h3>Text - Day 4</h3>
+      </div>
+      <div>
+        <span class="touchpoint-type sms">SMS</span>
+        <div class="touchpoint-timing">Day 4</div>
+      </div>
+    </div>
+    <div class="touchpoint-content">
+      <div class="field">
+        <label>SMS Message</label>
+        <div class="field-value">Hi {{first_name}}, what would make touring Cameron Estate easier for you? Weekend availability? Evening tours? Virtual walkthrough first? I will drop the link to book your perfect time below. Let me know how I can help. - Lisa</div>
+      </div>
+      <div class="notes-section">
+        <label>Review Notes:</label>
+        <div class="notes-lines">
+          <div class="note-line"></div>
+          <div class="note-line"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-break"></div>
+
+  <!-- Touchpoint 8 -->
+  <div class="touchpoint">
+    <div class="touchpoint-header">
+      <div class="touchpoint-title">
+        <div class="touchpoint-number">8</div>
+        <h3>Email - Day 5</h3>
+      </div>
+      <div>
+        <span class="touchpoint-type email">Email</span>
+        <div class="touchpoint-timing">Day 5</div>
+      </div>
+    </div>
+    <div class="touchpoint-content">
+      <div class="field">
+        <label>Subject Line</label>
+        <div class="field-value subject">{{first_name}}, can you see it?</div>
+      </div>
+      <div class="field">
+        <label>Preview Text</label>
+        <div class="field-value">Close your eyes. Picture your wedding day. Where are you standing?</div>
+      </div>
+      <div class="field">
+        <label>Email Body</label>
+        <div class="field-value">{{first_name}}, here is a question worth sitting with for a minute: When you picture your wedding day—really picture it—where are you? Can you see yourself walking down an aisle surrounded by trees? Hear the sound of your guests laughter floating across the lawn during cocktail hour? Feel what it is like to step into your reception and see everyone you love in one room? That feeling—that is what matters. Not the features list. Not the price comparison spreadsheet. Not even the logistics. The venue you choose should be the place where you can actually see your memories happening. I have watched hundreds of couples tour Cameron Estate, and the ones who book? They usually get quiet for a second during the tour. They look at each other. And you can see it click—they are not seeing a wedding anymore. They are seeing their wedding. Is that Cameron Estate for you? I do not know yet. But I would love to give you the chance to find out. Our calendar is filling up—a few couples who toured recently are making their final decisions this week. If you have been thinking about visiting, now is a good time. Just reply with 2-3 dates that work for you, and I will get you on the calendar. Warmly, Lisa, Wedding Specialist, Cameron Estate Inn, 717-725-4831</div>
+      </div>
+      <div class="notes-section">
+        <label>Review Notes:</label>
+        <div class="notes-lines">
+          <div class="note-line"></div>
+          <div class="note-line"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Touchpoint 9 -->
+  <div class="touchpoint">
+    <div class="touchpoint-header">
+      <div class="touchpoint-title">
+        <div class="touchpoint-number">9</div>
+        <h3>Email - Day 7</h3>
+      </div>
+      <div>
+        <span class="touchpoint-type email">Email</span>
+        <div class="touchpoint-timing">Day 7</div>
+      </div>
+    </div>
+    <div class="touchpoint-content">
+      <div class="field">
+        <label>Subject Line</label>
+        <div class="field-value subject">We made you a Pinterest board</div>
+      </div>
+      <div class="field">
+        <label>Preview Text</label>
+        <div class="field-value">Romantic garden party? Moody autumnal vibes? Black-tie elegance? Yes, yes, and yes...</div>
+      </div>
+      <div class="field">
+        <label>Email Body</label>
+        <div class="field-value">{{first_name}}, quick question: What does your dream wedding look like? Soft and romantic with lots of candlelight? Bold and dramatic with rich, moody colors? Classic elegance? Boho garden party? Something totally unexpected that perfectly captures you two? Here is the thing about Cameron Estate—it works for all of it. We have hosted intimate garden ceremonies with 50 guests and grand ballroom celebrations with 200. That is why we created a Pinterest board for you. It is packed with real weddings from Cameron Estate showing just how versatile this space is: Romantic spring garden ceremonies under the trees, Elegant candlelit receptions in the Spring View Ballroom, Dramatic fall weddings with rich burgundy and gold, Intimate winter celebrations by the fireplace. Browse our Pinterest board here: https://www.pinterest.com/search/pins/?q=the%20cameron%20estate Happy pinning! Lisa, Wedding Specialist, Cameron Estate Inn, 717-725-4831</div>
+      </div>
+      <div class="notes-section">
+        <label>Review Notes:</label>
+        <div class="notes-lines">
+          <div class="note-line"></div>
+          <div class="note-line"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Touchpoint 10 -->
+  <div class="touchpoint">
+    <div class="touchpoint-header">
+      <div class="touchpoint-title">
+        <div class="touchpoint-number">10</div>
+        <h3>Text - Day 9</h3>
+      </div>
+      <div>
+        <span class="touchpoint-type sms">SMS</span>
+        <div class="touchpoint-timing">Day 9</div>
+      </div>
+    </div>
+    <div class="touchpoint-content">
+      <div class="field">
+        <label>SMS Message</label>
+        <div class="field-value">{{first_name}}, have you had a chance to check out our Pinterest board yet? I would love to hear more about your color palette! - Lisa</div>
+      </div>
+      <div class="notes-section">
+        <label>Review Notes:</label>
+        <div class="notes-lines">
+          <div class="note-line"></div>
+          <div class="note-line"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Touchpoint 11 -->
+  <div class="touchpoint">
+    <div class="touchpoint-header">
+      <div class="touchpoint-title">
+        <div class="touchpoint-number">11</div>
+        <h3>Email - Day 10</h3>
+      </div>
+      <div>
+        <span class="touchpoint-type email">Email</span>
+        <div class="touchpoint-timing">Day 10</div>
+      </div>
+    </div>
+    <div class="touchpoint-content">
+      <div class="field">
+        <label>Subject Line</label>
+        <div class="field-value subject">What all-inclusive really means at Cameron Estate</div>
+      </div>
+      <div class="field">
+        <label>Preview Text</label>
+        <div class="field-value">Not all all-inclusive packages are created equal. Here is exactly what is included in ours...</div>
+      </div>
+      <div class="field">
+        <label>Email Body</label>
+        <div class="field-value">{{first_name}}, you are probably seeing all-inclusive at every venue you research. But here is what I have learned after years in this industry: that term means something different at every venue. Let me show you exactly what it means at Cameron Estate. WHAT IS INCLUDED: Venue & Spaces - Ceremony location, Cocktail hour space, Reception ballroom, No separate venue rental fee. Food & Beverage - Full plated dinner service, Champagne toast, Premium open bar, Bartender services, All glassware, china, flatware. Rentals & Decor - Tables and chairs, Linens, Centerpiece vases, Cake cutting. Staffing & Coordination - Event coordinator, Professional wait staff, Bar staff, Setup and cleanup crew. Instead of coordinating with a venue, caterer, rental company, bar service, day-of coordinator, and setup crew—you coordinate with one person at one place. Want to see how this works in person? Reply with a few dates for your tour. Best, Lisa, Wedding Specialist, Cameron Estate Inn, 717-725-4831</div>
+      </div>
+      <div class="notes-section">
+        <label>Review Notes:</label>
+        <div class="notes-lines">
+          <div class="note-line"></div>
+          <div class="note-line"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Touchpoint 12 -->
+  <div class="touchpoint">
+    <div class="touchpoint-header">
+      <div class="touchpoint-title">
+        <div class="touchpoint-number">12</div>
+        <h3>Email - Day 12</h3>
+      </div>
+      <div>
+        <span class="touchpoint-type email">Email</span>
+        <div class="touchpoint-timing">Day 12</div>
+      </div>
+    </div>
+    <div class="touchpoint-content">
+      <div class="field">
+        <label>Subject Line</label>
+        <div class="field-value subject">Questions couples ask at this stage</div>
+      </div>
+      <div class="field">
+        <label>Preview Text</label>
+        <div class="field-value">You are probably wondering about deposits, cancellations, and what-ifs. Let me answer those now...</div>
+      </div>
+      <div class="field">
+        <label>Email Body</label>
+        <div class="field-value">{{first_name}}, twelve days into your venue search, most couples are asking themselves similar questions. Let me address what I hear most often: WHAT IF WE FIND SOMETHING BETTER? You might. But you have now seen Cameron Estate and know what matters to you. IS THE PRICING REALLY FINAL? Yes. Your proposal includes everything we discussed. No surprises, no hidden fees. WHAT IF WE NEED TO CANCEL? Life happens, and we understand that. Our deposit structure: Initial deposit holds your date, Payment schedule spreads remaining balance over your engagement, Cancellation and postponement terms are clear and fair. HOW DO WE KNOW IT IS THE RIGHT CHOICE? Honestly? You will not know completely until your wedding day. But most couples tell us they felt relief, not anxiety, when they made their decision. Take your time. Good decisions are not rushed—but our calendar is real, and availability does shift. Best, Lisa, Wedding Specialist, Cameron Estate</div>
+      </div>
+      <div class="notes-section">
+        <label>Review Notes:</label>
+        <div class="notes-lines">
+          <div class="note-line"></div>
+          <div class="note-line"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Touchpoint 13 -->
+  <div class="touchpoint">
+    <div class="touchpoint-header">
+      <div class="touchpoint-title">
+        <div class="touchpoint-number">13</div>
+        <h3>Text - Day 12</h3>
+      </div>
+      <div>
+        <span class="touchpoint-type sms">SMS</span>
+        <div class="touchpoint-timing">Day 12</div>
+      </div>
+    </div>
+    <div class="touchpoint-content">
+      <div class="field">
+        <label>SMS Message</label>
+        <div class="field-value">{{first_name}}, this is my last note. If you would like to see Cameron Estate, I am here anytime. If you have chosen another direction, I wish you the very best. Congratulations on your wedding! - Lisa</div>
+      </div>
+      <div class="notes-section">
+        <label>Review Notes:</label>
+        <div class="notes-lines">
+          <div class="note-line"></div>
+          <div class="note-line"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Touchpoint 14 -->
+  <div class="touchpoint">
+    <div class="touchpoint-header">
+      <div class="touchpoint-title">
+        <div class="touchpoint-number">14</div>
+        <h3>Email - Day 14</h3>
+      </div>
+      <div>
+        <span class="touchpoint-type email">Email</span>
+        <div class="touchpoint-timing">Day 14</div>
+      </div>
+    </div>
+    <div class="touchpoint-content">
+      <div class="field">
+        <label>Subject Line</label>
+        <div class="field-value subject">Wishing you the best, {{first_name}}</div>
+      </div>
+      <div class="field">
+        <label>Preview Text</label>
+        <div class="field-value">I have not heard from you, which tells me you have likely found your venue. Congratulations, and best wishes...</div>
+      </div>
+      <div class="field">
+        <label>Email Body</label>
+        <div class="field-value">{{first_name}}, I have not heard from you over the past two weeks, which tells me you have likely found your perfect venue or are exploring other directions. I wanted to close our conversation properly, with genuine best wishes for your wedding celebration—wherever it takes place. If Cameron Estate becomes relevant to your planning again at any point, I am here: Schedule a tour: https://cameronestateinn.com, Call me directly: 717-725-4831, Email anytime: lisa@cameronestateinn.com. Thank you for considering Cameron Estate for your special day. I hope your wedding is everything you are dreaming of. Warmly, Lisa, Wedding Specialist, Cameron Estate Inn, 717-725-4831, cameronsstateinn.com</div>
+      </div>
+      <div class="notes-section">
+        <label>Review Notes:</label>
+        <div class="notes-lines">
+          <div class="note-line"></div>
+          <div class="note-line"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Approval Section -->
+  <div class="approval-section">
+    <h2>Journey Approval</h2>
+    <div class="approval-grid">
+      <div class="approval-box">
+        <label>Reviewer Name</label>
+        <div class="approval-line"></div>
+      </div>
+      <div class="approval-box">
+        <label>Signature</label>
+        <div class="approval-line"></div>
+      </div>
+      <div class="approval-box">
+        <label>Date</label>
+        <div class="approval-line"></div>
+      </div>
+    </div>
+    <div class="checklist">
+      <div class="check-item">
+        <div class="checkbox"></div>
+        <span>All content reviewed for accuracy</span>
+      </div>
+      <div class="check-item">
+        <div class="checkbox"></div>
+        <span>Timing and sequencing approved</span>
+      </div>
+      <div class="check-item">
+        <div class="checkbox"></div>
+        <span>Branding and voice consistent</span>
+      </div>
+      <div class="check-item">
+        <div class="checkbox"></div>
+        <span>Personalization tokens verified</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>Cameron Estate Inn - Customer Journey Map</span>
+    <span>Generated: February 2026</span>
+  </div>
+</body>
+</html>
