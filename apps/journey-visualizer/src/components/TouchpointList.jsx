@@ -5,14 +5,14 @@
 
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
-  Search, 
-  Filter, 
-  Printer, 
-  Edit3, 
-  Eye, 
-  Mail, 
-  MessageSquare, 
+import {
+  Search,
+  Filter,
+  Printer,
+  Edit3,
+  Eye,
+  Mail,
+  MessageSquare,
   Phone,
   ChevronDown,
   ChevronUp,
@@ -22,7 +22,8 @@ import {
   UploadCloud,
   CheckCircle,
   XCircle,
-  Loader2
+  Loader2,
+  BookOpen
 } from 'lucide-react';
 import { getApiClient } from '../services/apiClient';
 import { StatusBadge } from './StatusBadge';
@@ -288,7 +289,17 @@ export function TouchpointList({ selectedClientId, selectedJourneyId }) {
         </div>
 
         <div className="touchpoint-list__filters">
-          <button 
+          {selectedJourneyId && (
+            <button
+              className="touchpoint-list__review-btn"
+              onClick={() => navigate(`/journeys/${selectedJourneyId}/review`)}
+              title="Review and edit all touchpoints sequentially"
+            >
+              <BookOpen size={18} />
+              Review All
+            </button>
+          )}
+          <button
             className={`touchpoint-list__filter-toggle ${showFilters ? 'touchpoint-list__filter-toggle--active' : ''}`}
             onClick={() => setShowFilters(!showFilters)}
           >

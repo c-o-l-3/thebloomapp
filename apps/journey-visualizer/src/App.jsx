@@ -38,6 +38,7 @@ const StandaloneEmailEditor = lazy(() => import('./components/StandaloneEmailEdi
 const ClientSelfServicePortal = lazy(() => import('./components/ClientSelfServicePortal'));
 const ClientLogin = lazy(() => import('./components/ClientLogin'));
 const WebhookManager = lazy(() => import('./components/WebhookManager'));
+const JourneyReviewer = lazy(() => import('./components/JourneyReviewer'));
 
 const DATA_SOURCE = import.meta.env.VITE_DATA_SOURCE || 'api';
 const DEFAULT_CLIENT_SLUG = import.meta.env.VITE_CLIENT_SLUG || 'promise-farm';
@@ -519,6 +520,11 @@ function App() {
         <Route path="/journeys/:id/print" element={
           <Suspense fallback={<PageLoader />}>
             <JourneyPrintView />
+          </Suspense>
+        } />
+        <Route path="/journeys/:journeyId/review" element={
+          <Suspense fallback={<PageLoader />}>
+            <JourneyReviewer />
           </Suspense>
         } />
         <Route path="/touchpoints/:id/edit" element={

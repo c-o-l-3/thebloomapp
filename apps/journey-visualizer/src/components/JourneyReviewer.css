@@ -1,0 +1,655 @@
+/**
+ * JourneyReviewer Styles
+ * Sequential touchpoint editor/reviewer
+ * Matches the TouchpointPrintView document aesthetic
+ */
+
+/* ── Base ── */
+.journey-reviewer {
+  min-height: 100vh;
+  background: #f1f5f9;
+}
+
+/* ── Sticky Header ── */
+.journey-reviewer__header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: white;
+  border-bottom: 1px solid #e2e8f0;
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.journey-reviewer__back {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #475569;
+  white-space: nowrap;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.journey-reviewer__back:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+}
+
+/* Navigation cluster */
+.journey-reviewer__nav {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  justify-content: center;
+}
+
+.journey-reviewer__nav-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #475569;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.journey-reviewer__nav-btn:hover:not(:disabled) {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+  color: #1e293b;
+}
+
+.journey-reviewer__nav-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.journey-reviewer__progress {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1e293b;
+  min-width: 72px;
+  text-align: center;
+  letter-spacing: 0.5px;
+}
+
+.journey-reviewer__progress-sep {
+  font-weight: 400;
+  color: #94a3b8;
+}
+
+/* Action buttons */
+.journey-reviewer__actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.journey-reviewer__save-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  background: #10b981;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+
+.journey-reviewer__save-btn:hover {
+  background: #059669;
+}
+
+.journey-reviewer__save-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.journey-reviewer__saved-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #10b981;
+  font-weight: 600;
+  padding: 6px 10px;
+  background: #ecfdf5;
+  border-radius: 6px;
+  border: 1px solid #a7f3d0;
+}
+
+.journey-reviewer__print-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+
+.journey-reviewer__print-btn:hover {
+  background: #2563eb;
+}
+
+/* ── Screen content wrapper ── */
+.journey-reviewer__content {
+  max-width: 210mm;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.journey-reviewer__journey-label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 16px;
+}
+
+.journey-reviewer__unsaved-count {
+  font-size: 11px;
+  background: #fef3c7;
+  color: #92400e;
+  border: 1px solid #fde68a;
+  border-radius: 12px;
+  padding: 2px 10px;
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+/* ── Document card ── */
+.journey-reviewer__doc {
+  background: white;
+  border-radius: 8px;
+  padding: 40px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+/* Doc header row */
+.journey-reviewer__doc-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #e2e8f0;
+  margin-bottom: 32px;
+}
+
+.journey-reviewer__doc-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.journey-reviewer__doc-type {
+  font-size: 12px;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.journey-reviewer__doc-date {
+  font-size: 13px;
+  color: #94a3b8;
+}
+
+/* Type badge */
+.journey-reviewer__type-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  border: 1px solid;
+}
+
+.journey-reviewer__type-badge--email {
+  background: #eff6ff;
+  color: #3b82f6;
+  border-color: #bfdbfe;
+}
+
+.journey-reviewer__type-badge--sms {
+  background: #f0fdf4;
+  color: #16a34a;
+  border-color: #bbf7d0;
+}
+
+.journey-reviewer__type-badge--call {
+  background: #fdf4ff;
+  color: #9333ea;
+  border-color: #e9d5ff;
+}
+
+/* Touchpoint title */
+.journey-reviewer__tp-title {
+  font-size: 26px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 12px 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.journey-reviewer__tp-title svg {
+  color: #3b82f6;
+  flex-shrink: 0;
+}
+
+/* Timing */
+.journey-reviewer__timing {
+  display: inline-block;
+  font-size: 13px;
+  color: #64748b;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 6px 12px;
+  margin-bottom: 32px;
+}
+
+/* ── Editable Fields ── */
+.journey-reviewer__fields {
+  margin-top: 8px;
+}
+
+.journey-reviewer__section-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0 0 20px 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.journey-reviewer__field {
+  margin-bottom: 24px;
+}
+
+.journey-reviewer__field-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 500;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.journey-reviewer__field-input {
+  width: 100%;
+  padding: 11px 14px;
+  font-size: 14px;
+  color: #1e293b;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  box-sizing: border-box;
+  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+  font-family: inherit;
+}
+
+.journey-reviewer__field-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.journey-reviewer__field-input--subject {
+  font-size: 16px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.journey-reviewer__field-textarea {
+  width: 100%;
+  padding: 12px 14px;
+  font-size: 13px;
+  color: #334155;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  line-height: 1.7;
+  resize: vertical;
+  box-sizing: border-box;
+  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+  min-height: 120px;
+}
+
+.journey-reviewer__field-textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Rendered HTML preview */
+.journey-reviewer__preview-box {
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+  background: white;
+}
+
+.journey-reviewer__rendered {
+  padding: 24px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #334155;
+}
+
+.journey-reviewer__rendered img {
+  max-width: 100%;
+  height: auto;
+}
+
+.journey-reviewer__rendered a {
+  color: #3b82f6;
+}
+
+.journey-reviewer__rendered table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.journey-reviewer__rendered p {
+  margin: 0 0 12px 0;
+}
+
+.journey-reviewer__rendered p:last-child {
+  margin-bottom: 0;
+}
+
+/* ── Progress Dots ── */
+.journey-reviewer__dots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 40px;
+  padding-top: 24px;
+  border-top: 1px solid #e2e8f0;
+  justify-content: center;
+}
+
+.journey-reviewer__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #e2e8f0;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.15s, background 0.15s;
+}
+
+.journey-reviewer__dot:hover {
+  transform: scale(1.3);
+  background: #94a3b8;
+}
+
+.journey-reviewer__dot--active {
+  background: #3b82f6;
+  transform: scale(1.4);
+}
+
+.journey-reviewer__dot--unsaved {
+  background: #f59e0b;
+}
+
+.journey-reviewer__dot--saved {
+  background: #10b981;
+}
+
+/* ── Loading / Error ── */
+.journey-reviewer__loading,
+.journey-reviewer__error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  gap: 16px;
+  color: #64748b;
+  text-align: center;
+  padding: 24px;
+}
+
+.journey-reviewer__error h2 {
+  margin: 0;
+  color: #1e293b;
+}
+
+.journey-reviewer__error p {
+  margin: 0;
+  color: #64748b;
+}
+
+.journey-reviewer__error-back {
+  margin-top: 8px;
+  padding: 10px 20px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.journey-reviewer__spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #e2e8f0;
+  border-top-color: #3b82f6;
+  border-radius: 50%;
+  animation: reviewer-spin 1s linear infinite;
+}
+
+@keyframes reviewer-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.journey-reviewer__spin {
+  animation: reviewer-spin 1s linear infinite;
+}
+
+/* ── Print-only section (hidden on screen) ── */
+.journey-reviewer__print-all {
+  display: none;
+}
+
+/* ── Print Styles ── */
+@media print {
+  @page {
+    size: A4;
+    margin: 15mm 20mm;
+  }
+
+  /* Hide interactive UI */
+  .journey-reviewer__header {
+    display: none !important;
+  }
+
+  .journey-reviewer__content {
+    display: none !important;
+  }
+
+  /* Show print section */
+  .journey-reviewer__print-all {
+    display: block !important;
+  }
+
+  .journey-reviewer__print-page {
+    page-break-after: always;
+    padding: 0;
+    margin: 0;
+  }
+
+  .journey-reviewer__print-page:last-child {
+    page-break-after: avoid;
+  }
+
+  .journey-reviewer__print-page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    color: #64748b;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #e2e8f0;
+    margin-bottom: 24px;
+  }
+
+  .journey-reviewer__print-page-label {
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .journey-reviewer__print-page-date {
+    color: #94a3b8;
+  }
+
+  .journey-reviewer__print-tp-name {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0 0 8px 0;
+  }
+
+  .journey-reviewer__print-timing {
+    font-size: 12px;
+    color: #64748b;
+    margin: 0 0 20px 0;
+    font-style: italic;
+  }
+
+  .journey-reviewer__print-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 12px;
+  }
+
+  .journey-reviewer__print-field-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .journey-reviewer__print-field-value {
+    font-size: 14px;
+    color: #334155;
+    padding: 8px 12px;
+    background: #f8fafc;
+    border-radius: 4px;
+    border: 1px solid #e2e8f0;
+  }
+
+  .journey-reviewer__print-field-value--subject {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1e293b;
+    background: #eff6ff;
+    border-color: #bfdbfe;
+  }
+
+  .journey-reviewer__print-body {
+    font-size: 13px;
+    line-height: 1.7;
+    color: #334155;
+    margin-top: 16px;
+  }
+
+  .journey-reviewer__print-body p {
+    margin: 0 0 10px 0;
+  }
+
+  .journey-reviewer__print-body img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .journey-reviewer__print-footer {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: #94a3b8;
+    margin-top: 32px;
+    padding-top: 12px;
+    border-top: 1px solid #e2e8f0;
+  }
+}
+
+/* ── Responsive ── */
+@media screen and (max-width: 768px) {
+  .journey-reviewer__header {
+    padding: 10px 12px;
+    gap: 8px;
+  }
+
+  .journey-reviewer__content {
+    padding: 16px;
+  }
+
+  .journey-reviewer__doc {
+    padding: 24px 16px;
+  }
+
+  .journey-reviewer__tp-title {
+    font-size: 20px;
+  }
+
+  .journey-reviewer__nav {
+    gap: 6px;
+  }
+
+  .journey-reviewer__progress {
+    font-size: 13px;
+    min-width: 56px;
+  }
+}

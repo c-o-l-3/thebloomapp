@@ -150,6 +150,26 @@
   background: #cbd5e1;
 }
 
+.touchpoint-list__review-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: #6366f1;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+
+.touchpoint-list__review-btn:hover {
+  background: #4f46e5;
+}
+
 .touchpoint-list__filter-toggle {
   display: flex;
   align-items: center;
