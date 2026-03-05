@@ -17,11 +17,15 @@ const touchpointSchema = z.object({
   position: z.object({
     x: z.number(),
     y: z.number()
-  }).optional(),
-  ghlTemplateId: z.string().optional(),
+  }).nullish(),
+  ghlTemplateId: z.string().nullish(),
   status: z.enum(['draft', 'approved', 'published']).default('draft'),
-  nextTouchpointId: z.string().uuid().optional()
-});
+  nextTouchpointId: z.string().uuid().nullish(),
+  // Strip read-only relation fields the client may send back
+  journey: z.any().optional(),
+  createdAt: z.any().optional(),
+  updatedAt: z.any().optional(),
+}).strip();
 
 // GET /api/touchpoints
 router.get('/', async (req, res, next) => {
