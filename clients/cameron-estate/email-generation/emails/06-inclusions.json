@@ -13,7 +13,13 @@
                 "type": "image",
                 "id": "logoimg",
                 "values": {
-                  "src": "https://cameronestateinn.com/wp-content/uploads/2025/09/Cameron-Estate-Logo.png",
+                  "src": {
+                    "url": "https://cameronestateinn.com/wp-content/uploads/2025/09/Cameron-Estate-Logo.png",
+                    "width": 180,
+                    "height": 60,
+                    "maxWidth": "50%",
+                    "autoWidth": false
+                  },
                   "alt": "Cameron Estate Inn",
                   "width": 200,
                   "alignment": "center",
@@ -245,7 +251,13 @@
                 "type": "image",
                 "id": "footerlogo",
                 "values": {
-                  "src": "https://cameronestateinn.com/wp-content/uploads/2025/09/Cameron-Estate-Logo.png",
+                  "src": {
+                    "url": "https://cameronestateinn.com/wp-content/uploads/2025/09/Cameron-Estate-Logo.png",
+                    "width": 180,
+                    "height": 60,
+                    "maxWidth": "50%",
+                    "autoWidth": false
+                  },
                   "alt": "Cameron Estate Inn",
                   "width": 150,
                   "alignment": "center",

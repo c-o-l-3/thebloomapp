@@ -13,7 +13,13 @@
                 "type": "image",
                 "id": "logoimg",
                 "values": {
-                  "src": "https://cameronestateinn.com/wp-content/uploads/2025/09/Cameron-Estate-Logo.png",
+                  "src": {
+                    "url": "https://cameronestateinn.com/wp-content/uploads/2025/09/Cameron-Estate-Logo.png",
+                    "width": 180,
+                    "height": 60,
+                    "maxWidth": "50%",
+                    "autoWidth": false
+                  },
                   "alt": "Cameron Estate Inn",
                   "width": 200,
                   "alignment": "center",
@@ -123,7 +129,11 @@
                 "type": "image",
                 "id": "img01",
                 "values": {
-                  "src": "https://storage.googleapis.com/msgsndr/G7APqyfJ6lyi4l28noZj/media/6989327a0a7fd1ecad41c546.jpg",
+                  "src": {
+                    "url": "https://storage.googleapis.com/msgsndr/G7APqyfJ6lyi4l28noZj/media/6989327a0a7fd1ecad41c546.jpg",
+                    "width": 600,
+                    "autoWidth": true
+                  },
                   "alt": "Cameron Estate Inn Exterior",
                   "width": 520,
                   "alignment": "center",
@@ -192,7 +202,11 @@
                 "type": "image",
                 "id": "img02",
                 "values": {
-                  "src": "https://storage.googleapis.com/msgsndr/G7APqyfJ6lyi4l28noZj/media/6989327a38f77a2717eb4653.jpg",
+                  "src": {
+                    "url": "https://storage.googleapis.com/msgsndr/G7APqyfJ6lyi4l28noZj/media/6989327a38f77a2717eb4653.jpg",
+                    "width": 600,
+                    "autoWidth": true
+                  },
                   "alt": "Celebration at Cameron Estate",
                   "width": 520,
                   "alignment": "center",
@@ -416,7 +430,13 @@
                 "type": "image",
                 "id": "footerlogo",
                 "values": {
-                  "src": "https://cameronestateinn.com/wp-content/uploads/2025/09/Cameron-Estate-Logo.png",
+                  "src": {
+                    "url": "https://cameronestateinn.com/wp-content/uploads/2025/09/Cameron-Estate-Logo.png",
+                    "width": 180,
+                    "height": 60,
+                    "maxWidth": "50%",
+                    "autoWidth": false
+                  },
                   "alt": "Cameron Estate Inn",
                   "width": 150,
                   "alignment": "center",

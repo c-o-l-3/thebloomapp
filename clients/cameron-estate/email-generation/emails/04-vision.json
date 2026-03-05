@@ -13,7 +13,13 @@
                 "type": "image",
                 "id": "logoimg",
                 "values": {
-                  "src": "https://cameronestateinn.com/wp-content/uploads/2025/09/Cameron-Estate-Logo.png",
+                  "src": {
+                    "url": "https://cameronestateinn.com/wp-content/uploads/2025/09/Cameron-Estate-Logo.png",
+                    "width": 180,
+                    "height": 60,
+                    "maxWidth": "50%",
+                    "autoWidth": false
+                  },
                   "alt": "Cameron Estate Inn",
                   "width": 200,
                   "alignment": "center",
@@ -108,7 +114,11 @@
                 "type": "image",
                 "id": "imgceremony",
                 "values": {
-                  "src": "https://storage.googleapis.com/msgsndr/G7APqyfJ6lyi4l28noZj/media/6989327a0a7fd1cf9141c545.jpg",
+                  "src": {
+                    "url": "https://storage.googleapis.com/msgsndr/G7APqyfJ6lyi4l28noZj/media/6989327a0a7fd1cf9141c545.jpg",
+                    "width": 600,
+                    "autoWidth": true
+                  },
                   "alt": "Garden Ceremony",
                   "width": 520,
                   "alignment": "center",
@@ -147,7 +157,11 @@
                 "type": "image",
                 "id": "imgcocktail",
                 "values": {
-                  "src": "https://storage.googleapis.com/msgsndr/G7APqyfJ6lyi4l28noZj/media/6989327a0708e4880ea07007.jpg",
+                  "src": {
+                    "url": "https://storage.googleapis.com/msgsndr/G7APqyfJ6lyi4l28noZj/media/6989327a0708e4880ea07007.jpg",
+                    "width": 600,
+                    "autoWidth": true
+                  },
                   "alt": "Cocktail hour on the lawn",
                   "width": 520,
                   "alignment": "center",
@@ -186,7 +200,11 @@
                 "type": "image",
                 "id": "imgreception",
                 "values": {
-                  "src": "https://storage.googleapis.com/msgsndr/G7APqyfJ6lyi4l28noZj/media/6989327a0708e4880ea07007.jpg",
+                  "src": {
+                    "url": "https://storage.googleapis.com/msgsndr/G7APqyfJ6lyi4l28noZj/media/6989327a0708e4880ea07007.jpg",
+                    "width": 600,
+                    "autoWidth": true
+                  },
                   "alt": "Reception details",
                   "width": 520,
                   "alignment": "center",
@@ -364,7 +382,13 @@
                 "type": "image",
                 "id": "footerlogo",
                 "values": {
-                  "src": "https://cameronestateinn.com/wp-content/uploads/2025/09/Cameron-Estate-Logo.png",
+                  "src": {
+                    "url": "https://cameronestateinn.com/wp-content/uploads/2025/09/Cameron-Estate-Logo.png",
+                    "width": 180,
+                    "height": 60,
+                    "maxWidth": "50%",
+                    "autoWidth": false
+                  },
                   "alt": "Cameron Estate Inn",
                   "width": 150,
                   "alignment": "center",

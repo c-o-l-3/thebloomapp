@@ -4,7 +4,9 @@
     "rows": [
       {
         "id": "row-header",
-        "cells": [1],
+        "cells": [
+          1
+        ],
         "columns": [
           {
             "id": "col-header",
@@ -25,7 +27,10 @@
                   "altText": "Cameron Estate Inn",
                   "action": {
                     "name": "web",
-                    "values": { "href": "https://cameronestateinn.com", "target": "_blank" }
+                    "values": {
+                      "href": "https://cameronestateinn.com",
+                      "target": "_blank"
+                    }
                   },
                   "hideDesktop": false
                 }
@@ -42,7 +47,9 @@
       },
       {
         "id": "row-opening",
-        "cells": [1],
+        "cells": [
+          1
+        ],
         "columns": [
           {
             "id": "col-opening",
@@ -106,7 +113,9 @@
       },
       {
         "id": "row-testimonials-header",
-        "cells": [1],
+        "cells": [
+          1
+        ],
         "columns": [
           {
             "id": "col-testimonials-header",
@@ -143,7 +152,9 @@
       },
       {
         "id": "row-testimonial1",
-        "cells": [1],
+        "cells": [
+          1
+        ],
         "columns": [
           {
             "id": "col-testimonial1",
@@ -178,7 +189,9 @@
       },
       {
         "id": "row-image1",
-        "cells": [1],
+        "cells": [
+          1
+        ],
         "columns": [
           {
             "id": "col-image1",
@@ -197,7 +210,13 @@
                   },
                   "textAlign": "center",
                   "altText": "Cameron Estate Grounds",
-                  "action": { "name": "web", "values": { "href": "", "target": "_blank" } },
+                  "action": {
+                    "name": "web",
+                    "values": {
+                      "href": "",
+                      "target": "_blank"
+                    }
+                  },
                   "hideDesktop": false
                 }
               }
@@ -213,7 +232,9 @@
       },
       {
         "id": "row-testimonial2",
-        "cells": [1],
+        "cells": [
+          1
+        ],
         "columns": [
           {
             "id": "col-testimonial2",
@@ -248,7 +269,9 @@
       },
       {
         "id": "row-cta",
-        "cells": [1],
+        "cells": [
+          1
+        ],
         "columns": [
           {
             "id": "col-cta",
@@ -258,12 +281,31 @@
                 "type": "button",
                 "values": {
                   "containerPadding": "30px 40px 16px",
-                  "href": { "name": "web", "values": { "href": "{{links.book_tour}}", "target": "_blank" } },
-                  "buttonColors": { "color": "#FFFFFF", "backgroundColor": "#2C3E50", "hoverColor": "#FFFFFF", "hoverBackgroundColor": "#1a2632" },
-                  "fontSize": "14px", "fontWeight": "500",
-                  "fontFamily": { "label": "Poppins", "value": "Poppins,sans-serif", "url": "https://fonts.googleapis.com/css?family=Poppins:400,500,600" },
-                  "padding": "14px 35px", "borderRadius": "4px",
-                  "text": "<span>Schedule Your Tour</span>", "textAlign": "left", "hideDesktop": false
+                  "href": {
+                    "name": "web",
+                    "values": {
+                      "href": "{{links.book_tour}}",
+                      "target": "_blank"
+                    }
+                  },
+                  "buttonColors": {
+                    "color": "#FFFFFF",
+                    "backgroundColor": "#2C3E50",
+                    "hoverColor": "#FFFFFF",
+                    "hoverBackgroundColor": "#1a2632"
+                  },
+                  "fontSize": "14px",
+                  "fontWeight": "500",
+                  "fontFamily": {
+                    "label": "Poppins",
+                    "value": "Poppins,sans-serif",
+                    "url": "https://fonts.googleapis.com/css?family=Poppins:400,500,600"
+                  },
+                  "padding": "14px 35px",
+                  "borderRadius": "4px",
+                  "text": "<span>Schedule Your Tour</span>",
+                  "textAlign": "left",
+                  "hideDesktop": false
                 }
               },
               {
@@ -296,7 +338,9 @@
       },
       {
         "id": "row-signature",
-        "cells": [1],
+        "cells": [
+          1
+        ],
         "columns": [
           {
             "id": "col-signature",
@@ -306,20 +350,36 @@
                 "type": "heading",
                 "values": {
                   "containerPadding": "0px 40px 30px",
-                  "headingType": "h3", "fontWeight": 500, "fontSize": "22px", "color": "#2C3E50",
-                  "fontFamily": { "label": "Cormorant Garamond", "value": "'Cormorant Garamond',Georgia,serif", "url": "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&display=swap" },
-                  "textAlign": "left", "lineHeight": "150%", "text": "Talk soon,<br/>Lisa", "hideDesktop": false
+                  "headingType": "h3",
+                  "fontWeight": 500,
+                  "fontSize": "22px",
+                  "color": "#2C3E50",
+                  "fontFamily": {
+                    "label": "Cormorant Garamond",
+                    "value": "'Cormorant Garamond',Georgia,serif",
+                    "url": "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&display=swap"
+                  },
+                  "textAlign": "left",
+                  "lineHeight": "150%",
+                  "text": "Talk soon,<br/>Lisa",
+                  "hideDesktop": false
                 }
               }
             ],
             "values": {}
           }
         ],
-        "values": { "backgroundColor": "#FDFCFA", "columnsBackgroundColor": "", "padding": "0px" }
+        "values": {
+          "backgroundColor": "#FDFCFA",
+          "columnsBackgroundColor": "",
+          "padding": "0px"
+        }
       },
       {
         "id": "row-divider",
-        "cells": [1],
+        "cells": [
+          1
+        ],
         "columns": [
           {
             "id": "col-divider",
@@ -329,19 +389,31 @@
                 "type": "divider",
                 "values": {
                   "containerPadding": "10px 0px",
-                  "border": { "borderTopWidth": "2px", "borderTopStyle": "solid", "borderTopColor": "#D4AF37" },
-                  "textAlign": "center", "width": "50%", "hideDesktop": false
+                  "border": {
+                    "borderTopWidth": "2px",
+                    "borderTopStyle": "solid",
+                    "borderTopColor": "#D4AF37"
+                  },
+                  "textAlign": "center",
+                  "width": "50%",
+                  "hideDesktop": false
                 }
               }
             ],
             "values": {}
           }
         ],
-        "values": { "backgroundColor": "#FFFFFF", "columnsBackgroundColor": "", "padding": "0px" }
+        "values": {
+          "backgroundColor": "#FFFFFF",
+          "columnsBackgroundColor": "",
+          "padding": "0px"
+        }
       },
       {
         "id": "row-footer",
-        "cells": [1],
+        "cells": [
+          1
+        ],
         "columns": [
           {
             "id": "col-footer",
@@ -351,9 +423,22 @@
                 "type": "image",
                 "values": {
                   "containerPadding": "0px 0px 16px",
-                  "src": { "url": "https://cameronestateinn.com/wp-content/uploads/2025/09/Cameron-Estate-Logo.png", "width": 180, "height": 60, "maxWidth": "40%", "autoWidth": false },
-                  "textAlign": "center", "altText": "Cameron Estate Inn",
-                  "action": { "name": "web", "values": { "href": "https://cameronestateinn.com", "target": "_blank" } },
+                  "src": {
+                    "url": "https://cameronestateinn.com/wp-content/uploads/2025/09/Cameron-Estate-Logo.png",
+                    "width": 180,
+                    "height": 60,
+                    "maxWidth": "40%",
+                    "autoWidth": false
+                  },
+                  "textAlign": "center",
+                  "altText": "Cameron Estate Inn",
+                  "action": {
+                    "name": "web",
+                    "values": {
+                      "href": "https://cameronestateinn.com",
+                      "target": "_blank"
+                    }
+                  },
                   "hideDesktop": false
                 }
               },
@@ -379,7 +464,11 @@
             "values": {}
           }
         ],
-        "values": { "backgroundColor": "#FFFFFF", "columnsBackgroundColor": "", "padding": "25px 30px 30px" }
+        "values": {
+          "backgroundColor": "#FFFFFF",
+          "columnsBackgroundColor": "",
+          "padding": "25px 30px 30px"
+        }
       }
     ],
     "values": {

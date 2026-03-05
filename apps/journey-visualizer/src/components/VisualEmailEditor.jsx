@@ -3,7 +3,7 @@
  * WYSIWYG email editor with drag-and-drop using Unlayer
  */
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useLayoutEffect, useRef, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import EmailEditor from 'react-email-editor';
 import { ArrowLeft, Save, Check, AlertCircle, Upload, Copy, X } from 'lucide-react';
@@ -19,6 +19,20 @@ export function VisualEmailEditor() {
   const { id } = useParams();
   const navigate = useNavigate();
   const editorRef = useRef(null);
+  const containerRef = useRef(null);
+  const [editorHeight, setEditorHeight] = useState(600);
+
+  // Measure available height so Unlayer iframe fills the space correctly
+  useLayoutEffect(() => {
+    function updateHeight() {
+      if (containerRef.current) {
+        setEditorHeight(containerRef.current.clientHeight);
+      }
+    }
+    updateHeight();
+    window.addEventListener('resize', updateHeight);
+    return () => window.removeEventListener('resize', updateHeight);
+  }, []);
 
   const [touchpoint, setTouchpoint] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -258,12 +272,12 @@ export function VisualEmailEditor() {
       )}
 
       {/* Unlayer Editor */}
-      <div style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
+      <div ref={containerRef} style={{ flex: 1, minHeight: 0, overflow: 'hidden' }}>
         <EmailEditor
           ref={editorRef}
           onReady={onEditorReady}
-          style={{ height: '100%', width: '100%' }}
-          minHeight="100%"
+          style={{ width: '100%' }}
+          minHeight={editorHeight}
           options={{
             displayMode: 'email',
             features: { textEditor: { spellChecker: true } },
