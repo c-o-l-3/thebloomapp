@@ -65,6 +65,23 @@
   color: #475569;
 }
 
+.touchpoint-list__share-btn {
+  padding: 7px 14px;
+  background: #2c3e50;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+
+.touchpoint-list__share-btn:hover {
+  background: #1a2632;
+}
+
 .touchpoint-list__logout-btn {
   display: flex;
   align-items: center;

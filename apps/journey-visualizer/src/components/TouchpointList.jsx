@@ -221,6 +221,18 @@ export function TouchpointList({ selectedClientId, selectedJourneyId }) {
     setNotification(null);
   };
 
+  // Copy client review link to clipboard
+  const handleShareReviewLink = () => {
+    if (!selectedJourneyId) return;
+    const url = `${window.location.origin}/journeys/${selectedJourneyId}/client-review`;
+    navigator.clipboard.writeText(url).then(() => {
+      showNotification('success', `Review link copied: ${url}`);
+    }).catch(() => {
+      // Fallback for browsers without clipboard API
+      prompt('Copy this review link:', url);
+    });
+  };
+
   // Check if touchpoint can be published
   const canPublish = (touchpoint) => {
     const publishableTypes = ['email', 'sms'];
@@ -251,13 +263,22 @@ export function TouchpointList({ selectedClientId, selectedJourneyId }) {
         </div>
         
         <div className="touchpoint-list__header-right">
+          {selectedJourneyId && (
+            <button
+              className="touchpoint-list__share-btn"
+              onClick={handleShareReviewLink}
+              title="Copy shareable client review link"
+            >
+              Share Review Link
+            </button>
+          )}
           {user && (
             <div className="touchpoint-list__user">
               <User size={18} />
               <span>{user.name || user.email}</span>
             </div>
           )}
-          <button 
+          <button
             className="touchpoint-list__logout-btn"
             onClick={handleLogout}
             title="Logout"

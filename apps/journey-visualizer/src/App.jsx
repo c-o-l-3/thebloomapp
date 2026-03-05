@@ -39,6 +39,7 @@ const ClientSelfServicePortal = lazy(() => import('./components/ClientSelfServic
 const ClientLogin = lazy(() => import('./components/ClientLogin'));
 const WebhookManager = lazy(() => import('./components/WebhookManager'));
 const JourneyReviewer = lazy(() => import('./components/JourneyReviewer'));
+const ClientReviewPage = lazy(() => import('./components/ClientReviewPage').then(m => ({ default: m.ClientReviewPage })));
 
 const DATA_SOURCE = import.meta.env.VITE_DATA_SOURCE || 'api';
 const DEFAULT_CLIENT_SLUG = import.meta.env.VITE_CLIENT_SLUG || 'promise-farm';
@@ -525,6 +526,11 @@ function App() {
         <Route path="/journeys/:journeyId/review" element={
           <Suspense fallback={<PageLoader />}>
             <JourneyReviewer />
+          </Suspense>
+        } />
+        <Route path="/journeys/:journeyId/client-review" element={
+          <Suspense fallback={<PageLoader />}>
+            <ClientReviewPage />
           </Suspense>
         } />
         <Route path="/touchpoints/:id/edit" element={

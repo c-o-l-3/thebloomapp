@@ -1,0 +1,338 @@
+/* ── Client Review Page ─────────────────────────────────── */
+
+:root {
+  --cr-navy: #2c3e50;
+  --cr-gold: #d4af37;
+  --cr-bg: #f9f7f4;
+  --cr-white: #fff;
+  --cr-border: #e5e0d8;
+  --cr-text: #2c3e50;
+  --cr-muted: #7a7060;
+  --cr-radius: 10px;
+  --cr-shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+
+/* Loading & Error states */
+.cr-loading,
+.cr-error,
+.cr-success {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  color: var(--cr-text);
+  background: var(--cr-bg);
+}
+
+.cr-loading__spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--cr-border);
+  border-top-color: var(--cr-gold);
+  border-radius: 50%;
+  animation: cr-spin 0.8s linear infinite;
+}
+
+@keyframes cr-spin {
+  to { transform: rotate(360deg); }
+}
+
+.cr-success__icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #27ae60;
+  color: white;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Page layout */
+.cr-page {
+  min-height: 100vh;
+  background: var(--cr-bg);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  color: var(--cr-text);
+}
+
+/* Header */
+.cr-header {
+  background: var(--cr-navy);
+  color: white;
+  padding: 24px 32px;
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+}
+
+.cr-header__brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  padding-top: 2px;
+}
+
+.cr-header__logo {
+  font-size: 22px;
+}
+
+.cr-header__name {
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--cr-gold);
+}
+
+.cr-header__journey {
+  flex: 1;
+}
+
+.cr-header__title {
+  margin: 0 0 6px;
+  font-size: 22px;
+  font-weight: 600;
+  color: white;
+}
+
+.cr-header__subtitle {
+  margin: 0;
+  font-size: 14px;
+  color: rgba(255,255,255,0.7);
+  line-height: 1.5;
+}
+
+/* Main content */
+.cr-main {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 32px 20px 60px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+/* Touchpoint card */
+.cr-card {
+  background: var(--cr-white);
+  border: 1px solid var(--cr-border);
+  border-radius: var(--cr-radius);
+  box-shadow: var(--cr-shadow);
+  overflow: hidden;
+}
+
+.cr-card__meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 20px;
+  background: #f5f2ee;
+  border-bottom: 1px solid var(--cr-border);
+  flex-wrap: wrap;
+}
+
+.cr-card__index {
+  font-size: 12px;
+  color: var(--cr-muted);
+  font-weight: 500;
+}
+
+.cr-card__day {
+  font-size: 12px;
+  font-weight: 600;
+  background: var(--cr-navy);
+  color: white;
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+.cr-card__type {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+.cr-card__type--email { background: #dbeafe; color: #1d4ed8; }
+.cr-card__type--sms   { background: #dcfce7; color: #15803d; }
+.cr-card__type--call  { background: #fce7f3; color: #be185d; }
+.cr-card__type--task  { background: #f3e8ff; color: #7e22ce; }
+
+.cr-card__noted {
+  font-size: 12px;
+  color: #15803d;
+  font-weight: 500;
+  margin-left: auto;
+}
+
+.cr-card__name {
+  margin: 0;
+  padding: 16px 20px 8px;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--cr-text);
+}
+
+.cr-card__label {
+  font-weight: 600;
+  color: var(--cr-muted);
+}
+
+.cr-card__subject,
+.cr-card__preview-text {
+  padding: 4px 20px;
+  font-size: 14px;
+  color: var(--cr-text);
+}
+
+/* Email iframe preview */
+.cr-card__email-preview {
+  margin: 12px 20px;
+  border: 1px solid var(--cr-border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.cr-card__iframe {
+  width: 100%;
+  height: 500px;
+  border: none;
+  display: block;
+  background: white;
+}
+
+/* SMS body */
+.cr-card__sms-body {
+  margin: 12px 20px;
+  padding: 14px 16px;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  font-size: 15px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+.cr-card__empty {
+  padding: 20px;
+  font-size: 14px;
+  color: var(--cr-muted);
+  font-style: italic;
+}
+
+/* Notes section */
+.cr-card__notes {
+  padding: 16px 20px 20px;
+  border-top: 1px solid var(--cr-border);
+  background: #fffdf9;
+}
+
+.cr-card__notes-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--cr-navy);
+  margin-bottom: 8px;
+}
+
+.cr-card__notes-input {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid var(--cr-border);
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--cr-text);
+  resize: vertical;
+  line-height: 1.5;
+  background: white;
+  transition: border-color 0.15s;
+}
+
+.cr-card__notes-input:focus {
+  outline: none;
+  border-color: var(--cr-gold);
+  box-shadow: 0 0 0 3px rgba(212,175,55,0.15);
+}
+
+.cr-card__saved-note {
+  margin: 8px 0 0;
+  font-size: 12px;
+  color: var(--cr-muted);
+}
+
+/* Submit section */
+.cr-submit {
+  padding: 24px 0 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.cr-submit__btn {
+  padding: 14px 48px;
+  background: var(--cr-navy);
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.cr-submit__btn:hover:not(:disabled) {
+  background: #1a2632;
+}
+
+.cr-submit__btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.cr-submit__hint {
+  font-size: 13px;
+  color: var(--cr-muted);
+  margin: 0;
+}
+
+.cr-submit__error {
+  font-size: 14px;
+  color: #dc2626;
+  margin: 0;
+}
+
+/* Footer */
+.cr-footer {
+  text-align: center;
+  padding: 24px;
+  font-size: 13px;
+  color: var(--cr-muted);
+  border-top: 1px solid var(--cr-border);
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .cr-header {
+    padding: 16px;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .cr-card__iframe {
+    height: 360px;
+  }
+
+  .cr-main {
+    padding: 20px 12px 48px;
+  }
+}

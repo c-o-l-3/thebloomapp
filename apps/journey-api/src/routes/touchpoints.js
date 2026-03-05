@@ -226,4 +226,27 @@ router.post('/:id/publish', async (req, res, next) => {
   }
 });
 
+// POST /api/touchpoints/:id/note - Save client review note (no auth required, safe for review links)
+router.post('/:id/note', async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { note } = z.object({ note: z.string() }).parse(req.body);
+
+    const touchpoint = await prisma.touchpoint.findUnique({ where: { id } });
+    if (!touchpoint) {
+      return res.status(404).json({ error: 'Touchpoint not found' });
+    }
+
+    const updatedConfig = { ...(touchpoint.config || {}), clientNote: note };
+    const updated = await prisma.touchpoint.update({
+      where: { id },
+      data: { config: updatedConfig },
+    });
+
+    res.json({ ok: true, clientNote: updated.config.clientNote });
+  } catch (error) {
+    next(error);
+  }
+});
+
 export { router as touchpointsRouter };
