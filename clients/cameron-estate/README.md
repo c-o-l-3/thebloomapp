@@ -1,93 +1,65 @@
-# Cameron Estate
+# Cameron Estate Inn
 
 ## Overview
 
-**Client:** Cameron Estate
-**Location ID:** [To be added]
-**Industry:** Wedding Venue / Event Space
-**Status:** [Active/Pending]
+**Client:** Cameron Estate Inn
+**Industry:** Wedding Venue / Historic Inn
+**Location:** Mount Joy, Lancaster County, Pennsylvania
+**Status:** Active
 
 ## Contact Information
 
-- **Primary Contact:** [To be filled]
-- **Email:** [To be filled]
-- **Phone:** [To be filled]
-- **Website:** [To be filled]
-- **Address:** [To be filled]
+- **Primary Contact:** Lisa Pierson — Wedding Sales
+- **Phone:** 717-725-4831
+- **Email:** ceiweddings@cameronestateinn.com
+- **Website:** https://cameronestateinn.com
+- **Facebook:** https://www.facebook.com/CameronEstateInn/
+- **Instagram:** https://www.instagram.com/cameronestateinn/
 
 ## GoHighLevel Configuration
 
-### Location Details
+- **Location ID:** `G7APqyfJ6lyi4l28noZj`
+- **GHL Media Library base URL:** `https://storage.googleapis.com/msgsndr/G7APqyfJ6lyi4l28noZj/media/`
 
-```json
-{
-  "locationId": "",
-  "name": "Cameron Estate",
-  "timezone": "America/New_York",
-  "address": {
-    "street": "",
-    "city": "",
-    "state": "",
-    "postalCode": "",
-    "country": "US"
-  },
-  "contact": {
-    "email": "",
-    "phone": "",
-    "website": ""
-  }
-}
-```
+## About the Venue
 
-### Custom Fields Required
+225-year-old historic inn offering full-weekend weddings. Key selling points:
 
-- [ ] Event Type
-- [ ] Event Date
-- [ ] Guest Count
-- [ ] Budget
-- [ ] Venue Selection Status
-- [ ] Lead Source
-- [ ] Contract Value
+- Ceremony + reception + overnight guests all on one property
+- Two ceremony spaces: Spring Garden (outdoor, reflection pond) and The Conservatory (indoor, chandeliers, marble fireplace)
+- Two reception venues: Spring View Ballroom (50–150 guests) and The Carriage House (150–250 guests)
+- 75+ on-site guest suites
+- All-inclusive pricing — one transparent price covers everything (ceremony, reception, plated dinner, full open bar, tables/linens/china, day-of coordination, setup/breakdown)
+- No separate venue rental fee
 
-### Pipelines
+## Email Nurture Sequence
 
-1. **Main Pipeline:** Main Sales Pipeline
-   - Lead
-   - Contacted
-   - Tour Scheduled
-   - Proposal Sent
-   - Negotiation
-   - Booked/Won
-   - Lost
+8-email sequence over 14 days. See [`email-generation/WORKFLOW.md`](email-generation/WORKFLOW.md) for the full process.
 
-### Workflows
+Emails are authored as Unlayer design JSON, edited visually in the Bloom app, and exported as HTML for GoHighLevel.
 
-- [ ] New Lead Welcome
-- [ ] Tour Reminder
-- [ ] Post-Tour Follow-up
-- [ ] No Response Follow-up
-- [ ] Booking Confirmation
+| # | Day | Theme |
+|---|-----|-------|
+| 1 | 0   | Welcome |
+| 2 | 2   | What to Look For in a Venue |
+| 3 | 3   | Real Couple Stories |
+| 4 | 5   | Your Wedding Vision |
+| 5 | 7   | Pinterest vs. Reality |
+| 6 | 10  | Everything Included |
+| 7 | 12  | FAQ |
+| 8 | 14  | Last Chance |
 
-## Setup Checklist
+## Brand
 
-- [ ] Location configured
-- [ ] Custom fields created
-- [ ] Pipelines set up
-- [ ] Workflows imported
-- [ ] Calendars configured
-- [ ] Forms created
-- [ ] Email templates set up
-- [ ] Social media accounts connected
-- [ ] Payment processing configured
-- [ ] Team members added
-- [ ] Integration tested
-
-## Notes
-
-[Additional notes about Cameron Estate]
+- **Headings:** Cormorant Garamond, weight 500, 28–36px
+- **Body:** Poppins, 16–17px
+- **Navy (primary):** `#2C3E50`
+- **Gold (accent):** `#D4AF37`
+- **Background:** `#F9F7F4`
 
 ## Related Documents
 
-- [Link to contracts]
-- [Link to assets]
-- [Link to past projects]
+- [Email Generation Workflow](email-generation/WORKFLOW.md)
+- [LLM System Prompt](email-generation/system-prompt.md)
+- [Customer Journey](customer-journey.md)
+- [Client Feedback](raw_files/client_feedback.md)

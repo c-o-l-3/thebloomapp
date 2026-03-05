@@ -2,7 +2,7 @@
 
 /**
  * CLI Entry Point
- * Airtable to GHL Sync Engine
+ * Bloom to GHL Sync Engine
  */
 
 import { Command } from 'commander';
@@ -13,7 +13,6 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 import syncOrchestration from './services/sync.js';
-import airtableService from './services/airtable.js';
 import ghlService from './services/ghl.js';
 import conflictDetector from './utils/conflict.js';
 import logger from './utils/logger.js';
@@ -41,19 +40,19 @@ const program = new Command();
 
 program
   .name('ghl-sync')
-  .description('Airtable to GoHighLevel sync engine for Journey Builder')
+  .description('Bloom to GoHighLevel sync engine for Journey Builder')
   .version('1.0.0');
 
 // Main sync command
 program
   .command('sync')
-  .description('Sync published journeys from Airtable to GoHighLevel')
+  .description('Sync published journeys from Bloom to GoHighLevel')
   .option('--dry-run', 'Show what would be synced without making changes')
   .option('--client <clientId>', 'Sync only for specific client')
   .option('--journey <journeyId>', 'Sync only specific journey')
   .action(async (options) => {
     console.log(chalk.cyan('\n╔════════════════════════════════════════════════╗'));
-    console.log(chalk.cyan('║      Airtable to GHL Sync Engine              ║'));
+    console.log(chalk.cyan('║      Bloom to GHL Sync Engine                 ║'));
     console.log(chalk.cyan('╚════════════════════════════════════════════════╝\n'));
 
     try {
@@ -62,19 +61,14 @@ program
 
       // Test connections
       console.log(chalk.cyan('\nTesting connections...\n'));
-      
-      const airtableTest = await airtableService.testConnection();
-      console.log(airtableTest.success 
-        ? chalk.green(`✓ Airtable: ${airtableTest.message}`) 
-        : chalk.red(`✗ Airtable: ${airtableTest.message}`));
 
       const ghlTest = await ghlService.testConnection();
-      console.log(ghlTest.success 
-        ? chalk.green(`✓ GoHighLevel: ${ghlTest.message}`) 
+      console.log(ghlTest.success
+        ? chalk.green(`✓ GoHighLevel: ${ghlTest.message}`)
         : chalk.red(`✗ GoHighLevel: ${ghlTest.message}`));
 
-      if (!airtableTest.success || !ghlTest.success) {
-        console.log(chalk.red('\nConnection tests failed. Please check your configuration.\n'));
+      if (!ghlTest.success) {
+        console.log(chalk.red('\nConnection test failed. Please check your configuration.\n'));
         process.exit(1);
       }
 
@@ -119,7 +113,6 @@ program
     console.log(chalk.cyan('╚════════════════════════════════════════════════╝\n'));
 
     try {
-      await airtableService.connect();
       const history = await syncOrchestration.getHistory(options.journey);
 
       if (history.length === 0) {
@@ -195,7 +188,7 @@ program
   .command('resolve')
   .description('Resolve a conflict')
   .argument('<conflictId>', 'Conflict ID to resolve')
-  .option('--overwrite', 'Overwrite GHL with Airtable data')
+  .option('--overwrite', 'Overwrite GHL with Bloom data')
   .option('--skip', 'Skip this sync')
   .option('--merge', 'Merge changes')
   .action(async (conflictId, options) => {
@@ -228,23 +221,12 @@ program
     console.log(chalk.cyan('║         Connection Test                        ║'));
     console.log(chalk.cyan('╚════════════════════════════════════════════════╝\n'));
 
-    // Test Airtable
-    try {
-      await airtableService.connect();
-      const result = await airtableService.testConnection();
-      console.log(result.success 
-        ? chalk.green(`✓ Airtable: ${result.message}`) 
-        : chalk.red(`✗ Airtable: ${result.message}`));
-    } catch (error) {
-      console.log(chalk.red(`✗ Airtable: ${error.message}`));
-    }
-
     // Test GHL
     try {
       await ghlService.connect();
       const result = await ghlService.testConnection();
-      console.log(result.success 
-        ? chalk.green(`✓ GoHighLevel: ${result.message}`) 
+      console.log(result.success
+        ? chalk.green(`✓ GoHighLevel: ${result.message}`)
         : chalk.red(`✗ GoHighLevel: ${result.message}`));
     } catch (error) {
       console.log(chalk.red(`✗ GoHighLevel: ${error.message}`));
@@ -1074,13 +1056,9 @@ program
       const pipeline = new DeployPipeline(options.client);
       await pipeline.initialize();
 
-      // Connect to Airtable
-      await airtableService.connect();
-      const journey = await airtableService.getJourneyById(options.journey);
-      const touchpoints = await airtableService.getTouchpointsForJourney(options.journey);
+      // TODO: Load journey from PostgreSQL API
+      throw new Error('validate command requires API integration — use the Bloom app to validate journeys');
 
-      console.log(`Validating journey: ${journey.name}`);
-      console.log(`Touchpoints: ${touchpoints.length}\n`);
 
       // Run validation
       const validation = await pipeline.runPreDeployValidation(touchpoints);
@@ -1139,12 +1117,9 @@ program
       const pipeline = new DeployPipeline(options.client);
       await pipeline.initialize();
 
-      // Connect to Airtable
-      await airtableService.connect();
-      const journey = await airtableService.getJourneyById(options.journey);
-      const touchpoints = await airtableService.getTouchpointsForJourney(options.journey);
+      // TODO: Load journey from PostgreSQL API
+      throw new Error('deploy command requires API integration — use the Bloom app to deploy journeys');
 
-      console.log(`Deploying journey: ${chalk.white(journey.name)}`);
       console.log(`Touchpoints: ${touchpoints.length}`);
       if (options.dryRun) {
         console.log(chalk.yellow('\n⚠ DRY RUN MODE - No changes will be made\n'));
@@ -1623,7 +1598,6 @@ program
   .command('generate-journeys')
   .description('Generate default journeys for a client')
   .requiredOption('--client <slug>', 'Client folder slug')
-  .option('--create-in-airtable', 'Also create journeys in Airtable', false)
   .action(async (options) => {
     console.log(chalk.cyan('\n╔════════════════════════════════════════════════╗'));
     console.log(chalk.cyan('║         Generate Default Journeys              ║'));
@@ -1631,47 +1605,18 @@ program
 
     try {
       const generator = new JourneyGenerator(options.client);
-      const result = await generator.run({
-        createInAirtable: options.createInAirtable
-      });
-      
+      const result = await generator.run();
+
       console.log(chalk.green('\n✓ Journey generation complete'));
       console.log(`\nJourneys created: ${result.summary.journeysCreated}`);
       console.log(`Total touchpoints: ${result.summary.totalTouchpoints}`);
       console.log(`\nFiles saved to: clients/${options.client}/journeys/\n`);
-      
-      if (result.airtable) {
-        console.log('Airtable:');
-        console.log(`  Journeys: ${result.airtable.journeys.length}`);
-        console.log(`  Touchpoints: ${result.airtable.touchpoints.length}\n`);
-      }
-      
+
       process.exit(0);
     } catch (error) {
       console.log(chalk.red(`\n✗ Journey generation failed: ${error.message}\n`));
       process.exit(1);
     }
-  });
-
-// Sync local journeys to Airtable
-program
-  .command('sync:airtable')
-  .description('Sync local journey files to Airtable')
-  .requiredOption('--client <slug>', 'Client folder slug')
-  .option('--dry-run', 'Show what would be synced without making changes', false)
-  .option('--skip-existing', 'Skip records that already exist in Airtable', false)
-  .option('--mock', 'Run in mock mode without connecting to Airtable', false)
-  .action(async (options) => {
-    const { syncJourneysToAirtable } = await import('./scripts/sync-journeys-to-airtable.js');
-    
-    const result = await syncJourneysToAirtable({
-      client: options.client,
-      dryRun: options.dryRun,
-      skipExisting: options.skipExisting,
-      mockMode: options.mock
-    });
-    
-    process.exit(result.success ? 0 : 1);
   });
 
 // Parse and execute

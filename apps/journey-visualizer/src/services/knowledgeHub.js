@@ -8,7 +8,7 @@ import axios from 'axios';
 import { semanticSearch, getSemanticSearchClient } from './semanticSearchClient';
 
 const API_BASE_URL = import.meta.env.VITE_KNOWLEDGE_HUB_API_URL || 'http://localhost:3001/api';
-const DATA_SOURCE = import.meta.env.VITE_DATA_SOURCE || 'airtable';
+const DATA_SOURCE = import.meta.env.VITE_DATA_SOURCE || 'api';
 const DEFAULT_CLIENT_SLUG = import.meta.env.VITE_CLIENT_SLUG || 'promise-farm';
 
 /**

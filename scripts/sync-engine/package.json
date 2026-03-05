@@ -1,7 +1,7 @@
 {
   "name": "ghl-sync-engine",
   "version": "1.0.0",
-  "description": "Airtable to GoHighLevel sync engine for Journey Builder",
+  "description": "Bloom to GoHighLevel sync engine for Journey Builder",
   "main": "src/cli.js",
   "type": "module",
   "scripts": {
@@ -9,7 +9,6 @@
     "sync:dry": "node src/cli.js --dry-run",
     "sync:client": "node src/cli.js --client",
     "sync:journey": "node src/cli.js --journey",
-    "sync:airtable": "node src/cli.js sync:airtable",
     "knowledge:init": "node src/cli.js knowledge:init",
     "knowledge:crawl": "node src/cli.js knowledge:crawl",
     "knowledge:import": "node src/cli.js knowledge:import",
@@ -44,7 +43,6 @@
     "lint": "eslint src/"
   },
   "keywords": [
-    "airtable",
     "gohighlevel",
     "sync",
     "workflows",
@@ -55,7 +53,6 @@
   "dependencies": {
     "@google/generative-ai": "^0.2.0",
     "@prisma/client": "^5.8.0",
-    "airtable": "^0.12.2",
     "axios": "^1.6.2",
     "chalk": "^5.3.0",
     "commander": "^11.1.0",

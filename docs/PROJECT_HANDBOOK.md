@@ -8,12 +8,25 @@ A comprehensive guide for the BloomBuilder system, documenting lessons learned, 
 
 1. [System Overview](#system-overview)
 2. [Architecture](#architecture)
-3. [Airtable Setup Guide](#airtable-setup-guide)
-4. [GoHighLevel Integration](#gohighlevel-integration)
-5. [Lessons Learned](#lessons-learned)
-6. [Troubleshooting Guide](#troubleshooting-guide)
-7. [Quick Reference](#quick-reference)
-8. [Common Tasks](#common-tasks)
+3. [Email Authoring Workflow](#email-authoring-workflow)
+4. [Airtable Setup Guide](#airtable-setup-guide)
+5. [GoHighLevel Integration](#gohighlevel-integration)
+6. [Lessons Learned](#lessons-learned)
+7. [Troubleshooting Guide](#troubleshooting-guide)
+8. [Quick Reference](#quick-reference)
+9. [Common Tasks](#common-tasks)
+
+---
+
+## Email Authoring Workflow
+
+See [docs/EMAIL_WORKFLOW.md](EMAIL_WORKFLOW.md) for the full process.
+
+**Short version:**
+1. Paste the client's `email-generation/system-prompt.md` into any LLM
+2. LLM outputs Unlayer design JSON
+3. Import JSON into the Bloom visual editor ("Import JSON" button)
+4. Edit visually, then click "Copy HTML" to get GHL-ready output
 
 ---
 

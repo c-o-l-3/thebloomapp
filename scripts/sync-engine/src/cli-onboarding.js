@@ -47,7 +47,6 @@ const PROGRESS_FILE = path.join(repoRoot, '.onboarding-progress.json');
 const WIZARD_STEPS = [
   { id: 'welcome', name: 'Welcome & Client Selection', weight: 5 },
   { id: 'ghl-credentials', name: 'GHL API Credentials', weight: 15 },
-  { id: 'airtable-setup', name: 'Airtable Connection', weight: 10 },
   { id: 'brand-voice', name: 'Brand Voice Configuration', weight: 15 },
   { id: 'email-templates', name: 'Email Template Selection', weight: 10 },
   { id: 'location-config', name: 'Location Configuration', weight: 15 },
@@ -414,16 +413,6 @@ export class InteractiveOnboardingWizard {
           return false;
         }
       }
-      case 'airtable-setup': {
-        // Check if Airtable connection is already configured
-        try {
-          const { loadClientLocationConfig } = await import('./journey-builder/client-loader.js');
-          const { locationConfig } = await loadClientLocationConfig(this.clientSlug);
-          return locationConfig.airtable?.baseId || locationConfig.airtable?.isConnected;
-        } catch {
-          return false;
-        }
-      }
       case 'brand-voice': {
         try {
           const hub = new KnowledgeHub(this.clientSlug);
@@ -779,134 +768,7 @@ export class InteractiveOnboardingWizard {
   }
 
   /**
-   * Step 3: Airtable Connection Setup with Validation
-   */
-  async step3_AirtableSetup() {
-    this.printHeader('Step 3: Airtable Connection Setup');
-    this.stepStartTime = Date.now();
-
-    // Check if already configured
-    if (this.skipConfigured && await this.shouldSkipStep('airtable-setup')) {
-      this.logStep('Airtable setup', 'skipped', 'Already configured');
-      this.completedSteps.push('airtable-setup');
-      return { skipped: true };
-    }
-
-    // Step validation: Pre-validate Airtable configuration
-    if (!this.skipValidation) {
-      console.log(chalk.gray('\nValidating Airtable configuration...\n'));
-      
-      const validator = new SetupValidator(null, { silent: true });
-      const validation = await this.validateStep('airtable-setup', async () => {
-        return await validator.validateAirtableConnection();
-      });
-
-      if (validation.status === ValidationStatus.FAIL) {
-        console.log(chalk.red('\n✗ Airtable configuration issue:'));
-        console.log(chalk.red(`  ${validation.message}`));
-        
-        if (validation.fixInstructions) {
-          console.log(chalk.yellow('\n  Fix instructions:'));
-          validation.fixInstructions.forEach(fix => {
-            console.log(chalk.gray(`    → ${fix}`));
-          });
-        }
-        console.log('');
-      } else if (validation.status === ValidationStatus.PASS) {
-        console.log(chalk.green(`✓ Airtable connected: ${validation.details?.tables?.length || 0} tables accessible\n`));
-        this.validationResults.steps['airtable-connection'] = validation;
-      } else if (validation.status === ValidationStatus.WARNING) {
-        console.log(chalk.yellow(`⚠ ${validation.message}\n`));
-      }
-    }
-
-    if (this.nonInteractive) {
-      this.logStep('Airtable setup', 'success', 'Using environment configuration');
-      this.completedSteps.push('airtable-setup');
-      return { usingEnv: true };
-    }
-
-    // Check Airtable environment variables
-    const hasAirtableKey = !!process.env.AIRTABLE_API_KEY;
-    const hasAirtableBase = !!process.env.AIRTABLE_BASE_ID;
-
-    if (hasAirtableKey && hasAirtableBase) {
-      console.log(chalk.green('✓ Airtable environment variables found'));
-      
-      const { testConnection } = await inquirer.prompt([{
-        type: 'confirm',
-        name: 'testConnection',
-        message: 'Test Airtable connection with detailed validation?',
-        default: !this.skipValidation
-      }]);
-
-      if (testConnection && !this.skipValidation) {
-        const spinner = ora('Testing Airtable connection...').start();
-        try {
-          const validator = new SetupValidator(null, { silent: true });
-          const result = await validator.validateAirtableConnection();
-          
-          if (result.status === ValidationStatus.PASS) {
-            spinner.succeed(`Airtable connected: ${result.details.tables.length} tables accessible`);
-            this.logStep('Airtable connection', 'success', `${result.details.tables.length} tables`);
-            this.logStep('Tables found', 'success', result.details.tables.join(', '));
-            this.validationResults.steps['airtable-connection'] = result;
-          } else if (result.status === ValidationStatus.WARNING) {
-            spinner.warn(`Airtable connected with warnings: ${result.message}`);
-            this.logStep('Airtable connection', 'warning', result.message);
-          } else {
-            spinner.fail(`Airtable connection failed: ${result.message}`);
-            this.showError(result.message, result.fixInstructions || [
-              'Check your AIRTABLE_API_KEY environment variable',
-              'Verify your AIRTABLE_BASE_ID is correct',
-              'Ensure the base is accessible'
-            ]);
-          }
-        } catch (error) {
-          spinner.fail(`Airtable connection failed: ${error.message}`);
-          this.logStep('Airtable connection', 'error', error.message);
-        }
-      }
-    } else {
-      console.log(chalk.yellow('⚠ Airtable environment variables not fully configured'));
-      console.log(chalk.gray('  Set AIRTABLE_API_KEY and AIRTABLE_BASE_ID in your .env file\n'));
-      
-      const { configureNow } = await inquirer.prompt([{
-        type: 'confirm',
-        name: 'configureNow',
-        message: 'Would you like to configure Airtable now?',
-        default: true
-      }]);
-
-      if (configureNow) {
-        console.log(chalk.cyan('\nPlease set these environment variables:'));
-        console.log('  export AIRTABLE_API_KEY=your_api_key');
-        console.log('  export AIRTABLE_BASE_ID=your_base_id\n');
-        
-        await inquirer.prompt([{
-          type: 'input',
-          name: 'continue',
-          message: 'Press Enter when ready to continue...'
-        }]);
-      }
-    }
-
-    const duration = ((Date.now() - this.stepStartTime) / 1000).toFixed(1);
-    this.logStep('Airtable setup', 'success', 'Configuration verified', duration);
-    this.completedSteps.push('airtable-setup');
-    
-    await this.stateManager.save({
-      currentStep: 'airtable-setup',
-      completedSteps: this.completedSteps,
-      clientSlug: this.clientSlug,
-      config: this.results.config
-    });
-
-    return { configured: true };
-  }
-
-  /**
-   * Step 4: Brand Voice Configuration (AI-assisted) with Validation
+   * Step 3: Brand Voice Configuration (AI-assisted) with Validation
    */
   async step4_BrandVoice() {
     this.printHeader('Step 4: Brand Voice Configuration', 'AI-assisted analysis');

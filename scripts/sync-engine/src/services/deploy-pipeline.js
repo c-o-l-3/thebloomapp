@@ -11,7 +11,6 @@ import logger from '../utils/logger.js';
 import { KnowledgeHub } from './knowledge-hub.js';
 import { CommentSystem } from './comment-system.js';
 import { compareJourneys } from '../utils/version-compare.js';
-import airtableService from './airtable.js';
 import ghlService from './ghl.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -121,10 +120,7 @@ export class DeployPipeline {
       // Step 5: Deploy to GHL
       await this.runStep('deploy', () => this.deployToGHL(journey, touchpoints));
 
-      // Step 6: Update Airtable
-      await this.runStep('sync-airtable', () => this.updateAirtable(journey));
-
-      // Step 7: Generate report
+      // Step 6: Generate report
       await this.runStep('report', () => this.generateReport());
 
       // Mark as complete
@@ -377,29 +373,6 @@ export class DeployPipeline {
     this.currentDeployment.ghlDeploymentId = result.deploymentId;
 
     return result;
-  }
-
-  /**
-   * Update Airtable with deployment status
-   */
-  async updateAirtable(journey) {
-    await airtableService.connect();
-
-    // Update journey status to Published
-    await airtableService.updateJourneySyncStatus(journey.id, 'Deployed', {
-      'Status': 'Published',
-      'Published At': new Date().toISOString()
-    });
-
-    // Create sync history record
-    await airtableService.createSyncHistoryRecord(journey.id, {
-      status: 'Success',
-      type: 'deployment',
-      ghlWorkflowId: this.currentDeployment.ghlDeploymentId,
-      duration: Date.now() - new Date(this.currentDeployment.startedAt).getTime()
-    });
-
-    return { synced: true };
   }
 
   /**

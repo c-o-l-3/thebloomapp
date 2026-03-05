@@ -166,8 +166,6 @@ export class SetupValidator {
     const required = [
       { key: 'GHL_API_KEY', critical: true, description: 'GoHighLevel API key' },
       { key: 'GHL_LOCATION_ID', critical: true, description: 'GoHighLevel Location ID' },
-      { key: 'AIRTABLE_API_KEY', critical: true, description: 'Airtable Personal Access Token' },
-      { key: 'AIRTABLE_BASE_ID', critical: true, description: 'Airtable Base ID' },
       { key: 'OPENAI_API_KEY', critical: false, description: 'OpenAI API key (for AI features)' }
     ];
 
@@ -476,126 +474,6 @@ export class SetupValidator {
         ValidationStatus.FAIL,
         `GHL connection failed: ${message}`,
         { status, error: message },
-        fixInstructions
-      );
-    }
-  }
-
-  /**
-   * Validate Airtable connection with list bases and verify write access
-   */
-  async validateAirtableConnection(pat = null, baseId = null) {
-    const apiKey = pat || process.env.AIRTABLE_API_KEY;
-    const base = baseId || process.env.AIRTABLE_BASE_ID;
-
-    if (!apiKey) {
-      return this.addResult(
-        'airtable_connection',
-        ValidationStatus.FAIL,
-        'AIRTABLE_API_KEY not configured',
-        null,
-        [
-          'Create a Personal Access Token at https://airtable.com/create/tokens',
-          'Set AIRTABLE_API_KEY in your .env file',
-          'Required scopes: data.records:read, data.records:write, schema.bases:read'
-        ]
-      );
-    }
-
-    if (!base) {
-      return this.addResult(
-        'airtable_connection',
-        ValidationStatus.FAIL,
-        'AIRTABLE_BASE_ID not configured',
-        null,
-        [
-          'Find your Base ID in Airtable API documentation',
-          'It starts with "app" followed by alphanumeric characters',
-          'Set AIRTABLE_BASE_ID in your .env file'
-        ]
-      );
-    }
-
-    try {
-      const { default: Airtable } = await import('airtable');
-      
-      Airtable.configure({ apiKey });
-      const airtableBase = Airtable.base(base);
-      
-      // Test 1: List tables (schema read access)
-      const tables = await airtableBase.tables();
-      const tableNames = tables.map(t => t.name);
-      
-      // Check for required tables
-      const requiredTables = ['Journeys', 'Touchpoints', 'Templates'];
-      const missingTables = requiredTables.filter(t => !tableNames.includes(t));
-      
-      // Test 2: Verify write access by attempting to read a record
-      let writeAccess = false;
-      try {
-        if (tableNames.includes('Journeys')) {
-          await airtableBase('Journeys').select({ maxRecords: 1 }).firstPage();
-          writeAccess = true;
-        }
-      } catch (writeError) {
-        // Write access might be limited, but that's ok for validation
-      }
-
-      if (missingTables.length > 0) {
-        return this.addResult(
-          'airtable_connection',
-          ValidationStatus.WARNING,
-          `Airtable connected but missing recommended tables: ${missingTables.join(', ')}`,
-          {
-            baseId: base,
-            tablesFound: tableNames,
-            missingTables,
-            writeAccess
-          },
-          [
-            `Create the missing tables: ${missingTables.join(', ')}`,
-            'Or run the Airtable setup script: npm run setup-airtable'
-          ]
-        );
-      }
-
-      return this.addResult(
-        'airtable_connection',
-        ValidationStatus.PASS,
-        `Airtable connection successful: ${tableNames.length} tables accessible`,
-        {
-          baseId: base,
-          tables: tableNames,
-          writeAccess
-        }
-      );
-    } catch (error) {
-      let fixInstructions = [
-        'Verify AIRTABLE_API_KEY is a valid Personal Access Token',
-        'Check that AIRTABLE_BASE_ID is correct',
-        'Ensure the token has access to the base'
-      ];
-      
-      if (error.message?.includes('AUTHENTICATION_REQUIRED') || error.message?.includes('INVALID')) {
-        fixInstructions = [
-          'Your Airtable Personal Access Token is invalid',
-          'Create a new token at https://airtable.com/create/tokens',
-          'Ensure it has the required scopes',
-          'Update AIRTABLE_API_KEY in your .env file'
-        ];
-      } else if (error.message?.includes('NOT_FOUND')) {
-        fixInstructions = [
-          'Base ID not found',
-          'Verify AIRTABLE_BASE_ID is correct',
-          'Ensure the base exists and the token has access to it'
-        ];
-      }
-
-      return this.addResult(
-        'airtable_connection',
-        ValidationStatus.FAIL,
-        `Airtable connection failed: ${error.message}`,
-        { error: error.message },
         fixInstructions
       );
     }

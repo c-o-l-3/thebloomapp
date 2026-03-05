@@ -1,6 +1,6 @@
 /**
  * Conflict Detection Utility
- * Detects and handles conflicts between Airtable and GHL versions
+ * Detects and handles conflicts between Bloom (PostgreSQL) and GHL versions
  */
 
 import logger from './logger.js';
@@ -11,7 +11,7 @@ export const ConflictType = {
   VERSION_MISMATCH: 'version_mismatch',
   CONCURRENT_EDIT: 'concurrent_edit',
   MISSING_IN_GHL: 'missing_in_ghl',
-  MISSING_IN_AIRTABLE: 'missing_in_airtable'
+  MISSING_IN_DB: 'missing_in_db'
 };
 
 export const ConflictResolution = {
@@ -29,7 +29,7 @@ export class ConflictDetector {
   /**
    * Detect conflicts between Airtable journey and GHL workflow
    */
-  detectConflicts(airtableJourney, ghlWorkflow) {
+  detectConflicts(journey, ghlWorkflow) {
     const conflicts = [];
 
     // Check if GHL workflow exists
@@ -37,40 +37,40 @@ export class ConflictDetector {
       const conflict = {
         id: uuidv4(),
         type: ConflictType.MISSING_IN_GHL,
-        journeyId: airtableJourney.id,
-        journeyName: airtableJourney.name,
+        journeyId: journey.id,
+        journeyName: journey.name,
         message: 'Journey exists in Airtable but not in GHL',
         severity: 'warning',
         resolution: ConflictResolution.CREATE
       };
       conflicts.push(conflict);
       logger.info('Conflict detected: Journey missing in GHL', { 
-        journeyId: airtableJourney.id 
+        journeyId: journey.id 
       });
       return conflicts;
     }
 
     // Check for external modifications
-    const externalModification = this.checkExternalModification(airtableJourney, ghlWorkflow);
+    const externalModification = this.checkExternalModification(journey, ghlWorkflow);
     if (externalModification) {
       conflicts.push(externalModification);
     }
 
     // Check version mismatch
-    const versionConflict = this.checkVersionMismatch(airtableJourney, ghlWorkflow);
+    const versionConflict = this.checkVersionMismatch(journey, ghlWorkflow);
     if (versionConflict) {
       conflicts.push(versionConflict);
     }
 
     // Check content differences
-    const contentConflict = this.checkContentDifferences(airtableJourney, ghlWorkflow);
+    const contentConflict = this.checkContentDifferences(journey, ghlWorkflow);
     if (contentConflict) {
       conflicts.push(contentConflict);
     }
 
     if (conflicts.length > 0) {
       logger.warn('Conflicts detected', { 
-        journeyId: airtableJourney.id, 
+        journeyId: journey.id, 
         conflictCount: conflicts.length 
       });
     }
@@ -81,9 +81,9 @@ export class ConflictDetector {
   /**
    * Check if GHL workflow was modified outside the system
    */
-  checkExternalModification(airtableJourney, ghlWorkflow) {
-    const airtableModified = airtableJourney.lastModified 
-      ? new Date(airtableJourney.lastModified).getTime() 
+  checkExternalModification(journey, ghlWorkflow) {
+    const airtableModified = journey.lastModified 
+      ? new Date(journey.lastModified).getTime() 
       : 0;
     
     const ghlModified = ghlWorkflow.updatedAt 
@@ -91,8 +91,8 @@ export class ConflictDetector {
       : 0;
 
     // If GHL was modified after our last sync, it might be externally modified
-    const lastSync = airtableJourney.lastSync 
-      ? new Date(airtableJourney.lastSync).getTime() 
+    const lastSync = journey.lastSync 
+      ? new Date(journey.lastSync).getTime() 
       : 0;
 
     // If GHL modified is more recent than last sync AND after Airtable modified
@@ -100,23 +100,23 @@ export class ConflictDetector {
       const conflict = {
         id: uuidv4(),
         type: ConflictType.EXTERNAL_MODIFICATION,
-        journeyId: airtableJourney.id,
-        journeyName: airtableJourney.name,
+        journeyId: journey.id,
+        journeyName: journey.name,
         ghlWorkflowId: ghlWorkflow.id,
         message: 'GHL workflow was modified outside the system',
         severity: 'high',
         resolution: ConflictResolution.MANUAL,
         details: {
-          airtableModified: airtableJourney.lastModified,
+          airtableModified: journey.lastModified,
           ghlModified: ghlWorkflow.updatedAt,
-          lastSync: airtableJourney.lastSync
+          lastSync: journey.lastSync
         }
       };
 
       logger.warn('External modification detected', {
-        journeyId: airtableJourney.id,
+        journeyId: journey.id,
         ghlModified: ghlWorkflow.updatedAt,
-        airtableModified: airtableJourney.lastModified
+        airtableModified: journey.lastModified
       });
 
       return conflict;
@@ -128,16 +128,16 @@ export class ConflictDetector {
   /**
    * Check version mismatch between Airtable and GHL
    */
-  checkVersionMismatch(airtableJourney, ghlWorkflow) {
-    const airtableVersion = airtableJourney.version || 1;
+  checkVersionMismatch(journey, ghlWorkflow) {
+    const airtableVersion = journey.version || 1;
     const ghlVersion = ghlWorkflow.settings?.journeyVersion || 1;
 
     if (ghlVersion > airtableVersion) {
       const conflict = {
         id: uuidv4(),
         type: ConflictType.VERSION_MISMATCH,
-        journeyId: airtableJourney.id,
-        journeyName: airtableJourney.name,
+        journeyId: journey.id,
+        journeyName: journey.name,
         ghlWorkflowId: ghlWorkflow.id,
         message: 'GHL workflow version is ahead of Airtable version',
         severity: 'medium',
@@ -149,7 +149,7 @@ export class ConflictDetector {
       };
 
       logger.warn('Version mismatch detected', {
-        journeyId: airtableJourney.id,
+        journeyId: journey.id,
         airtableVersion,
         ghlVersion
       });
@@ -163,16 +163,16 @@ export class ConflictDetector {
   /**
    * Check for content differences between touchpoints and workflow steps
    */
-  checkContentDifferences(airtableJourney, ghlWorkflow) {
-    const airtableSteps = airtableJourney.touchpoints?.length || 0;
+  checkContentDifferences(journey, ghlWorkflow) {
+    const airtableSteps = journey.touchpoints?.length || 0;
     const ghlSteps = ghlWorkflow.steps?.length || 0;
 
     if (airtableSteps !== ghlSteps) {
       const conflict = {
         id: uuidv4(),
         type: ConflictType.CONCURRENT_EDIT,
-        journeyId: airtableJourney.id,
-        journeyName: airtableJourney.name,
+        journeyId: journey.id,
+        journeyName: journey.name,
         ghlWorkflowId: ghlWorkflow.id,
         message: `Step count mismatch: Airtable has ${airtableSteps} steps, GHL has ${ghlSteps} steps`,
         severity: 'low',
@@ -184,7 +184,7 @@ export class ConflictDetector {
       };
 
       logger.info('Step count difference detected', {
-        journeyId: airtableJourney.id,
+        journeyId: journey.id,
         airtableSteps,
         ghlSteps
       });
