@@ -1,0 +1,577 @@
+{
+  "body": {
+    "id": "ce-email02-body",
+    "rows": [
+      {
+        "id": "row-header",
+        "cells": [1],
+        "columns": [
+          {
+            "id": "col-header",
+            "contents": [
+              {
+                "id": "img-logo",
+                "type": "image",
+                "values": {
+                  "containerPadding": "20px 40px",
+                  "src": {
+                    "url": "https://cameronestateinn.com/wp-content/uploads/2025/09/Cameron-Estate-Logo.png",
+                    "width": 180,
+                    "height": 60,
+                    "maxWidth": "50%",
+                    "autoWidth": false
+                  },
+                  "textAlign": "center",
+                  "altText": "Cameron Estate Inn",
+                  "action": {
+                    "name": "web",
+                    "values": { "href": "https://cameronestateinn.com", "target": "_blank" }
+                  },
+                  "hideDesktop": false
+                }
+              }
+            ],
+            "values": {}
+          }
+        ],
+        "values": {
+          "backgroundColor": "#2C3E50",
+          "columnsBackgroundColor": "#2C3E50",
+          "padding": "0px"
+        }
+      },
+      {
+        "id": "row-greeting",
+        "cells": [1],
+        "columns": [
+          {
+            "id": "col-greeting",
+            "contents": [
+              {
+                "id": "text-hi",
+                "type": "heading",
+                "values": {
+                  "containerPadding": "40px 40px 0px",
+                  "headingType": "h1",
+                  "fontWeight": 500,
+                  "fontSize": "36px",
+                  "color": "#2C3E50",
+                  "fontFamily": {
+                    "label": "Cormorant Garamond",
+                    "value": "'Cormorant Garamond',Georgia,serif",
+                    "url": "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&display=swap"
+                  },
+                  "textAlign": "left",
+                  "lineHeight": "120%",
+                  "text": "{{contact.first_name}},",
+                  "hideDesktop": false
+                }
+              },
+              {
+                "id": "text-intro-1",
+                "type": "text",
+                "values": {
+                  "containerPadding": "20px 40px 16px",
+                  "text": "<p style=\"font-size:17px;line-height:1.7;color:#4A4A4A;font-family:Poppins,sans-serif;margin:0;\">You're probably about to visit several venues over the next few weeks, and honestly? They're all going to look gorgeous in their listing photos and during your tours. That's the easy part — every venue has beautiful images.</p>",
+                  "hideDesktop": false
+                }
+              },
+              {
+                "id": "text-intro-2",
+                "type": "text",
+                "values": {
+                  "containerPadding": "0px 40px 30px",
+                  "text": "<p style=\"font-size:17px;line-height:1.7;color:#4A4A4A;font-family:Poppins,sans-serif;margin:0;\">Here's what I encourage couples to focus on instead — the stuff that actually affects your wedding day experience and the months of planning leading up to it.</p>",
+                  "hideDesktop": false
+                }
+              }
+            ],
+            "values": {}
+          }
+        ],
+        "values": {
+          "backgroundColor": "#FDFCFA",
+          "columnsBackgroundColor": "",
+          "padding": "0px"
+        }
+      },
+      {
+        "id": "row-estate-image",
+        "cells": [1],
+        "columns": [
+          {
+            "id": "col-estate-image",
+            "contents": [
+              {
+                "id": "img-estate",
+                "type": "image",
+                "values": {
+                  "containerPadding": "0px 40px 40px",
+                  "src": {
+                    "url": "https://storage.googleapis.com/msgsndr/G7APqyfJ6lyi4l28noZj/media/6989327a0a7fd1ecad41c546.jpg",
+                    "width": 520,
+                    "height": 350,
+                    "maxWidth": "100%",
+                    "autoWidth": true
+                  },
+                  "textAlign": "center",
+                  "altText": "Cameron Estate Inn - Historic Venue",
+                  "action": { "name": "web", "values": { "href": "", "target": "_blank" } },
+                  "hideDesktop": false
+                }
+              }
+            ],
+            "values": {}
+          }
+        ],
+        "values": {
+          "backgroundColor": "#FDFCFA",
+          "columnsBackgroundColor": "",
+          "padding": "0px"
+        }
+      },
+      {
+        "id": "row-tip1",
+        "cells": [1],
+        "columns": [
+          {
+            "id": "col-tip1",
+            "contents": [
+              {
+                "id": "heading-tip1",
+                "type": "heading",
+                "values": {
+                  "containerPadding": "0px 40px 16px",
+                  "headingType": "h2",
+                  "fontWeight": 500,
+                  "fontSize": "24px",
+                  "color": "#D4AF37",
+                  "fontFamily": {
+                    "label": "Cormorant Garamond",
+                    "value": "'Cormorant Garamond',Georgia,serif",
+                    "url": "https://fonts.googleapis.com/css2?family=Cormorant Garamond:wght@400;500;600&display=swap"
+                  },
+                  "textAlign": "left",
+                  "lineHeight": "130%",
+                  "text": "#1: Trust Your Gut When You Walk In",
+                  "hideDesktop": false
+                }
+              },
+              {
+                "id": "text-tip1-1",
+                "type": "text",
+                "values": {
+                  "containerPadding": "0px 40px 12px",
+                  "text": "<p style=\"font-size:16px;line-height:1.7;color:#4A4A4A;font-family:Poppins,sans-serif;margin:0;\">Photos only tell you so much. When you visit a venue in person, pay attention to:</p>",
+                  "hideDesktop": false
+                }
+              },
+              {
+                "id": "text-tip1-2",
+                "type": "text",
+                "values": {
+                  "containerPadding": "0px 40px 8px",
+                  "text": "<p style=\"font-size:16px;line-height:1.7;color:#4A4A4A;font-family:Poppins,sans-serif;margin:0;\"><strong>Can you actually see YOUR wedding happening here?</strong><br/>Not someone else's Pinterest-perfect wedding — <em>yours</em>. The flowers you choose, the people you love gathered around you, your dad giving his toast, your first dance.</p>",
+                  "hideDesktop": false
+                }
+              },
+              {
+                "id": "text-tip1-3",
+                "type": "text",
+                "values": {
+                  "containerPadding": "0px 40px 8px",
+                  "text": "<p style=\"font-size:16px;line-height:1.7;color:#4A4A4A;font-family:Poppins,sans-serif;margin:0;\"><strong>Does the space feel right for your guest count?</strong><br/>A venue that feels perfect for 100 guests might feel empty for 200, or cramped for 250.</p>",
+                  "hideDesktop": false
+                }
+              },
+              {
+                "id": "text-tip1-4",
+                "type": "text",
+                "values": {
+                  "containerPadding": "0px 40px 8px",
+                  "text": "<p style=\"font-size:16px;line-height:1.7;color:#4A4A4A;font-family:Poppins,sans-serif;margin:0;\"><strong>Do you feel welcomed, or like you're being sold to?</strong><br/>You'll be working with this team for a year or more. Do they seem genuinely excited about your vision, or just going through the motions?</p>",
+                  "hideDesktop": false
+                }
+              },
+              {
+                "id": "text-tip1-5",
+                "type": "text",
+                "values": {
+                  "containerPadding": "0px 40px 30px",
+                  "text": "<p style=\"font-size:15px;line-height:1.7;color:#666666;font-family:Poppins,sans-serif;margin:0;font-style:italic;\">That last one matters more than you'd think. Your venue coordinator becomes part of your wedding planning team — you want someone you're excited to work with.</p>",
+                  "hideDesktop": false
+                }
+              }
+            ],
+            "values": {}
+          }
+        ],
+        "values": {
+          "backgroundColor": "#FFFFFF",
+          "columnsBackgroundColor": "",
+          "padding": "0px"
+        }
+      },
+      {
+        "id": "row-image2",
+        "cells": [1],
+        "columns": [
+          {
+            "id": "col-image2",
+            "contents": [
+              {
+                "id": "img-details",
+                "type": "image",
+                "values": {
+                  "containerPadding": "0px 40px 40px",
+                  "src": {
+                    "url": "https://storage.googleapis.com/msgsndr/G7APqyfJ6lyi4l28noZj/media/6989327a38f77a2717eb4653.jpg",
+                    "width": 520,
+                    "height": 350,
+                    "maxWidth": "100%",
+                    "autoWidth": true
+                  },
+                  "textAlign": "center",
+                  "altText": "Elegant details included in your package",
+                  "action": { "name": "web", "values": { "href": "", "target": "_blank" } },
+                  "hideDesktop": false
+                }
+              }
+            ],
+            "values": {}
+          }
+        ],
+        "values": {
+          "backgroundColor": "#FFFFFF",
+          "columnsBackgroundColor": "",
+          "padding": "0px"
+        }
+      },
+      {
+        "id": "row-tip2",
+        "cells": [1],
+        "columns": [
+          {
+            "id": "col-tip2",
+            "contents": [
+              {
+                "id": "heading-tip2",
+                "type": "heading",
+                "values": {
+                  "containerPadding": "0px 40px 16px",
+                  "headingType": "h2",
+                  "fontWeight": 500,
+                  "fontSize": "24px",
+                  "color": "#D4AF37",
+                  "fontFamily": {
+                    "label": "Cormorant Garamond",
+                    "value": "'Cormorant Garamond',Georgia,serif",
+                    "url": "https://fonts.googleapis.com/css2?family=Cormorant Garamond:wght@400;500;600&display=swap"
+                  },
+                  "textAlign": "left",
+                  "lineHeight": "130%",
+                  "text": "#2: Get Crystal Clear on \"All-Inclusive\"",
+                  "hideDesktop": false
+                }
+              },
+              {
+                "id": "text-tip2-1",
+                "type": "text",
+                "values": {
+                  "containerPadding": "0px 40px 12px",
+                  "text": "<p style=\"font-size:16px;line-height:1.7;color:#4A4A4A;font-family:Poppins,sans-serif;margin:0;\">Every venue defines \"all-inclusive\" differently, and this is exactly where hidden costs love to hide. When you're touring venues (including ours!), worth asking specifically:</p>",
+                  "hideDesktop": false
+                }
+              },
+              {
+                "id": "text-tip2-2",
+                "type": "text",
+                "values": {
+                  "containerPadding": "0px 40px 8px",
+                  "text": "<p style=\"font-size:16px;line-height:1.7;color:#4A4A4A;font-family:Poppins,sans-serif;margin:0;\">• <strong>What's included in your base price vs. what costs extra?</strong></p>",
+                  "hideDesktop": false
+                }
+              },
+              {
+                "id": "text-tip2-3",
+                "type": "text",
+                "values": {
+                  "containerPadding": "0px 40px 8px",
+                  "text": "<p style=\"font-size:16px;line-height:1.7;color:#4A4A4A;font-family:Poppins,sans-serif;margin:0;\">• <strong>Are linens included, or do you rent them separately?</strong></p>",
+                  "hideDesktop": false
+                }
+              },
+              {
+                "id": "text-tip2-4",
+                "type": "text",
+                "values": {
+                  "containerPadding": "0px 40px 8px",
+                  "text": "<p style=\"font-size:16px;line-height:1.7;color:#4A4A4A;font-family:Poppins,sans-serif;margin:0;\">• <strong>Is there a day-of coordinator included?</strong></p>",
+                  "hideDesktop": false
+                }
+              },
+              {
+                "id": "text-tip2-5",
+                "type": "text",
+                "values": {
+                  "containerPadding": "0px 40px 8px",
+                  "text": "<p style=\"font-size:16px;line-height:1.7;color:#4A4A4A;font-family:Poppins,sans-serif;margin:0;\">• <strong>Will there be any surprise charges?</strong> (Ceremony fees, Hidden Surcharges, Cleaning fees)</p>",
+                  "hideDesktop": false
+                }
+              },
+              {
+                "id": "text-tip2-6",
+                "type": "text",
+                "values": {
+                  "containerPadding": "16px 40px 30px",
+                  "text": "<p style=\"font-size:16px;line-height:1.7;color:#4A4A4A;font-family:Poppins,sans-serif;margin:0;\">At Cameron Estate, our per-person proposal covers all of the above. No separate venue rental fee. No gotchas. One clear number.<br/>At the end of your tour we will present you with a clear proposal so you know exactly what investment is required for your perfect day at Cameron Estate Inn.</p>",
+                  "hideDesktop": false
+                }
+              }
+            ],
+            "values": {}
+          }
+        ],
+        "values": {
+          "backgroundColor": "#F5F1EB",
+          "columnsBackgroundColor": "",
+          "padding": "0px"
+        }
+      },
+      {
+        "id": "row-tip3",
+        "cells": [1],
+        "columns": [
+          {
+            "id": "col-tip3",
+            "contents": [
+              {
+                "id": "heading-tip3",
+                "type": "heading",
+                "values": {
+                  "containerPadding": "0px 40px 16px",
+                  "headingType": "h2",
+                  "fontWeight": 500,
+                  "fontSize": "24px",
+                  "color": "#D4AF37",
+                  "fontFamily": {
+                    "label": "Cormorant Garamond",
+                    "value": "'Cormorant Garamond',Georgia,serif",
+                    "url": "https://fonts.googleapis.com/css2?family=Cormorant Garamond:wght@400;500;600&display=swap"
+                  },
+                  "textAlign": "left",
+                  "lineHeight": "130%",
+                  "text": "#3: Think About the Planning Process",
+                  "hideDesktop": false
+                }
+              },
+              {
+                "id": "text-tip3-1",
+                "type": "text",
+                "values": {
+                  "containerPadding": "0px 40px 12px",
+                  "text": "<p style=\"font-size:16px;line-height:1.7;color:#4A4A4A;font-family:Poppins,sans-serif;margin:0;\">Your venue choice determines how you'll spend the next year of your life:</p>",
+                  "hideDesktop": false
+                }
+              },
+              {
+                "id": "text-tip3-2",
+                "type": "text",
+                "values": {
+                  "containerPadding": "0px 40px 8px",
+                  "text": "<p style=\"font-size:16px;line-height:1.7;color:#4A4A4A;font-family:Poppins,sans-serif;margin:0;\"><strong>Will you be coordinating with five different vendors?</strong><br/>When you book separate venues, caterers, rental companies, bar services, and coordinators, you become the project manager of your own wedding.</p>",
+                  "hideDesktop": false
+                }
+              },
+              {
+                "id": "text-tip3-3",
+                "type": "text",
+                "values": {
+                  "containerPadding": "0px 40px 8px",
+                  "text": "<p style=\"font-size:16px;line-height:1.7;color:#4A4A4A;font-family:Poppins,sans-serif;margin:0;\"><strong>Who's managing your timeline and setup?</strong><br/>Things go wrong at every wedding — it's how they're handled that matters.</p>",
+                  "hideDesktop": false
+                }
+              },
+              {
+                "id": "text-tip3-4",
+                "type": "text",
+                "values": {
+                  "containerPadding": "0px 40px 8px",
+                  "text": "<p style=\"font-size:16px;line-height:1.7;color:#4A4A4A;font-family:Poppins,sans-serif;margin:0;\"><strong>If something goes sideways, who fixes it?</strong><br/>The answer should be \"we do\" — not \"that's between you and your vendors.\"</p>",
+                  "hideDesktop": false
+                }
+              },
+              {
+                "id": "text-tip3-5",
+                "type": "text",
+                "values": {
+                  "containerPadding": "16px 40px 30px",
+                  "text": "<p style=\"font-size:16px;line-height:1.7;color:#4A4A4A;font-family:Poppins,sans-serif;margin:0;\">When one experienced team manages everything in one location — as we do at Cameron Estate — planning gets significantly easier. Enjoy the fun and magic of this special season in your life - we will handle behind the scenes to make it all happen.</p>",
+                  "hideDesktop": false
+                }
+              }
+            ],
+            "values": {}
+          }
+        ],
+        "values": {
+          "backgroundColor": "#FFFFFF",
+          "columnsBackgroundColor": "",
+          "padding": "0px"
+        }
+      },
+      {
+        "id": "row-cta",
+        "cells": [1],
+        "columns": [
+          {
+            "id": "col-cta",
+            "contents": [
+              {
+                "id": "btn-tour",
+                "type": "button",
+                "values": {
+                  "containerPadding": "30px 40px 16px",
+                  "href": { "name": "web", "values": { "href": "{{links.book_tour}}", "target": "_blank" } },
+                  "buttonColors": { "color": "#FFFFFF", "backgroundColor": "#2C3E50", "hoverColor": "#FFFFFF", "hoverBackgroundColor": "#1a2632" },
+                  "fontSize": "14px", "fontWeight": "500",
+                  "fontFamily": { "label": "Poppins", "value": "Poppins,sans-serif", "url": "https://fonts.googleapis.com/css?family=Poppins:400,500,600" },
+                  "padding": "14px 35px", "borderRadius": "4px",
+                  "text": "<span>Schedule Your Tour</span>", "textAlign": "left", "hideDesktop": false
+                }
+              },
+              {
+                "id": "text-cta-body",
+                "type": "text",
+                "values": {
+                  "containerPadding": "0px 40px 12px",
+                  "text": "<p style=\"font-size:16px;line-height:1.7;color:#4A4A4A;font-family:Poppins,sans-serif;margin:0;\">I'd love to show you around Cameron Estate and answer any questions you have about how we compare to other places you're visiting. We have warm cookies and refreshments ready for you!</p>",
+                  "hideDesktop": false
+                }
+              },
+              {
+                "id": "text-cta-cta",
+                "type": "text",
+                "values": {
+                  "containerPadding": "0px 40px 30px",
+                  "text": "<p style=\"font-size:16px;line-height:1.7;color:#4A4A4A;font-family:Poppins,sans-serif;margin:0;\">Just reply with a few dates that work for a tour, or email me anytime with questions.</p>",
+                  "hideDesktop": false
+                }
+              }
+            ],
+            "values": {}
+          }
+        ],
+        "values": {
+          "backgroundColor": "#FDFCFA",
+          "columnsBackgroundColor": "",
+          "padding": "0px"
+        }
+      },
+      {
+        "id": "row-signature",
+        "cells": [1],
+        "columns": [
+          {
+            "id": "col-signature",
+            "contents": [
+              {
+                "id": "text-signature",
+                "type": "heading",
+                "values": {
+                  "containerPadding": "0px 40px 30px",
+                  "headingType": "h3", "fontWeight": 500, "fontSize": "22px", "color": "#2C3E50",
+                  "fontFamily": { "label": "Cormorant Garamond", "value": "'Cormorant Garamond',Georgia,serif", "url": "https://fonts.googleapis.com/css2?family=Cormorant Garamond:wght@400;500;600&display=swap" },
+                  "textAlign": "left", "lineHeight": "150%", "text": "Talk soon,<br/>Lisa", "hideDesktop": false
+                }
+              }
+            ],
+            "values": {}
+          }
+        ],
+        "values": { "backgroundColor": "#FDFCFA", "columnsBackgroundColor": "", "padding": "0px" }
+      },
+      {
+        "id": "row-divider",
+        "cells": [1],
+        "columns": [
+          {
+            "id": "col-divider",
+            "contents": [
+              {
+                "id": "divider-gold",
+                "type": "divider",
+                "values": {
+                  "containerPadding": "10px 0px",
+                  "border": { "borderTopWidth": "2px", "borderTopStyle": "solid", "borderTopColor": "#D4AF37" },
+                  "textAlign": "center", "width": "50%", "hideDesktop": false
+                }
+              }
+            ],
+            "values": {}
+          }
+        ],
+        "values": { "backgroundColor": "#FFFFFF", "columnsBackgroundColor": "", "padding": "0px" }
+      },
+      {
+        "id": "row-footer",
+        "cells": [1],
+        "columns": [
+          {
+            "id": "col-footer",
+            "contents": [
+              {
+                "id": "img-footer-logo",
+                "type": "image",
+                "values": {
+                  "containerPadding": "0px 0px 16px",
+                  "src": { "url": "https://cameronestateinn.com/wp-content/uploads/2025/09/Cameron-Estate-Logo.png", "width": 180, "height": 60, "maxWidth": "40%", "autoWidth": false },
+                  "textAlign": "center", "altText": "Cameron Estate Inn",
+                  "action": { "name": "web", "values": { "href": "https://cameronestateinn.com", "target": "_blank" } },
+                  "hideDesktop": false
+                }
+              },
+              {
+                "id": "text-footer-contact",
+                "type": "text",
+                "values": {
+                  "containerPadding": "0px 20px 16px",
+                  "text": "<p style=\"font-size:16px;line-height:1.6;color:#4A4A4A;font-family:Poppins,sans-serif;margin:0 0 4px;text-align:center;\">Lisa Pierson</p><p style=\"font-size:14px;line-height:1.6;color:#666666;font-family:Poppins,sans-serif;margin:0 0 4px;text-align:center;\">Wedding Sales | 717-725-4831</p><p style=\"font-size:14px;line-height:1.6;color:#2C3E50;font-family:Poppins,sans-serif;margin:0 0 12px;text-align:center;\"><a href=\"mailto:ceiweddings@cameronestateinn.com\" style=\"color:#2C3E50;text-decoration:none;\">ceiweddings@cameronestateinn.com</a></p><p style=\"font-size:12px;line-height:1.6;color:#666666;font-family:Poppins,sans-serif;margin:0;text-align:center;\"><a href=\"https://www.facebook.com/CameronEstateInn/\" style=\"color:#2C3E50;text-decoration:none;margin:0 6px;\">Facebook</a> <span style=\"color:#cccccc;\">|</span> <a href=\"https://www.instagram.com/cameronestateinn/\" style=\"color:#2C3E50;text-decoration:none;margin:0 6px;\">Instagram</a> <span style=\"color:#cccccc;\">|</span> <a href=\"https://cameronestateinn.com\" style=\"color:#2C3E50;text-decoration:none;margin:0 6px;\">Website</a></p>",
+                  "hideDesktop": false
+                }
+              },
+              {
+                "id": "text-unsubscribe",
+                "type": "text",
+                "values": {
+                  "containerPadding": "8px 20px 20px",
+                  "text": "<p style=\"font-size:11px;line-height:1.6;color:#999999;font-family:Poppins,sans-serif;margin:0;text-align:center;\"><a href=\"{{links.unsubscribe}}\" style=\"color:#999999;\">Unsubscribe</a></p>",
+                  "hideDesktop": false
+                }
+              }
+            ],
+            "values": {}
+          }
+        ],
+        "values": { "backgroundColor": "#FFFFFF", "columnsBackgroundColor": "", "padding": "25px 30px 30px" }
+      }
+    ],
+    "values": {
+      "backgroundColor": "#F9F7F4",
+      "width": "600px",
+      "preheaderText": "You're about to see a lot of beautiful spaces. Here's what to actually pay attention to...",
+      "fontFamily": {
+        "label": "Poppins",
+        "value": "Poppins,sans-serif",
+        "url": "https://fonts.googleapis.com/css?family=Poppins:400,500,600"
+      },
+      "linkStyle": {
+        "body": true,
+        "linkColor": "#2C3E50",
+        "linkUnderline": false,
+        "linkHoverColor": "#D4AF37",
+        "linkHoverUnderline": true
+      }
+    }
+  }
+}

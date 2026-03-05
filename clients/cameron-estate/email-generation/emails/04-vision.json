@@ -1,0 +1,437 @@
+{
+  "body": {
+    "id": "vision001",
+    "rows": [
+      {
+        "id": "header01",
+        "columns": [
+          {
+            "id": "headercol",
+            "width": 100,
+            "contents": [
+              {
+                "type": "image",
+                "id": "logoimg",
+                "values": {
+                  "src": "https://cameronestateinn.com/wp-content/uploads/2025/09/Cameron-Estate-Logo.png",
+                  "alt": "Cameron Estate Inn",
+                  "width": 200,
+                  "alignment": "center",
+                  "padding": "20px 0"
+                }
+              }
+            ]
+          }
+        ],
+        "values": {
+          "backgroundColor": "#2C3E50",
+          "padding": "0 0 0 0"
+        }
+      },
+      {
+        "id": "opening01",
+        "columns": [
+          {
+            "id": "opencol01",
+            "width": 100,
+            "contents": [
+              {
+                "type": "heading",
+                "id": "head01",
+                "values": {
+                  "text": "{{contact.first_name}},",
+                  "tag": "h2",
+                  "color": "#2C3E50",
+                  "fontFamily": "Cormorant Garamond",
+                  "fontSize": 28,
+                  "fontWeight": 500,
+                  "alignment": "left",
+                  "padding": "0 0 10px 0"
+                }
+              },
+              {
+                "type": "text",
+                "id": "text01",
+                "values": {
+                  "text": "<p>Here's a question worth sitting with for a minute — maybe with your coffee this morning, or as you're winding down this evening:</p>",
+                  "color": "#4A4A4A",
+                  "fontFamily": "Poppins",
+                  "fontSize": 16,
+                  "lineHeight": 1.7,
+                  "alignment": "left",
+                  "padding": "0 0 15px 0"
+                }
+              },
+              {
+                "type": "text",
+                "id": "text02",
+                "values": {
+                  "text": "<p style=\"font-family: 'Cormorant Garamond', Georgia, serif; font-size: 24px; font-style: italic; font-weight: 500; color: #D4AF37; text-align: center;\">When you picture your wedding day — really picture it, in vivid detail — where are you?</p>",
+                  "color": "#D4AF37",
+                  "fontFamily": "Cormorant Garamond",
+                  "fontSize": 24,
+                  "fontStyle": "italic",
+                  "fontWeight": 500,
+                  "alignment": "center",
+                  "padding": "25px 0 25px 0"
+                }
+              }
+            ]
+          }
+        ],
+        "values": {
+          "backgroundColor": "#FDFCFA",
+          "padding": "40px 40px 20px 40px"
+        }
+      },
+      {
+        "id": "vision01",
+        "columns": [
+          {
+            "id": "vis01col",
+            "width": 100,
+            "contents": [
+              {
+                "type": "text",
+                "id": "text03",
+                "values": {
+                  "text": "<p><strong>Can you see yourself</strong> walking down an aisle surrounded by ancient trees, with golden sunlight filtering through the branches, your closest people seated on either side as you make your way toward the person you love?</p>",
+                  "color": "#4A4A4A",
+                  "fontFamily": "Poppins",
+                  "fontSize": 16,
+                  "lineHeight": 1.7,
+                  "alignment": "left",
+                  "padding": "0 0 20px 0"
+                }
+              },
+              {
+                "type": "image",
+                "id": "imgceremony",
+                "values": {
+                  "src": "https://storage.googleapis.com/msgsndr/G7APqyfJ6lyi4l28noZj/media/6989327a0a7fd1cf9141c545.jpg",
+                  "alt": "Garden Ceremony",
+                  "width": 520,
+                  "alignment": "center",
+                  "padding": "0 0 20px 0"
+                }
+              }
+            ]
+          }
+        ],
+        "values": {
+          "backgroundColor": "#FFFFFF",
+          "padding": "30px 40px 30px 40px"
+        }
+      },
+      {
+        "id": "vision02",
+        "columns": [
+          {
+            "id": "vis02col",
+            "width": 100,
+            "contents": [
+              {
+                "type": "text",
+                "id": "text04",
+                "values": {
+                  "text": "<p><strong>Can you hear</strong> the sound of your guests' laughter floating across the lawn during cocktail hour, the clink of glasses as people toast to your future, the murmur of conversation as everyone enjoys being together?</p>",
+                  "color": "#4A4A4A",
+                  "fontFamily": "Poppins",
+                  "fontSize": 16,
+                  "lineHeight": 1.7,
+                  "alignment": "left",
+                  "padding": "0 0 20px 0"
+                }
+              },
+              {
+                "type": "image",
+                "id": "imgcocktail",
+                "values": {
+                  "src": "https://storage.googleapis.com/msgsndr/G7APqyfJ6lyi4l28noZj/media/6989327a0708e4880ea07007.jpg",
+                  "alt": "Cocktail hour on the lawn",
+                  "width": 520,
+                  "alignment": "center",
+                  "padding": "0 0 20px 0"
+                }
+              }
+            ]
+          }
+        ],
+        "values": {
+          "backgroundColor": "#F5F1EB",
+          "padding": "30px 40px 30px 40px"
+        }
+      },
+      {
+        "id": "vision03",
+        "columns": [
+          {
+            "id": "vis03col",
+            "width": 100,
+            "contents": [
+              {
+                "type": "text",
+                "id": "text05",
+                "values": {
+                  "text": "<p><strong>Can you feel</strong> what it's like to step into your reception space, look around, and see everyone you love in one room — your families, your friends, the people who've shaped who you are as a couple — all gathered here to celebrate you?</p>",
+                  "color": "#4A4A4A",
+                  "fontFamily": "Poppins",
+                  "fontSize": 16,
+                  "lineHeight": 1.7,
+                  "alignment": "left",
+                  "padding": "0 0 20px 0"
+                }
+              },
+              {
+                "type": "image",
+                "id": "imgreception",
+                "values": {
+                  "src": "https://storage.googleapis.com/msgsndr/G7APqyfJ6lyi4l28noZj/media/6989327a0708e4880ea07007.jpg",
+                  "alt": "Reception details",
+                  "width": 520,
+                  "alignment": "center",
+                  "padding": "0 0 20px 0"
+                }
+              }
+            ]
+          }
+        ],
+        "values": {
+          "backgroundColor": "#FFFFFF",
+          "padding": "30px 40px 30px 40px"
+        }
+      },
+      {
+        "id": "quote01",
+        "columns": [
+          {
+            "id": "quotecol",
+            "width": 100,
+            "contents": [
+              {
+                "type": "text",
+                "id": "quote01",
+                "values": {
+                  "text": "<p style=\"font-family: 'Cormorant Garamond', Georgia, serif; font-size: 22px; font-style: italic; font-weight: 500; color: #D4AF37; text-align: center;\">\"That feeling — that moment of clarity when you can actually see your memories happening — that's what matters.\"</p>",
+                  "color": "#D4AF37",
+                  "fontFamily": "Cormorant Garamond",
+                  "fontSize": 22,
+                  "fontStyle": "italic",
+                  "fontWeight": 500,
+                  "alignment": "center",
+                  "padding": "0 0 15px 0"
+                }
+              },
+              {
+                "type": "text",
+                "id": "quote02",
+                "values": {
+                  "text": "<p style=\"color: #E8E8E8; font-family: 'Poppins', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 1.7; text-align: center;\">The venue you choose should be the place where you can genuinely see your memories happening. Where you can imagine your dad's toast, your first dance, the moment you look around the room and think, 'We did this. This is ours.'</p>",
+                  "color": "#E8E8E8",
+                  "fontFamily": "Poppins",
+                  "fontSize": 16,
+                  "lineHeight": 1.7,
+                  "alignment": "center",
+                  "padding": "10px 0 0 0"
+                }
+              }
+            ]
+          }
+        ],
+        "values": {
+          "backgroundColor": "#2C3E50",
+          "padding": "40px 40px 40px 40px"
+        }
+      },
+      {
+        "id": "closing01",
+        "columns": [
+          {
+            "id": "closecol01",
+            "width": 100,
+            "contents": [
+              {
+                "type": "heading",
+                "id": "head02",
+                "values": {
+                  "text": "Is That Cameron Estate for You?",
+                  "tag": "h2",
+                  "color": "#2C3E50",
+                  "fontFamily": "Cormorant Garamond",
+                  "fontSize": 24,
+                  "fontWeight": 500,
+                  "alignment": "left",
+                  "padding": "0 0 15px 0"
+                }
+              },
+              {
+                "type": "text",
+                "id": "text06",
+                "values": {
+                  "text": "<p>I don't know the answer to that question yet. But I'd love to give you the chance to find out.</p>",
+                  "color": "#4A4A4A",
+                  "fontFamily": "Poppins",
+                  "fontSize": 16,
+                  "lineHeight": 1.7,
+                  "alignment": "left",
+                  "padding": "0 0 15px 0"
+                }
+              },
+              {
+                "type": "text",
+                "id": "text07",
+                "values": {
+                  "text": "<p>I've watched hundreds of couples tour Cameron Estate over the years, and here's what I've noticed: the ones who book with us — the couples who decide \"yes, this is it\" — they usually get quiet for a second during the tour. They're not looking at the chandeliers anymore.</p>",
+                  "color": "#4A4A4A",
+                  "fontFamily": "Poppins",
+                  "fontSize": 16,
+                  "lineHeight": 1.7,
+                  "alignment": "left",
+                  "padding": "0 0 15px 0"
+                }
+              },
+              {
+                "type": "text",
+                "id": "text08",
+                "values": {
+                  "text": "<p>They're looking at each other. And you can see it click. They're not seeing <em>a</em> wedding anymore. They're seeing <em>their</em> wedding.</p>",
+                  "color": "#4A4A4A",
+                  "fontFamily": "Poppins",
+                  "fontSize": 16,
+                  "lineHeight": 1.7,
+                  "alignment": "left",
+                  "padding": "0 0 25px 0"
+                }
+              },
+              {
+                "type": "button",
+                "id": "btn01",
+                "values": {
+                  "text": "Schedule Your Private Tour",
+                  "href": "{{links.book_tour}}",
+                  "backgroundColor": "#D4AF37",
+                  "color": "#FFFFFF",
+                  "fontFamily": "Poppins",
+                  "fontSize": 16,
+                  "fontWeight": 500,
+                  "alignment": "left",
+                  "padding": "0 0 0 0",
+                  "borderRadius": 4
+                }
+              },
+              {
+                "type": "text",
+                "id": "text09",
+                "values": {
+                  "text": "<p>Our calendar is filling up nicely for the upcoming seasons. Just reply with 2-3 dates that work for you, and I'll get you on the calendar. Warm cookies and good conversation await!</p>",
+                  "color": "#4A4A4A",
+                  "fontFamily": "Poppins",
+                  "fontSize": 16,
+                  "lineHeight": 1.7,
+                  "alignment": "left",
+                  "padding": "10px 0 0 0"
+                }
+              },
+              {
+                "type": "text",
+                "id": "sig01",
+                "values": {
+                  "text": "<p style=\"font-family: 'Cormorant Garamond', Georgia, serif; font-size: 22px; font-weight: 500; color: #2C3E50;\">Talk soon,<br/>Lisa</p>",
+                  "color": "#2C3E50",
+                  "fontFamily": "Cormorant Garamond",
+                  "fontSize": 22,
+                  "fontWeight": 500,
+                  "alignment": "left",
+                  "padding": "30px 0 0 0"
+                }
+              }
+            ]
+          }
+        ],
+        "values": {
+          "backgroundColor": "#FDFCFA",
+          "padding": "40px 40px 20px 40px"
+        }
+      },
+      {
+        "id": "footer01",
+        "columns": [
+          {
+            "id": "footercol01",
+            "width": 50,
+            "contents": [
+              {
+                "type": "image",
+                "id": "footerlogo",
+                "values": {
+                  "src": "https://cameronestateinn.com/wp-content/uploads/2025/09/Cameron-Estate-Logo.png",
+                  "alt": "Cameron Estate Inn",
+                  "width": 150,
+                  "alignment": "center",
+                  "padding": "0 0 10px 0"
+                }
+              }
+            ]
+          },
+          {
+            "id": "footercol02",
+            "width": 50,
+            "contents": [
+              {
+                "type": "text",
+                "id": "footertext",
+                "values": {
+                  "text": "<p style=\"font-family: 'Poppins', Helvetica, Arial, sans-serif; font-size: 12px; color: #666666; text-align: center; line-height: 1.6;\"><strong>Cameron Estate Inn</strong><br/>1495 Monterey Road<br/>Middletown, PA 17057<br/><br/><a href=\"https://cameronestateinn.com\" style=\"color: #2C3E50; text-decoration: none;\">cameronestateinn.com</a></p>",
+                  "color": "#666666",
+                  "fontFamily": "Poppins",
+                  "fontSize": 12,
+                  "lineHeight": 1.6,
+                  "alignment": "center",
+                  "padding": "0 0 0 0"
+                }
+              }
+            ]
+          }
+        ],
+        "values": {
+          "backgroundColor": "#FFFFFF",
+          "padding": "30px 40px 30px 40px"
+        }
+      },
+      {
+        "id": "footer02",
+        "columns": [
+          {
+            "id": "footer2col",
+            "width": 100,
+            "contents": [
+              {
+                "type": "text",
+                "id": "unsubscribe",
+                "values": {
+                  "text": "<p style=\"font-family: 'Poppins', Helvetica, Arial, sans-serif; font-size: 11px; color: #999999; text-align: center;\">You received this email because you're on our mailing list. <a href=\"{{links.unsubscribe}}\" style=\"color: #999999; text-decoration: underline;\">Unsubscribe</a></p>",
+                  "color": "#999999",
+                  "fontFamily": "Poppins",
+                  "fontSize": 11,
+                  "alignment": "center",
+                  "padding": "0 0 0 0"
+                }
+              }
+            ]
+          }
+        ],
+        "values": {
+          "backgroundColor": "#FAFAFA",
+          "padding": "20px 40px 20px 40px"
+        }
+      }
+    ],
+    "values": {
+      "backgroundColor": "#FAFAFA",
+      "fontFamily": "Poppins",
+      "fontSize": 16,
+      "textColor": "#4A4A4A",
+      "linkColor": "#2C3E50"
+    }
+  }
+}

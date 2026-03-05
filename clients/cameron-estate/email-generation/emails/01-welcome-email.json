@@ -1,0 +1,584 @@
+{
+  "body": {
+    "id": "ce-welcome-body",
+    "rows": [
+      {
+        "id": "row-header",
+        "cells": [1],
+        "columns": [
+          {
+            "id": "col-header",
+            "contents": [
+              {
+                "id": "img-logo",
+                "type": "image",
+                "values": {
+                  "containerPadding": "20px 40px",
+                  "src": {
+                    "url": "https://cameronestateinn.com/wp-content/uploads/2025/09/Cameron-Estate-Logo.png",
+                    "width": 180,
+                    "height": 60,
+                    "maxWidth": "50%",
+                    "autoWidth": false
+                  },
+                  "textAlign": "center",
+                  "altText": "Cameron Estate Inn",
+                  "action": {
+                    "name": "web",
+                    "values": { "href": "https://cameronestateinn.com", "target": "_blank" }
+                  },
+                  "hideDesktop": false
+                }
+              }
+            ],
+            "values": {}
+          }
+        ],
+        "values": {
+          "backgroundColor": "#2C3E50",
+          "columnsBackgroundColor": "#2C3E50",
+          "padding": "0px"
+        }
+      },
+      {
+        "id": "row-greeting",
+        "cells": [1],
+        "columns": [
+          {
+            "id": "col-greeting",
+            "contents": [
+              {
+                "id": "text-hi",
+                "type": "heading",
+                "values": {
+                  "containerPadding": "40px 40px 0px",
+                  "headingType": "h1",
+                  "fontWeight": 500,
+                  "fontSize": "36px",
+                  "color": "#2C3E50",
+                  "fontFamily": {
+                    "label": "Cormorant Garamond",
+                    "value": "'Cormorant Garamond',Georgia,serif",
+                    "url": "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&display=swap"
+                  },
+                  "textAlign": "left",
+                  "lineHeight": "120%",
+                  "text": "Hi {{contact.first_name}},",
+                  "hideDesktop": false
+                }
+              },
+              {
+                "id": "text-intro",
+                "type": "text",
+                "values": {
+                  "containerPadding": "20px 40px 30px",
+                  "text": "<p style=\"font-size:17px;line-height:1.7;color:#4A4A4A;font-family:Poppins,sans-serif;margin:0;\">I'm Lisa, and I wanted to be the first to welcome you to Cameron Estate. I know you're probably reaching out to a few venues right now (I remember what wedding planning felt like!), so I'll keep this short and sweet.</p>",
+                  "hideDesktop": false
+                }
+              }
+            ],
+            "values": {}
+          }
+        ],
+        "values": {
+          "backgroundColor": "#FDFCFA",
+          "columnsBackgroundColor": "",
+          "padding": "0px"
+        }
+      },
+      {
+        "id": "row-story",
+        "cells": [1],
+        "columns": [
+          {
+            "id": "col-story",
+            "contents": [
+              {
+                "id": "text-story-1",
+                "type": "text",
+                "values": {
+                  "containerPadding": "0px 40px 16px",
+                  "text": "<p style=\"font-size:17px;line-height:1.7;color:#4A4A4A;font-family:Poppins,sans-serif;margin:0;\">Cameron Estate isn't just a venue — it's a 225-year-old historic inn where your entire wedding weekend unfolds in one beautiful place. Your ceremony, your reception, your closest family and friends staying overnight... all here, surrounded by mature trees, gardens, and the kind of peace that's hard to find these days.</p>",
+                  "hideDesktop": false
+                }
+              },
+              {
+                "id": "text-story-2",
+                "type": "text",
+                "values": {
+                  "containerPadding": "0px 40px 30px",
+                  "text": "<p style=\"font-size:17px;line-height:1.7;color:#4A4A4A;font-family:Poppins,sans-serif;margin:0;\">What couples tell us they love most? Not having to coordinate transportation between venues, not worrying about where guests will stay, and having one experienced team handle everything from your first tour to your last dance.</p>",
+                  "hideDesktop": false
+                }
+              }
+            ],
+            "values": {}
+          }
+        ],
+        "values": {
+          "backgroundColor": "#FDFCFA",
+          "columnsBackgroundColor": "",
+          "padding": "0px"
+        }
+      },
+      {
+        "id": "row-estate-image",
+        "cells": [1],
+        "columns": [
+          {
+            "id": "col-estate-image",
+            "contents": [
+              {
+                "id": "img-estate",
+                "type": "image",
+                "values": {
+                  "containerPadding": "0px 40px 30px",
+                  "src": {
+                    "url": "https://storage.googleapis.com/msgsndr/G7APqyfJ6lyi4l28noZj/media/6989327a0a7fd1ecad41c546.jpg",
+                    "width": 520,
+                    "height": 350,
+                    "maxWidth": "100%",
+                    "autoWidth": true
+                  },
+                  "textAlign": "center",
+                  "altText": "Cameron Estate Inn — Your wedding weekend destination",
+                  "action": { "name": "web", "values": { "href": "", "target": "_blank" } },
+                  "hideDesktop": false
+                }
+              }
+            ],
+            "values": {}
+          }
+        ],
+        "values": {
+          "backgroundColor": "#FDFCFA",
+          "columnsBackgroundColor": "",
+          "padding": "0px"
+        }
+      },
+      {
+        "id": "row-ceremony",
+        "cells": [1],
+        "columns": [
+          {
+            "id": "col-ceremony",
+            "contents": [
+              {
+                "id": "heading-ceremony",
+                "type": "heading",
+                "values": {
+                  "containerPadding": "0px 40px 16px",
+                  "headingType": "h2",
+                  "fontWeight": 500,
+                  "fontSize": "26px",
+                  "color": "#2C3E50",
+                  "fontFamily": {
+                    "label": "Cormorant Garamond",
+                    "value": "'Cormorant Garamond',Georgia,serif",
+                    "url": "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&display=swap"
+                  },
+                  "textAlign": "left",
+                  "lineHeight": "130%",
+                  "text": "Two Ceremony Spaces",
+                  "hideDesktop": false
+                }
+              },
+              {
+                "id": "img-ceremony",
+                "type": "image",
+                "values": {
+                  "containerPadding": "0px 40px 16px",
+                  "src": {
+                    "url": "https://storage.googleapis.com/msgsndr/G7APqyfJ6lyi4l28noZj/media/6989327a0a7fd1cf9141c545.jpg",
+                    "width": 520,
+                    "height": 340,
+                    "maxWidth": "100%",
+                    "autoWidth": true
+                  },
+                  "textAlign": "center",
+                  "altText": "Spring Garden ceremony at Cameron Estate",
+                  "action": { "name": "web", "values": { "href": "", "target": "_blank" } },
+                  "hideDesktop": false
+                }
+              },
+              {
+                "id": "img-reception",
+                "type": "image",
+                "values": {
+                  "containerPadding": "0px 40px 16px",
+                  "src": {
+                    "url": "https://storage.googleapis.com/msgsndr/G7APqyfJ6lyi4l28noZj/media/6989327a0708e4880ea07007.jpg",
+                    "width": 520,
+                    "height": 340,
+                    "maxWidth": "100%",
+                    "autoWidth": true
+                  },
+                  "textAlign": "center",
+                  "altText": "Elegant reception setup at Cameron Estate",
+                  "action": { "name": "web", "values": { "href": "", "target": "_blank" } },
+                  "hideDesktop": false
+                }
+              },
+              {
+                "id": "text-ceremony-desc",
+                "type": "text",
+                "values": {
+                  "containerPadding": "0px 40px 8px",
+                  "text": "<p style=\"font-size:16px;line-height:1.6;color:#4A4A4A;font-family:Poppins,sans-serif;margin:0;\"><strong>The Spring Garden</strong> — outdoor ceremony beneath mature trees, overlooking the serene reflection pond.</p>",
+                  "hideDesktop": false
+                }
+              },
+              {
+                "id": "text-conservatory-desc",
+                "type": "text",
+                "values": {
+                  "containerPadding": "0px 40px 30px",
+                  "text": "<p style=\"font-size:16px;line-height:1.6;color:#4A4A4A;font-family:Poppins,sans-serif;margin:0;\"><strong>The Conservatory</strong> — elegant indoor space with crystal chandeliers and a marble fireplace.</p>",
+                  "hideDesktop": false
+                }
+              }
+            ],
+            "values": {}
+          }
+        ],
+        "values": {
+          "backgroundColor": "#FDFCFA",
+          "columnsBackgroundColor": "",
+          "padding": "0px"
+        }
+      },
+      {
+        "id": "row-pricing",
+        "cells": [1],
+        "columns": [
+          {
+            "id": "col-pricing",
+            "contents": [
+              {
+                "id": "heading-pricing",
+                "type": "heading",
+                "values": {
+                  "containerPadding": "0px 0px 16px",
+                  "headingType": "h2",
+                  "fontWeight": 500,
+                  "fontSize": "28px",
+                  "color": "#2C3E50",
+                  "fontFamily": {
+                    "label": "Cormorant Garamond",
+                    "value": "'Cormorant Garamond',Georgia,serif",
+                    "url": "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&display=swap"
+                  },
+                  "textAlign": "center",
+                  "lineHeight": "130%",
+                  "text": "One Simple, Transparent Price",
+                  "hideDesktop": false
+                }
+              },
+              {
+                "id": "text-pricing-intro",
+                "type": "text",
+                "values": {
+                  "containerPadding": "0px 0px 16px",
+                  "text": "<p style=\"font-size:16px;line-height:1.6;color:#4A4A4A;font-family:Poppins,sans-serif;margin:0;text-align:center;\">Our pricing includes everything — no hidden fees, no surprises:</p>",
+                  "hideDesktop": false
+                }
+              },
+              {
+                "id": "text-pricing-items",
+                "type": "text",
+                "values": {
+                  "containerPadding": "0px 0px 8px",
+                  "text": "<p style=\"font-size:15px;line-height:1.7;color:#4A4A4A;font-family:Poppins,sans-serif;margin:0;text-align:center;\">Ceremony space &bull; Reception venue &bull; Plated dinner catering<br/>Full luxury open bar &bull; Tables, Linens, China, Glassware<br/>Day-of coordination team &bull; Premium guest suites<br/>Accommodations for 75+ on site &bull; Full staff for setup &amp; breakdown</p>",
+                  "hideDesktop": false
+                }
+              },
+              {
+                "id": "text-pricing-note",
+                "type": "text",
+                "values": {
+                  "containerPadding": "16px 0px 0px",
+                  "text": "<p style=\"font-size:14px;line-height:1.6;color:#666666;font-family:Poppins,sans-serif;margin:0;text-align:center;font-style:italic;\">No separate venue rental fee. Just one clear number.</p>",
+                  "hideDesktop": false
+                }
+              }
+            ],
+            "values": {}
+          }
+        ],
+        "values": {
+          "backgroundColor": "#F5F1EB",
+          "columnsBackgroundColor": "",
+          "padding": "40px 40px"
+        }
+      },
+      {
+        "id": "row-celebration-image",
+        "cells": [1],
+        "columns": [
+          {
+            "id": "col-celebration-image",
+            "contents": [
+              {
+                "id": "img-celebration",
+                "type": "image",
+                "values": {
+                  "containerPadding": "0px 40px 30px",
+                  "src": {
+                    "url": "https://storage.googleapis.com/msgsndr/G7APqyfJ6lyi4l28noZj/media/6989327a38f77a2717eb4653.jpg",
+                    "width": 520,
+                    "height": 350,
+                    "maxWidth": "100%",
+                    "autoWidth": true
+                  },
+                  "textAlign": "center",
+                  "altText": "Celebrate your love at Cameron Estate Inn",
+                  "action": { "name": "web", "values": { "href": "", "target": "_blank" } },
+                  "hideDesktop": false
+                }
+              }
+            ],
+            "values": {}
+          }
+        ],
+        "values": {
+          "backgroundColor": "#FDFCFA",
+          "columnsBackgroundColor": "",
+          "padding": "0px"
+        }
+      },
+      {
+        "id": "row-invitation",
+        "cells": [1],
+        "columns": [
+          {
+            "id": "col-invitation",
+            "contents": [
+              {
+                "id": "text-invitation",
+                "type": "text",
+                "values": {
+                  "containerPadding": "0px 40px 30px",
+                  "text": "<p style=\"font-size:17px;line-height:1.7;color:#4A4A4A;font-family:Poppins,sans-serif;margin:0;\">I'd love to show you around in person. There's something about standing in the garden at golden hour, or seeing the ballroom lit by candlelight, that helps you picture your own wedding day unfolding here.</p>",
+                  "hideDesktop": false
+                }
+              }
+            ],
+            "values": {}
+          }
+        ],
+        "values": {
+          "backgroundColor": "#FDFCFA",
+          "columnsBackgroundColor": "",
+          "padding": "0px"
+        }
+      },
+      {
+        "id": "row-cta-box",
+        "cells": [1],
+        "columns": [
+          {
+            "id": "col-cta-box",
+            "contents": [
+              {
+                "id": "heading-cta",
+                "type": "heading",
+                "values": {
+                  "containerPadding": "0px 0px 16px",
+                  "headingType": "h2",
+                  "fontWeight": 500,
+                  "fontSize": "24px",
+                  "color": "#2C3E50",
+                  "fontFamily": {
+                    "label": "Cormorant Garamond",
+                    "value": "'Cormorant Garamond',Georgia,serif",
+                    "url": "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&display=swap"
+                  },
+                  "textAlign": "center",
+                  "lineHeight": "130%",
+                  "text": "Ready for a tour?",
+                  "hideDesktop": false
+                }
+              },
+              {
+                "id": "text-cta-body",
+                "type": "text",
+                "values": {
+                  "containerPadding": "0px",
+                  "text": "<p style=\"font-size:16px;line-height:1.6;color:#4A4A4A;font-family:Poppins,sans-serif;margin:0;text-align:center;\"><strong>Just reply to this email with a few dates and times that work for you.</strong><br/><br/>Weekday or weekend, whatever fits your schedule. I'll bring the warm cookies and refreshments. You bring your questions and your vision.</p>",
+                  "hideDesktop": false
+                }
+              }
+            ],
+            "values": {
+              "backgroundColor": "#F5F1EB",
+              "borderRadius": "6px",
+              "padding": "28px"
+            }
+          }
+        ],
+        "values": {
+          "backgroundColor": "#FDFCFA",
+          "columnsBackgroundColor": "",
+          "padding": "0px 40px 30px"
+        }
+      },
+      {
+        "id": "row-buttons",
+        "cells": [1],
+        "columns": [
+          {
+            "id": "col-buttons",
+            "contents": [
+              {
+                "id": "btn-pricing-2026",
+                "type": "button",
+                "values": {
+                  "containerPadding": "8px 40px",
+                  "href": { "name": "web", "values": { "href": "https://cameronestateinn.com/2026", "target": "_blank" } },
+                  "buttonColors": { "color": "#FFFFFF", "backgroundColor": "#2C3E50", "hoverColor": "#FFFFFF", "hoverBackgroundColor": "#1a2632" },
+                  "fontSize": "14px", "fontWeight": "500",
+                  "fontFamily": { "label": "Poppins", "value": "Poppins,sans-serif", "url": "https://fonts.googleapis.com/css?family=Poppins:400,500,600" },
+                  "padding": "12px 28px", "borderRadius": "4px",
+                  "text": "<span>View 2026 Pricing</span>", "textAlign": "left", "hideDesktop": false
+                }
+              },
+              {
+                "id": "btn-pricing-2027",
+                "type": "button",
+                "values": {
+                  "containerPadding": "8px 40px",
+                  "href": { "name": "web", "values": { "href": "https://cameronestateinn.com/2027", "target": "_blank" } },
+                  "buttonColors": { "color": "#FFFFFF", "backgroundColor": "#2C3E50", "hoverColor": "#FFFFFF", "hoverBackgroundColor": "#1a2632" },
+                  "fontSize": "14px", "fontWeight": "500",
+                  "fontFamily": { "label": "Poppins", "value": "Poppins,sans-serif", "url": "https://fonts.googleapis.com/css?family=Poppins:400,500,600" },
+                  "padding": "12px 28px", "borderRadius": "4px",
+                  "text": "<span>View 2027 Pricing</span>", "textAlign": "left", "hideDesktop": false
+                }
+              },
+              {
+                "id": "btn-website",
+                "type": "button",
+                "values": {
+                  "containerPadding": "8px 40px 20px",
+                  "href": { "name": "web", "values": { "href": "https://cameronestateinn.com", "target": "_blank" } },
+                  "buttonColors": { "color": "#2C3E50", "backgroundColor": "#FFFFFF", "hoverColor": "#2C3E50", "hoverBackgroundColor": "#F5F1EB" },
+                  "fontSize": "14px", "fontWeight": "500",
+                  "fontFamily": { "label": "Poppins", "value": "Poppins,sans-serif", "url": "https://fonts.googleapis.com/css?family=Poppins:400,500,600" },
+                  "border": { "borderWidth": "1px", "borderStyle": "solid", "borderColor": "#2C3E50" },
+                  "padding": "12px 28px", "borderRadius": "4px",
+                  "text": "<span>Visit Our Website</span>", "textAlign": "left", "hideDesktop": false
+                }
+              }
+            ],
+            "values": {}
+          }
+        ],
+        "values": { "backgroundColor": "#FFFFFF", "columnsBackgroundColor": "", "padding": "0px" }
+      },
+      {
+        "id": "row-signature",
+        "cells": [1],
+        "columns": [
+          {
+            "id": "col-signature",
+            "contents": [
+              {
+                "id": "text-signature",
+                "type": "heading",
+                "values": {
+                  "containerPadding": "30px 40px 30px",
+                  "headingType": "h3", "fontWeight": 500, "fontSize": "22px", "color": "#2C3E50",
+                  "fontFamily": { "label": "Cormorant Garamond", "value": "'Cormorant Garamond',Georgia,serif", "url": "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&display=swap" },
+                  "textAlign": "left", "lineHeight": "150%", "text": "Talk soon,<br/>Lisa", "hideDesktop": false
+                }
+              }
+            ],
+            "values": {}
+          }
+        ],
+        "values": { "backgroundColor": "#FDFCFA", "columnsBackgroundColor": "", "padding": "0px" }
+      },
+      {
+        "id": "row-divider",
+        "cells": [1],
+        "columns": [
+          {
+            "id": "col-divider",
+            "contents": [
+              {
+                "id": "divider-gold",
+                "type": "divider",
+                "values": {
+                  "containerPadding": "10px 0px",
+                  "border": { "borderTopWidth": "2px", "borderTopStyle": "solid", "borderTopColor": "#D4AF37" },
+                  "textAlign": "center", "width": "50%", "hideDesktop": false
+                }
+              }
+            ],
+            "values": {}
+          }
+        ],
+        "values": { "backgroundColor": "#FFFFFF", "columnsBackgroundColor": "", "padding": "0px" }
+      },
+      {
+        "id": "row-footer",
+        "cells": [1],
+        "columns": [
+          {
+            "id": "col-footer",
+            "contents": [
+              {
+                "id": "img-footer-logo",
+                "type": "image",
+                "values": {
+                  "containerPadding": "0px 0px 16px",
+                  "src": { "url": "https://cameronestateinn.com/wp-content/uploads/2025/09/Cameron-Estate-Logo.png", "width": 180, "height": 60, "maxWidth": "40%", "autoWidth": false },
+                  "textAlign": "center", "altText": "Cameron Estate Inn",
+                  "action": { "name": "web", "values": { "href": "https://cameronestateinn.com", "target": "_blank" } },
+                  "hideDesktop": false
+                }
+              },
+              {
+                "id": "text-footer-contact",
+                "type": "text",
+                "values": {
+                  "containerPadding": "0px 20px 16px",
+                  "text": "<p style=\"font-size:16px;line-height:1.6;color:#4A4A4A;font-family:Poppins,sans-serif;margin:0 0 4px;text-align:center;\">Lisa Pierson</p><p style=\"font-size:14px;line-height:1.6;color:#666666;font-family:Poppins,sans-serif;margin:0 0 4px;text-align:center;\">Wedding Sales | 717-725-4831</p><p style=\"font-size:14px;line-height:1.6;color:#2C3E50;font-family:Poppins,sans-serif;margin:0 0 12px;text-align:center;\"><a href=\"mailto:ceiweddings@cameronestateinn.com\" style=\"color:#2C3E50;text-decoration:none;\">ceiweddings@cameronestateinn.com</a></p><p style=\"font-size:12px;line-height:1.6;color:#666666;font-family:Poppins,sans-serif;margin:0;text-align:center;\"><a href=\"https://www.facebook.com/CameronEstateInn/\" style=\"color:#2C3E50;text-decoration:none;margin:0 6px;\">Facebook</a> <span style=\"color:#cccccc;\">|</span> <a href=\"https://www.instagram.com/cameronestateinn/\" style=\"color:#2C3E50;text-decoration:none;margin:0 6px;\">Instagram</a> <span style=\"color:#cccccc;\">|</span> <a href=\"https://cameronestateinn.com\" style=\"color:#2C3E50;text-decoration:none;margin:0 6px;\">Website</a></p>",
+                  "hideDesktop": false
+                }
+              },
+              {
+                "id": "text-unsubscribe",
+                "type": "text",
+                "values": {
+                  "containerPadding": "8px 20px 20px",
+                  "text": "<p style=\"font-size:11px;line-height:1.6;color:#999999;font-family:Poppins,sans-serif;margin:0;text-align:center;\"><a href=\"{{links.unsubscribe}}\" style=\"color:#999999;\">Unsubscribe</a></p>",
+                  "hideDesktop": false
+                }
+              }
+            ],
+            "values": {}
+          }
+        ],
+        "values": { "backgroundColor": "#FFFFFF", "columnsBackgroundColor": "", "padding": "25px 30px 30px" }
+      }
+    ],
+    "values": {
+      "backgroundColor": "#F9F7F4",
+      "width": "600px",
+      "preheaderText": "A personal note from Lisa at Cameron Estate Inn",
+      "fontFamily": {
+        "label": "Poppins",
+        "value": "Poppins,sans-serif",
+        "url": "https://fonts.googleapis.com/css?family=Poppins:400,500,600"
+      },
+      "linkStyle": {
+        "body": true,
+        "linkColor": "#2C3E50",
+        "linkUnderline": false,
+        "linkHoverColor": "#D4AF37",
+        "linkHoverUnderline": true
+      }
+    }
+  }
+}

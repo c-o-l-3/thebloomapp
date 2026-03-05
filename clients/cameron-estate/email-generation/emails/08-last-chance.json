@@ -1,0 +1,234 @@
+{
+  "body": {
+    "id": "lastchance01",
+    "rows": [
+      {
+        "id": "header01",
+        "columns": [
+          {
+            "id": "headercol",
+            "width": 100,
+            "contents": [
+              {
+                "type": "image",
+                "id": "logoimg",
+                "values": {
+                  "src": "https://cameronestateinn.com/wp-content/uploads/2025/09/Cameron-Estate-Logo.png",
+                  "alt": "Cameron Estate Inn",
+                  "width": 200,
+                  "alignment": "center",
+                  "padding": "20px 0"
+                }
+              }
+            ]
+          }
+        ],
+        "values": {
+          "backgroundColor": "#2C3E50",
+          "padding": "0 0 0 0"
+        }
+      },
+      {
+        "id": "opening01",
+        "columns": [
+          {
+            "id": "opencol01",
+            "width": 100,
+            "contents": [
+              {
+                "type": "heading",
+                "id": "head01",
+                "values": {
+                  "text": "{{contact.first_name}},",
+                  "tag": "h2",
+                  "color": "#2C3E50",
+                  "fontFamily": "Cormorant Garamond",
+                  "fontSize": 28,
+                  "fontWeight": 500,
+                  "alignment": "left",
+                  "padding": "0 0 15px 0"
+                }
+              },
+              {
+                "type": "text",
+                "id": "text01",
+                "values": {
+                  "text": "<p>I haven't heard from you in a bit, so I'm assuming you've likely found your wedding venue or decided to go in a different direction.</p>",
+                  "color": "#4A4A4A",
+                  "fontFamily": "Poppins",
+                  "fontSize": 16,
+                  "lineHeight": 1.7,
+                  "alignment": "left",
+                  "padding": "0 0 15px 0"
+                }
+              },
+              {
+                "type": "text",
+                "id": "text02",
+                "values": {
+                  "text": "<p>I just wanted to send one last note to say: <strong>congratulations</strong>.</p>",
+                  "color": "#4A4A4A",
+                  "fontFamily": "Poppins",
+                  "fontSize": 16,
+                  "lineHeight": 1.7,
+                  "alignment": "left",
+                  "padding": "0 0 15px 0"
+                }
+              },
+              {
+                "type": "text",
+                "id": "text03",
+                "values": {
+                  "text": "<p>Planning a wedding is a big journey. Wherever you've chosen to celebrate, I truly hope it's everything you've envisioned. I hope the day is full of joy, that the weather is perfect, and that you're surrounded by people who love you.</p>",
+                  "color": "#4A4A4A",
+                  "fontFamily": "Poppins",
+                  "fontSize": 16,
+                  "lineHeight": 1.7,
+                  "alignment": "left",
+                  "padding": "0 0 15px 0"
+                }
+              }
+            ]
+          }
+        ],
+        "values": {
+          "backgroundColor": "#FDFCFA",
+          "padding": "40px 40px 20px 40px"
+        }
+      },
+      {
+        "id": "body01",
+        "columns": [
+          {
+            "id": "bodycol01",
+            "width": 100,
+            "contents": [
+              {
+                "type": "text",
+                "id": "text04",
+                "values": {
+                  "text": "<p>If you <em>are</em> still looking and just haven't had a chance to reply — life gets busy! — I'm still here. You can always reach back out to me, even months from now. If we have the date available, we'd love to host you.</p>",
+                  "color": "#4A4A4A",
+                  "fontFamily": "Poppins",
+                  "fontSize": 16,
+                  "lineHeight": 1.7,
+                  "alignment": "left",
+                  "padding": "0 0 15px 0"
+                }
+              },
+              {
+                "type": "text",
+                "id": "text05",
+                "values": {
+                  "text": "<p>But for now, I'll take you off my follow-up list so I'm not clogging your inbox.</p>",
+                  "color": "#4A4A4A",
+                  "fontFamily": "Poppins",
+                  "fontSize": 16,
+                  "lineHeight": 1.7,
+                  "alignment": "left",
+                  "padding": "0 0 25px 0"
+                }
+              },
+              {
+                "type": "text",
+                "id": "sig01",
+                "values": {
+                  "text": "<p style=\"font-family: 'Cormorant Garamond', Georgia, serif; font-size: 22px; font-weight: 500; color: #2C3E50;\">All the best,<br/>Lisa</p>",
+                  "color": "#2C3E50",
+                  "fontFamily": "Cormorant Garamond",
+                  "fontSize": 22,
+                  "fontWeight": 500,
+                  "alignment": "left",
+                  "padding": "0 0 0 0"
+                }
+              }
+            ]
+          }
+        ],
+        "values": {
+          "backgroundColor": "#FFFFFF",
+          "padding": "30px 40px 30px 40px"
+        }
+      },
+      {
+        "id": "footer01",
+        "columns": [
+          {
+            "id": "footercol01",
+            "width": 50,
+            "contents": [
+              {
+                "type": "image",
+                "id": "footerlogo",
+                "values": {
+                  "src": "https://cameronestateinn.com/wp-content/uploads/2025/09/Cameron-Estate-Logo.png",
+                  "alt": "Cameron Estate Inn",
+                  "width": 150,
+                  "alignment": "center",
+                  "padding": "0 0 10px 0"
+                }
+              }
+            ]
+          },
+          {
+            "id": "footercol02",
+            "width": 50,
+            "contents": [
+              {
+                "type": "text",
+                "id": "footertext",
+                "values": {
+                  "text": "<p style=\"font-family: 'Poppins', Helvetica, Arial, sans-serif; font-size: 12px; color: #666666; text-align: center; line-height: 1.6;\"><strong>Cameron Estate Inn</strong><br/>1495 Monterey Road<br/>Middletown, PA 17057<br/><br/><a href=\"https://cameronestateinn.com\" style=\"color: #2C3E50; text-decoration: none;\">cameronestateinn.com</a></p>",
+                  "color": "#666666",
+                  "fontFamily": "Poppins",
+                  "fontSize": 12,
+                  "lineHeight": 1.6,
+                  "alignment": "center",
+                  "padding": "0 0 0 0"
+                }
+              }
+            ]
+          }
+        ],
+        "values": {
+          "backgroundColor": "#FFFFFF",
+          "padding": "30px 40px 30px 40px"
+        }
+      },
+      {
+        "id": "footer02",
+        "columns": [
+          {
+            "id": "footer2col",
+            "width": 100,
+            "contents": [
+              {
+                "type": "text",
+                "id": "unsubscribe",
+                "values": {
+                  "text": "<p style=\"font-family: 'Poppins', Helvetica, Arial, sans-serif; font-size: 11px; color: #999999; text-align: center;\">You received this email because you're on our mailing list. <a href=\"{{links.unsubscribe}}\" style=\"color: #999999; text-decoration: underline;\">Unsubscribe</a></p>",
+                  "color": "#999999",
+                  "fontFamily": "Poppins",
+                  "fontSize": 11,
+                  "alignment": "center",
+                  "padding": "0 0 0 0"
+                }
+              }
+            ]
+          }
+        ],
+        "values": {
+          "backgroundColor": "#FAFAFA",
+          "padding": "20px 40px 20px 40px"
+        }
+      }
+    ],
+    "values": {
+      "backgroundColor": "#FAFAFA",
+      "fontFamily": "Poppins",
+      "fontSize": 16,
+      "textColor": "#4A4A4A",
+      "linkColor": "#2C3E50"
+    }
+  }
+}

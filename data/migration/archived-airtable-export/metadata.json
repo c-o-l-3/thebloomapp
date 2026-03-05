@@ -1,0 +1,62 @@
+{
+  "exportInfo": {
+    "version": "1.0.0",
+    "exportedAt": "2026-02-22T00:47:00.000Z",
+    "exportedBy": "manual-export",
+    "baseId": "app0SDQtlRtScHkpC",
+    "totalTables": 7,
+    "successfulExports": 7,
+    "failedExports": 0,
+    "exportMethod": "manual-csv",
+    "source": "Airtable Web UI - Download as CSV"
+  },
+  "tables": [
+    {
+      "name": "Approvals",
+      "filename": "Approvals-Grid view.csv",
+      "recordCount": 0,
+      "exportedAt": "2026-02-22T00:47:00.000Z"
+    },
+    {
+      "name": "Clients",
+      "filename": "Clients-Grid view.csv",
+      "recordCount": 4,
+      "exportedAt": "2026-02-22T00:47:00.000Z"
+    },
+    {
+      "name": "Journeys",
+      "filename": "Journeys-Grid view.csv",
+      "recordCount": 6,
+      "exportedAt": "2026-02-22T00:47:00.000Z"
+    },
+    {
+      "name": "Pipelines",
+      "filename": "Pipelines-Grid view.csv",
+      "recordCount": 0,
+      "exportedAt": "2026-02-22T00:47:00.000Z"
+    },
+    {
+      "name": "Table 1",
+      "filename": "Table 1-Grid view.csv",
+      "recordCount": 1,
+      "exportedAt": "2026-02-22T00:47:00.000Z"
+    },
+    {
+      "name": "Touchpoints",
+      "filename": "Touchpoints-Grid view.csv",
+      "recordCount": 89,
+      "exportedAt": "2026-02-22T00:47:00.000Z"
+    },
+    {
+      "name": "Versions",
+      "filename": "Versions-Grid view.csv",
+      "recordCount": 1,
+      "exportedAt": "2026-02-22T00:47:00.000Z"
+    }
+  ],
+  "environment": {
+    "nodeVersion": "v22.18.0",
+    "platform": "darwin",
+    "arch": "arm64"
+  }
+}
