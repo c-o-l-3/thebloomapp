@@ -11,6 +11,7 @@ import {
   Printer,
   Edit3,
   Eye,
+  Layout,
   Mail,
   MessageSquare,
   Phone,
@@ -478,14 +479,23 @@ export function TouchpointList({ selectedClientId, selectedJourneyId }) {
                   </td>
                   <td className="touchpoint-list__td touchpoint-list__td--actions">
                     <div className="touchpoint-list__actions">
-                      <button 
+                      <button
                         className="touchpoint-list__action-btn"
                         onClick={() => handleView(touchpoint.id)}
                         title="View"
                       >
                         <Eye size={16} />
                       </button>
-                      <button 
+                      {touchpoint.type === 'email' && (
+                        <button
+                          className="touchpoint-list__action-btn touchpoint-list__action-btn--visual"
+                          onClick={() => navigate(`/touchpoints/${touchpoint.id}/visual-edit`)}
+                          title="Visual Editor"
+                        >
+                          <Layout size={16} />
+                        </button>
+                      )}
+                      <button
                         className="touchpoint-list__action-btn"
                         onClick={() => handleEdit(touchpoint.id)}
                         title="Edit HTML"
