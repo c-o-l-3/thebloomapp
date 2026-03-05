@@ -352,7 +352,8 @@
 
 .touchpoint-list__th--actions {
   text-align: center;
-  width: 140px;
+  width: 200px;
+  min-width: 200px;
 }
 
 .touchpoint-list__row {
@@ -430,7 +431,7 @@
 .touchpoint-list__actions {
   display: flex;
   justify-content: center;
-  gap: 8px;
+  gap: 4px;
 }
 
 .touchpoint-list__action-btn {
@@ -540,38 +541,51 @@
 }
 
 /* Responsive */
+
+/* Hide date column on medium screens to give actions room */
+@media (max-width: 1100px) {
+  .touchpoint-list__th--date,
+  .touchpoint-list__td--date {
+    display: none;
+  }
+}
+
+/* Hide journey column on smaller screens */
+@media (max-width: 900px) {
+  .touchpoint-list__th:nth-child(3),
+  .touchpoint-list__td:nth-child(3) {
+    display: none;
+  }
+}
+
 @media (max-width: 768px) {
   .touchpoint-list__header {
     padding: 16px;
   }
-  
+
   .touchpoint-list__toolbar {
     padding: 12px 16px;
     flex-direction: column;
     align-items: stretch;
   }
-  
+
   .touchpoint-list__search {
     max-width: none;
     min-width: auto;
   }
-  
+
   .touchpoint-list__filter-panel {
     padding: 12px 16px;
   }
-  
+
   .touchpoint-list__table-container {
     padding: 0 16px 16px;
   }
-  
-  .touchpoint-list__th--date,
-  .touchpoint-list__td--date {
-    display: none;
-  }
-  
-  .touchpoint-list__th:nth-child(3),
-  .touchpoint-list__td:nth-child(3) {
-    display: none;
+
+  /* Shrink action buttons slightly on mobile */
+  .touchpoint-list__action-btn {
+    width: 28px;
+    height: 28px;
   }
 }
 
