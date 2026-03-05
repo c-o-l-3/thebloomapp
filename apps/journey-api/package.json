@@ -12,6 +12,7 @@
     "db:studio": "prisma studio",
     "db:seed": "node src/seed.js",
     "db:seed:cameron-estate": "node src/seed-cameron-estate.js",
+    "db:import:cameron-emails": "node src/import-cameron-emails.js",
     "db:reset": "prisma migrate reset --force",
     "test": "vitest",
     "lint": "eslint src/"
