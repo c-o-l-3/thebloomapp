@@ -388,6 +388,10 @@
   50% { opacity: 0.5; }
 }
 
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
 .visual-editor__save-btn--saving {
   animation: pulse 1s ease-in-out infinite;
 }
