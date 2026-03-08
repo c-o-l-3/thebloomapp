@@ -1005,6 +1005,7 @@ class GHLPublisher {
 
     return results;
   }
+}
 
 // Export instances
 export const ghlPublisher = new GHLPublisher();

@@ -133,27 +133,102 @@ async function main() {
   const byOrder = new Map(touchpoints.map((tp) => [tp.orderIndex, tp]));
 
   let updated = 0;
+  let created = 0;
   let skipped = 0;
 
   for (const entry of EMAIL_MAP) {
-    const tp = byOrder.get(entry.orderIndex);
+    let tp = byOrder.get(entry.orderIndex);
 
+    // Create touchpoint if it doesn't exist
     if (!tp) {
-      console.warn(`  SKIP  orderIndex ${entry.orderIndex} — touchpoint not found`);
-      skipped++;
-      continue;
+      console.log(`  CREATE orderIndex ${entry.orderIndex} — creating new touchpoint`);
+      try {
+        const newTp = await apiFetch(`/touchpoints`, {
+          method: 'POST',
+          headers: auth,
+          body: JSON.stringify({
+            journeyId: journey.id,
+            name: entry.subject,
+            type: 'email',
+            orderIndex: entry.orderIndex,
+            content: {
+              subject: entry.subject,
+              previewText: entry.previewText,
+            }
+          }),
+        });
+        tp = newTp;
+        byOrder.set(entry.orderIndex, tp);
+        created++;
+      } catch (err) {
+        console.error(`  ERROR creating touchpoint for orderIndex ${entry.orderIndex}: ${err.message}`);
+        skipped++;
+        continue;
+      }
     }
 
     // Read and parse the Unlayer design JSON
     const filePath = resolve(EMAIL_DIR, entry.file);
-    let design;
+    let bodyData;
     try {
-      design = JSON.parse(readFileSync(filePath, 'utf8'));
+      bodyData = JSON.parse(readFileSync(filePath, 'utf8'));
     } catch (err) {
       console.error(`  ERROR reading ${entry.file}: ${err.message}`);
       skipped++;
       continue;
     }
+
+    // Wrap the body data in a full Unlayer design object
+    // The JSON files contain { body: {...} } where body has rows and values
+    // Unlayer expects { body: {...}, counters: {...}, schemaVersion: "v1" }
+    // Ensure we preserve the full body structure including values
+    const bodyContent = bodyData.body || bodyData;
+    
+    // Validate body has required structure
+    if (!bodyContent.rows || !Array.isArray(bodyContent.rows)) {
+      console.error(`  ERROR: ${entry.file} missing required 'body.rows' array`);
+      skipped++;
+      continue;
+    }
+    
+    // Fix rows to include 'cells' property which Unlayer requires
+    // Each row needs: id, cells (array of column indices), values, columns
+    const fixedRows = bodyContent.rows.map((row, index) => ({
+      id: row.id || `row-${index}`,
+      cells: row.cells || row.columns?.map((_, i) => i + 1) || [1],
+      values: row.values || {},
+      columns: (row.columns || []).map((col, colIndex) => ({
+        id: col.id || `col-${index}-${colIndex}`,
+        width: col.width || 100,
+        contents: col.contents || []
+      }))
+    }));
+    
+    const design = {
+      body: {
+        id: bodyContent.id || 'email-body',
+        rows: fixedRows,
+        values: bodyContent.values || {
+          backgroundColor: '#FAFAFA',
+          fontFamily: 'Poppins',
+          fontSize: 16,
+          textColor: '#4A4A4A',
+          linkColor: '#2C3E50'
+        }
+      },
+      counters: {
+        body: 0,
+        html: 0,
+        text: 0,
+        image: 0,
+        button: 0,
+        column: 0,
+        social: 0,
+        spacer: 0,
+        divider: 0
+      },
+      schemaVersion: 'v1'
+    };
 
     // Merge new fields into existing content — preserve anything we're not touching
     const updatedContent = {
@@ -176,7 +251,7 @@ async function main() {
     updated++;
   }
 
-  console.log(`\n${updated} updated, ${skipped} skipped.\n`);
+  console.log(`\n${updated} updated, ${created} created, ${skipped} skipped.\n`);
   console.log('Next step:');
   console.log('  Open each email in the visual editor (Touchpoints -> Edit Visually)');
   console.log('  and click Save to compile the HTML body for client review previews.');

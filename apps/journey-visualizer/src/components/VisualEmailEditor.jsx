@@ -49,12 +49,6 @@ export function VisualEmailEditor() {
   const [importText, setImportText] = useState('');
   const [importError, setImportError] = useState(null);
 
-  // Import HTML modal state
-  const [showImportHtml, setShowImportHtml] = useState(false);
-  const [importHtmlText, setImportHtmlText] = useState('');
-  const [importHtmlFile, setImportHtmlFile] = useState(null);
-  const [importHtmlError, setImportHtmlError] = useState(null);
-  const [importHtmlLoading, setImportHtmlLoading] = useState(false);
   const fileInputRef = useRef(null);
 
   // Export HTML modal state
@@ -66,12 +60,11 @@ export function VisualEmailEditor() {
   const loadContent = useCallback((tp) => {
     if (!editorRef.current?.editor || !tp) return;
     const unlayerDesign = tp.content?.unlayerDesign;
-    const bodyHtml = tp.content?.body || '';
     if (unlayerDesign) {
       editorRef.current.editor.loadDesign(unlayerDesign);
-    } else if (bodyHtml) {
-      editorRef.current.editor.loadHtml(bodyHtml);
     }
+    // Note: Unlayer doesn't support loading arbitrary HTML for editing
+    // If no unlayerDesign exists, the editor starts with a blank canvas
   }, []);
 
   // Fetch touchpoint
@@ -190,65 +183,7 @@ export function VisualEmailEditor() {
     setImportText('');
   }, [importText]);
 
-  // Handle import HTML - file or text
-  const handleImportHtml = useCallback(async () => {
-    setImportHtmlError(null);
-    setImportHtmlLoading(true);
 
-    try {
-      let htmlContent = '';
-
-      if (importHtmlFile) {
-        // Read from uploaded file
-        htmlContent = importHtmlFile;
-      } else if (importHtmlText.trim()) {
-        // Read from textarea
-        htmlContent = importHtmlText.trim();
-      } else {
-        setImportHtmlError('Please provide HTML content either by uploading a file or pasting HTML.');
-        setImportHtmlLoading(false);
-        return;
-      }
-
-      // Use Unlayer's loadHtml to parse and display the HTML
-      if (editorRef.current?.editor) {
-        editorRef.current.editor.loadHtml(htmlContent);
-        setShowImportHtml(false);
-        setImportHtmlText('');
-        setImportHtmlFile(null);
-        if (fileInputRef.current) {
-          fileInputRef.current.value = '';
-        }
-      } else {
-        setImportHtmlError('Editor is not ready. Please wait and try again.');
-      }
-    } catch (err) {
-      console.error('Failed to import HTML:', err);
-      setImportHtmlError('Failed to import HTML. Please check the format and try again.');
-    } finally {
-      setImportHtmlLoading(false);
-    }
-  }, [importHtmlText, importHtmlFile]);
-
-  // Handle file selection
-  const handleFileChange = useCallback((e) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      if (!file.name.endsWith('.html') && !file.name.endsWith('.htm')) {
-        setImportHtmlError('Please select a valid .html file.');
-        return;
-      }
-      setImportHtmlError(null);
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        setImportHtmlFile(event.target.result);
-      };
-      reader.onerror = () => {
-        setImportHtmlError('Failed to read file. Please try again.');
-      };
-      reader.readAsText(file);
-    }
-  }, []);
 
   // Handle export HTML for copy/paste into GHL
   const handleExportHtml = useCallback(() => {
@@ -366,11 +301,6 @@ export function VisualEmailEditor() {
             Import JSON
           </button>
 
-          <button onClick={() => { setShowImportHtml(true); setImportHtmlError(null); setImportHtmlText(''); setImportHtmlFile(null); }} style={btnStyle()}>
-            <Upload size={14} />
-            Import HTML
-          </button>
-
           <button onClick={handleExportHtml} style={btnStyle()}>
             <Copy size={14} />
             Copy HTML
@@ -466,114 +396,6 @@ export function VisualEmailEditor() {
                 style={{ padding: '10px 20px', background: '#2c3e50', color: 'white', border: 'none', borderRadius: '4px', cursor: importText.trim() ? 'pointer' : 'not-allowed', fontSize: '14px', opacity: importText.trim() ? 1 : 0.5 }}
               >
                 Load Design
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Import HTML Modal */}
-      {showImportHtml && (
-        <div style={{
-          position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.6)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000,
-        }}>
-          <div style={{
-            backgroundColor: 'white', borderRadius: '8px', padding: '28px',
-            width: '700px', maxWidth: '90vw', maxHeight: '85vh',
-            display: 'flex', flexDirection: 'column', gap: '16px',
-          }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <h2 style={{ margin: 0, fontSize: '18px', color: '#2c3e50' }}>Import HTML</h2>
-              <button onClick={() => { setShowImportHtml(false); setImportHtmlFile(null); if (fileInputRef.current) fileInputRef.current.value = ''; }} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#666' }}>
-                <X size={20} />
-              </button>
-            </div>
-
-            <p style={{ margin: 0, fontSize: '14px', color: '#666', lineHeight: 1.5 }}>
-              Upload an HTML file or paste raw HTML code to load it into the visual editor.
-            </p>
-
-            {/* File Upload Section */}
-            <div style={{ border: '1px solid #ddd', borderRadius: '6px', padding: '16px' }}>
-              <div style={{ fontSize: '14px', fontWeight: 500, color: '#2c3e50', marginBottom: '12px' }}>
-                Option 1: Upload HTML File
-              </div>
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept=".html,.htm"
-                onChange={handleFileChange}
-                style={{ display: 'block', width: '100%', fontSize: '13px', color: '#666' }}
-              />
-              {importHtmlFile && (
-                <p style={{ margin: '8px 0 0', fontSize: '12px', color: '#27ae60' }}>
-                  ✓ File loaded: {importHtmlFile.substring(0, 50)}...
-                </p>
-              )}
-            </div>
-
-            {/* Divider */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <div style={{ flex: 1, height: '1px', background: '#e0e0e0' }} />
-              <span style={{ fontSize: '12px', color: '#999' }}>OR</span>
-              <div style={{ flex: 1, height: '1px', background: '#e0e0e0' }} />
-            </div>
-
-            {/* Textarea Section */}
-            <div style={{ border: '1px solid #ddd', borderRadius: '6px', padding: '16px' }}>
-              <div style={{ fontSize: '14px', fontWeight: 500, color: '#2c3e50', marginBottom: '12px' }}>
-                Option 2: Paste HTML Code
-              </div>
-              <textarea
-                value={importHtmlText}
-                onChange={(e) => { setImportHtmlText(e.target.value); setImportHtmlFile(null); }}
-                placeholder="<html>\n  <body>\n    <h1>Your email content here...</h1>\n  </body>\n</html>"
-                style={{
-                  width: '100%', boxSizing: 'border-box',
-                  height: '200px', fontFamily: 'monospace', fontSize: '12px',
-                  border: '1px solid #ddd', borderRadius: '4px', padding: '12px',
-                  resize: 'vertical',
-                }}
-              />
-            </div>
-
-            {importHtmlError && (
-              <p style={{ margin: 0, color: '#e74c3c', fontSize: '13px' }}>{importHtmlError}</p>
-            )}
-
-            <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
-              <button 
-                onClick={() => { setShowImportHtml(false); setImportHtmlFile(null); if (fileInputRef.current) fileInputRef.current.value = ''; }} 
-                style={{ padding: '10px 20px', border: '1px solid #ddd', borderRadius: '4px', background: 'white', cursor: 'pointer', fontSize: '14px' }}
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleImportHtml}
-                disabled={importHtmlLoading || (!importHtmlText.trim() && !importHtmlFile)}
-                style={{ 
-                  padding: '10px 20px', 
-                  background: '#2c3e50', 
-                  color: 'white', 
-                  border: 'none', 
-                  borderRadius: '4px', 
-                  cursor: (importHtmlText.trim() || importHtmlFile) && !importHtmlLoading ? 'pointer' : 'not-allowed', 
-                  fontSize: '14px', 
-                  opacity: (importHtmlText.trim() || importHtmlFile) && !importHtmlLoading ? 1 : 0.5,
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                }}
-              >
-                {importHtmlLoading ? (
-                  <>
-                    <div style={{ width: '14px', height: '14px', border: '2px solid rgba(255,255,255,0.3)', borderTopColor: 'white', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
-                    Loading...
-                  </>
-                ) : (
-                  'Load HTML'
-                )}
               </button>
             </div>
           </div>
