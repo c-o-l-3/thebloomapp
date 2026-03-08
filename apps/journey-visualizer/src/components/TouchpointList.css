@@ -100,6 +100,68 @@
   background: #fecaca;
 }
 
+/* Journey Selector Bar */
+.touchpoint-list__journey-selector-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 24px;
+  background: #f0f7ff;
+  border-bottom: 1px solid #bfdbfe;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.touchpoint-list__journey-selector-inner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+}
+
+.touchpoint-list__journey-selector-icon {
+  color: #3498db;
+  flex-shrink: 0;
+}
+
+.touchpoint-list__journey-selector-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #2c3e50;
+  white-space: nowrap;
+}
+
+.touchpoint-list__journey-select {
+  padding: 8px 32px 8px 12px;
+  border: 1px solid #bfdbfe;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #2c3e50;
+  background: white;
+  cursor: pointer;
+  min-width: 240px;
+  max-width: 400px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  appearance: auto;
+}
+
+.touchpoint-list__journey-select:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.15);
+}
+
+.touchpoint-list__journey-select:hover {
+  border-color: #3498db;
+}
+
+.touchpoint-list__journey-selector-empty {
+  font-size: 14px;
+  color: #666;
+  font-style: italic;
+}
+
 /* Toolbar */
 .touchpoint-list__toolbar {
   padding: 16px 24px;
@@ -170,17 +232,18 @@
 .touchpoint-list__review-btn {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 10px 16px;
+  gap: 6px;
+  padding: 8px 14px;
   background: #6366f1;
   color: white;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   transition: background 0.2s;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .touchpoint-list__review-btn:hover {
@@ -352,8 +415,8 @@
 
 .touchpoint-list__th--actions {
   text-align: center;
-  width: 200px;
-  min-width: 200px;
+  width: 280px;
+  min-width: 260px;
 }
 
 .touchpoint-list__row {
@@ -713,4 +776,104 @@
 .touchpoint-list__notification-close:hover {
   background: rgba(0, 0, 0, 0.05);
   color: #1e293b;
+}
+
+/* Guide Banner */
+.touchpoint-list__guide-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 24px;
+  background: #eff6ff;
+  border-bottom: 1px solid #bfdbfe;
+  font-size: 14px;
+  color: #1d4ed8;
+}
+
+.touchpoint-list__guide-banner svg {
+  flex-shrink: 0;
+  color: #3498db;
+}
+
+.touchpoint-list__guide-banner strong {
+  font-weight: 600;
+}
+
+/* Email row distinction */
+.touchpoint-list__row--email {
+  border-left: 3px solid #3498db;
+}
+
+.touchpoint-list__row--email:hover {
+  background: #f0f7ff;
+}
+
+/* Subject preview for email touchpoints */
+.touchpoint-list__subject-preview {
+  font-size: 12px;
+  color: #3498db;
+  font-style: italic;
+  max-width: 250px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Prominent Edit Email button */
+.touchpoint-list__edit-email-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: #3498db;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.touchpoint-list__edit-email-btn:hover {
+  background: #2980b9;
+}
+
+.touchpoint-list__edit-email-btn:active {
+  transform: scale(0.97);
+}
+
+/* Labeled action buttons (icon + text) for secondary actions */
+.touchpoint-list__action-btn--labeled {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  width: auto;
+  height: auto;
+  font-size: 13px;
+  font-weight: 500;
+  border: 1px solid #e2e8f0;
+  background: white;
+  color: #475569;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+
+.touchpoint-list__action-btn--labeled:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  color: #1e293b;
+}
+
+/* Warning / info guide banner variant */
+.touchpoint-list__guide-banner--warn {
+  background: #fffbeb;
+  border-bottom-color: #fde68a;
+  color: #92400e;
+}
+
+.touchpoint-list__guide-banner--warn svg {
+  color: #d97706;
 }

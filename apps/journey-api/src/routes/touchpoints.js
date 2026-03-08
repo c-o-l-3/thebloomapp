@@ -21,10 +21,6 @@ const touchpointSchema = z.object({
   ghlTemplateId: z.string().nullish(),
   status: z.enum(['draft', 'approved', 'published']).default('draft'),
   nextTouchpointId: z.string().uuid().nullish(),
-  // Strip read-only relation fields the client may send back
-  journey: z.any().optional(),
-  createdAt: z.any().optional(),
-  updatedAt: z.any().optional(),
 }).strip();
 
 // GET /api/touchpoints
@@ -103,15 +99,22 @@ router.post('/', async (req, res, next) => {
 router.put('/:id', async (req, res, next) => {
   try {
     const { id } = req.params;
-    const data = touchpointSchema.partial().parse(req.body);
     
+    const { id: _id, ...updateData } = touchpointSchema.partial().parse(req.body);
+
+    // Ensure content is never null/undefined - use empty object as fallback
+    if (updateData.content === null || updateData.content === undefined) {
+      updateData.content = {};
+    }
+
     const touchpoint = await prisma.touchpoint.update({
       where: { id },
-      data
+      data: updateData
     });
 
     res.json(touchpoint);
   } catch (error) {
+    console.error('PUT /touchpoints/:id - Error:', error);
     next(error);
   }
 });

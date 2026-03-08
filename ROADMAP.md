@@ -132,6 +132,21 @@ See something missing? Have feedback on priorities?
 
 ---
 
+## Known UX Issues (Post-Audit — Not Yet Fixed)
+
+The following issues were identified during a UX audit but were **not addressed** in the v1.1.0 overhaul. They are lower priority and tracked here for future resolution.
+
+| Issue | Description | Priority |
+|-------|-------------|----------|
+| **Three competing editors** | TouchpointEditor (ReactQuill), HTMLEditor (Monaco), and VisualEmailEditor (Unlayer) all write to `content.body`. Need to designate VisualEmailEditor as the primary editor for email touchpoints and restrict others. | P1 |
+| **Stale Unlayer design** | VisualEmailEditor loads `content.unlayerDesign` first; if body was edited via HTMLEditor, the design may be stale. Need to detect and warn. | P1 |
+| **HTMLEditor draft restore uses `window.confirm()`** | Should use an in-app modal instead of the native browser dialog. | P2 |
+| **Print View is paper-oriented** | Signature lines in print view are paper/physical-document oriented — consider a digital-first alternative. | P2 |
+| **No "Create Touchpoint" button on Touchpoints tab** | Touchpoint creation is only possible from the JourneyFlow canvas. Should be accessible from the Touchpoints list view. | P1 |
+| **No next/previous touchpoint navigation in editors** | Users must return to the list to switch between touchpoints. Add prev/next navigation inside editors. | P2 |
+
+---
+
 ## Revision History
 
 | Date | Version | Changes |

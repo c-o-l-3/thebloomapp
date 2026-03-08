@@ -40,6 +40,9 @@ export function VisualEmailEditor() {
   const [error, setError] = useState(null);
   const [saveStatus, setSaveStatus] = useState('idle');
   const [editorReady, setEditorReady] = useState(false);
+  const [subject, setSubject] = useState('');
+  const [previewText, setPreviewText] = useState('');
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
   // Import JSON modal state
   const [showImport, setShowImport] = useState(false);
@@ -90,9 +93,34 @@ export function VisualEmailEditor() {
     if (id) fetchTouchpoint();
   }, [id]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // Initialize subject + previewText from touchpoint data
+  useEffect(() => {
+    if (touchpoint) {
+      setSubject(touchpoint.content?.subject || '');
+      setPreviewText(touchpoint.content?.previewText || '');
+    }
+  }, [touchpoint]);
+
+  // beforeunload warning
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      if (hasUnsavedChanges) {
+        e.preventDefault();
+        e.returnValue = '';
+      }
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [hasUnsavedChanges]);
+
   const onEditorReady = useCallback(() => {
     setEditorReady(true);
     if (touchpoint) loadContent(touchpoint);
+    if (editorRef.current?.editor) {
+      editorRef.current.editor.addEventListener('design:updated', () => {
+        setHasUnsavedChanges(true);
+      });
+    }
   }, [touchpoint, loadContent]);
 
   // Handle save
@@ -106,16 +134,21 @@ export function VisualEmailEditor() {
       editorRef.current.editor.exportHtml(async (data) => {
         const { html, design } = data;
 
-        try {
-          await apiClient.updateTouchpoint(id, {
-            ...touchpoint,
-            content: {
-              ...touchpoint.content,
-              body: html,
-              unlayerDesign: design,
-            },
-          });
+        const updateData = {
+          content: {
+            ...(touchpoint.content || {}),
+            body: html,
+            unlayerDesign: design,
+            subject: subject,
+            previewText: previewText,
+          },
+        };
 
+        try {
+          await apiClient.updateTouchpoint(id, updateData);
+
+          setTouchpoint(prev => ({ ...prev, content: updateData.content }));
+          setHasUnsavedChanges(false);
           setSaveStatus('saved');
           setTimeout(() => setSaveStatus('idle'), 2000);
         } catch (err) {
@@ -131,7 +164,7 @@ export function VisualEmailEditor() {
       setError('Failed to export email content.');
       setSaving(false);
     }
-  }, [id, touchpoint]);
+  }, [id, touchpoint, subject, previewText]);
 
   // Handle import JSON from LLM
   const handleImport = useCallback(() => {
@@ -233,8 +266,14 @@ export function VisualEmailEditor() {
   }, [exportHtml]);
 
   const handleBack = useCallback(() => {
-    navigate(-1);
-  }, [navigate]);
+    if (hasUnsavedChanges) {
+      if (window.confirm('You have unsaved changes. Are you sure you want to leave?')) {
+        navigate('/touchpoints');
+      }
+    } else {
+      navigate('/touchpoints');
+    }
+  }, [navigate, hasUnsavedChanges]);
 
   const btnStyle = (color = 'rgba(255,255,255,0.15)') => ({
     background: color,
@@ -287,20 +326,38 @@ export function VisualEmailEditor() {
       }}>
         <button
           onClick={handleBack}
-          style={{ background: 'none', border: 'none', color: 'white', cursor: 'pointer', padding: '6px', borderRadius: '4px' }}
+          style={{ background: 'none', border: 'none', color: 'white', cursor: 'pointer', padding: '6px', borderRadius: '4px', display: 'flex', alignItems: 'center', gap: '6px' }}
           onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.1)')}
           onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
         >
           <ArrowLeft size={20} />
+          <span className="visual-editor__back-label">Back to Touchpoints</span>
         </button>
 
         <div style={{ flex: 1 }}>
           <div style={{ fontSize: '16px', fontWeight: 600 }}>{touchpoint?.name || 'Email Editor'}</div>
-          {touchpoint?.content?.subject && (
-            <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.6)', marginTop: '2px' }}>
-              {touchpoint.content.subject}
+          <div className="visual-editor__email-fields">
+            <div className="visual-editor__field-row">
+              <span className="visual-editor__field-label">Subject:</span>
+              <input
+                className="visual-editor__field-input"
+                type="text"
+                value={subject}
+                onChange={(e) => { setSubject(e.target.value); setHasUnsavedChanges(true); }}
+                placeholder="Email subject line..."
+              />
             </div>
-          )}
+            <div className="visual-editor__field-row">
+              <span className="visual-editor__field-label">Preview:</span>
+              <input
+                className="visual-editor__field-input visual-editor__field-input--preview"
+                type="text"
+                value={previewText}
+                onChange={(e) => { setPreviewText(e.target.value); setHasUnsavedChanges(true); }}
+                placeholder="Preview text (shown in inbox)..."
+              />
+            </div>
+          </div>
         </div>
 
         <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>

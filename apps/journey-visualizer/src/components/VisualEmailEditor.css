@@ -427,3 +427,58 @@
     #ffffff 20px
   );
 }
+
+/* Email fields in header (subject + preview text) */
+.visual-editor__email-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-top: 4px;
+}
+
+.visual-editor__field-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.visual-editor__field-label {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.5);
+  width: 48px;
+  flex-shrink: 0;
+  text-align: right;
+}
+
+.visual-editor__field-input {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+  color: white;
+  font-size: 12px;
+  padding: 3px 8px;
+  width: 320px;
+  outline: none;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.visual-editor__field-input::placeholder {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.visual-editor__field-input:focus {
+  border-color: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.visual-editor__field-input--preview {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+/* Back label next to arrow */
+.visual-editor__back-label {
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+}

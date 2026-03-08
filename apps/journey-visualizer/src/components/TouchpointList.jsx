@@ -10,21 +10,18 @@ import {
   Filter,
   Printer,
   Edit3,
-  Eye,
   Layout,
   Mail,
   MessageSquare,
   Phone,
   ChevronDown,
   ChevronUp,
-  MoreVertical,
-  LogOut,
-  User,
   UploadCloud,
   CheckCircle,
   XCircle,
   Loader2,
-  BookOpen
+  BookOpen,
+  GitBranch
 } from 'lucide-react';
 import { getApiClient } from '../services/apiClient';
 import { StatusBadge } from './StatusBadge';
@@ -50,13 +47,14 @@ const STATUS_OPTIONS = [
  * TouchpointList - Main touchpoint management interface
  * @param {string} selectedClientId - The currently selected client ID
  * @param {string} selectedJourneyId - The ID of the selected journey for the client
+ * @param {Array} journeys - All available journeys for the client
+ * @param {Function} onJourneyChange - Callback when user selects a different journey
  */
-export function TouchpointList({ selectedClientId, selectedJourneyId }) {
+export function TouchpointList({ selectedClientId, selectedJourneyId, journeys = [], onJourneyChange }) {
   const navigate = useNavigate();
   const [touchpoints, setTouchpoints] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const user = JSON.parse(localStorage.getItem('user') || 'null');
 
   // Publish state
   const [publishingIds, setPublishingIds] = useState(new Set());
@@ -78,7 +76,6 @@ export function TouchpointList({ selectedClientId, selectedJourneyId }) {
       setLoading(true);
       setError(null);
 
-      // Get touchpoints for the selected journey (or all if no journey selected)
       const data = await apiClient.getTouchpoints(selectedJourneyId || undefined);
       setTouchpoints(data);
     } catch (err) {
@@ -92,12 +89,6 @@ export function TouchpointList({ selectedClientId, selectedJourneyId }) {
   useEffect(() => {
     fetchTouchpoints();
   }, [fetchTouchpoints]);
-
-  // Handle logout
-  const handleLogout = useCallback(() => {
-    apiClient.logout();
-    navigate('/login', { replace: true });
-  }, [navigate]);
 
   // Handle sort
   const handleSort = useCallback((field) => {
@@ -121,6 +112,16 @@ export function TouchpointList({ selectedClientId, selectedJourneyId }) {
         tp.journey?.name?.toLowerCase().includes(query)
       );
     }
+
+    // Type filter
+    if (typeFilter && typeFilter !== 'all') {
+      result = result.filter(tp => tp.type === typeFilter);
+    }
+
+    // Status filter
+    if (statusFilter && statusFilter !== 'all') {
+      result = result.filter(tp => tp.status === statusFilter);
+    }
     
     // Sort
     result.sort((a, b) => {
@@ -141,7 +142,7 @@ export function TouchpointList({ selectedClientId, selectedJourneyId }) {
     });
     
     return result;
-  }, [touchpoints, searchQuery, sortField, sortDirection]);
+  }, [touchpoints, searchQuery, typeFilter, statusFilter, sortField, sortDirection]);
 
   // Get type icon
   const getTypeIcon = (type) => {
@@ -174,12 +175,7 @@ export function TouchpointList({ selectedClientId, selectedJourneyId }) {
     navigate(`/touchpoints/${id}/edit`);
   };
 
-  const handleView = (id) => {
-    navigate(`/touchpoints/${id}/print`);
-  };
-
   const handlePublish = async (touchpoint) => {
-    // Only allow publishing email and SMS touchpoints
     const publishableTypes = ['email', 'sms'];
     if (!publishableTypes.includes(touchpoint.type?.toLowerCase())) {
       showNotification('error', `Cannot publish ${touchpoint.type} touchpoints to GHL`);
@@ -191,7 +187,6 @@ export function TouchpointList({ selectedClientId, selectedJourneyId }) {
     try {
       const result = await apiClient.publishTouchpoint(touchpoint.id);
       
-      // Update touchpoint in list with new status
       setTouchpoints(prev => prev.map(tp => 
         tp.id === touchpoint.id 
           ? { ...tp, status: 'published', ghlTemplateId: result.publishResult?.ghlTemplateId }
@@ -214,7 +209,6 @@ export function TouchpointList({ selectedClientId, selectedJourneyId }) {
 
   const showNotification = (type, message) => {
     setNotification({ type, message });
-    // Auto-dismiss after 5 seconds
     setTimeout(() => setNotification(null), 5000);
   };
 
@@ -229,7 +223,6 @@ export function TouchpointList({ selectedClientId, selectedJourneyId }) {
     navigator.clipboard.writeText(url).then(() => {
       showNotification('success', `Review link copied: ${url}`);
     }).catch(() => {
-      // Fallback for browsers without clipboard API
       prompt('Copy this review link:', url);
     });
   };
@@ -240,14 +233,8 @@ export function TouchpointList({ selectedClientId, selectedJourneyId }) {
     return publishableTypes.includes(touchpoint.type?.toLowerCase());
   };
 
-  // Get publish status display
-  const getPublishStatus = (touchpoint) => {
-    if (touchpoint.status === 'published' || touchpoint.ghlTemplateId) {
-      return { label: 'Published', className: 'status-published' };
-    }
-    return { label: 'Draft', className: 'status-draft' };
-  };
-
+  // Selected journey object for display
+  const selectedJourney = journeys.find(j => j.id === selectedJourneyId);
 
   return (
     <div className="touchpoint-list">
@@ -273,21 +260,53 @@ export function TouchpointList({ selectedClientId, selectedJourneyId }) {
               Share Review Link
             </button>
           )}
-          {user && (
-            <div className="touchpoint-list__user">
-              <User size={18} />
-              <span>{user.name || user.email}</span>
-            </div>
-          )}
-          <button
-            className="touchpoint-list__logout-btn"
-            onClick={handleLogout}
-            title="Logout"
-          >
-            <LogOut size={18} />
-          </button>
         </div>
       </header>
+
+      {/* Journey Selector */}
+      <div className="touchpoint-list__journey-selector-bar">
+        <div className="touchpoint-list__journey-selector-inner">
+          <GitBranch size={18} className="touchpoint-list__journey-selector-icon" />
+          <label className="touchpoint-list__journey-selector-label" htmlFor="journey-select">
+            Journey:
+          </label>
+          {journeys.length === 0 ? (
+            <span className="touchpoint-list__journey-selector-empty">No journeys available</span>
+          ) : (
+            <select
+              id="journey-select"
+              className="touchpoint-list__journey-select"
+              value={selectedJourneyId || ''}
+              onChange={(e) => onJourneyChange && onJourneyChange(e.target.value)}
+            >
+              {journeys.map(j => (
+                <option key={j.id} value={j.id}>
+                  {j.name}
+                  {j.touchpoints?.length != null ? ` (${j.touchpoints.length} touchpoints)` : ''}
+                </option>
+              ))}
+            </select>
+          )}
+        </div>
+        {selectedJourneyId && (
+          <button
+            className="touchpoint-list__review-btn"
+            onClick={() => navigate(`/journeys/${selectedJourneyId}/review`)}
+            title="Review and edit all touchpoints sequentially"
+          >
+            <BookOpen size={16} />
+            Review All
+          </button>
+        )}
+      </div>
+
+      {/* Guide Banner — only shown when no journeys exist */}
+      {!loading && journeys.length === 0 && (
+        <div className="touchpoint-list__guide-banner touchpoint-list__guide-banner--warn">
+          <Mail size={16} />
+          <span>No journeys found for this client. Create journeys first from the Journeys tab.</span>
+        </div>
+      )}
 
       {/* Toolbar */}
       <div className="touchpoint-list__toolbar">
@@ -311,16 +330,6 @@ export function TouchpointList({ selectedClientId, selectedJourneyId }) {
         </div>
 
         <div className="touchpoint-list__filters">
-          {selectedJourneyId && (
-            <button
-              className="touchpoint-list__review-btn"
-              onClick={() => navigate(`/journeys/${selectedJourneyId}/review`)}
-              title="Review and edit all touchpoints sequentially"
-            >
-              <BookOpen size={18} />
-              Review All
-            </button>
-          )}
           <button
             className={`touchpoint-list__filter-toggle ${showFilters ? 'touchpoint-list__filter-toggle--active' : ''}`}
             onClick={() => setShowFilters(!showFilters)}
@@ -446,12 +455,24 @@ export function TouchpointList({ selectedClientId, selectedJourneyId }) {
               </tr>
             </thead>
             <tbody className="touchpoint-list__tbody">
-              {filteredTouchpoints.map((touchpoint) => (
-                <tr key={touchpoint.id} className="touchpoint-list__row">
+              {filteredTouchpoints.map((touchpoint) => {
+                const isEmail = touchpoint.type === 'email';
+                return (
+                <tr
+                  key={touchpoint.id}
+                  className={`touchpoint-list__row${isEmail ? ' touchpoint-list__row--email' : ''}`}
+                  onClick={isEmail ? () => navigate(`/touchpoints/${touchpoint.id}/visual-edit`) : undefined}
+                  style={isEmail ? { cursor: 'pointer' } : undefined}
+                >
                   <td className="touchpoint-list__td touchpoint-list__td--name">
                     <div className="touchpoint-list__name-cell">
                       <span className="touchpoint-list__name">{touchpoint.name}</span>
-                      {touchpoint.content?.subject && (
+                      {isEmail && touchpoint.content?.subject && (
+                        <span className="touchpoint-list__subject-preview">
+                          {touchpoint.content.subject}
+                        </span>
+                      )}
+                      {!isEmail && touchpoint.content?.subject && (
                         <span className="touchpoint-list__subject">
                           {touchpoint.content.subject}
                         </span>
@@ -478,63 +499,95 @@ export function TouchpointList({ selectedClientId, selectedJourneyId }) {
                     {formatDate(touchpoint.updatedAt)}
                   </td>
                   <td className="touchpoint-list__td touchpoint-list__td--actions">
-                    <div className="touchpoint-list__actions">
-                      <button
-                        className="touchpoint-list__action-btn"
-                        onClick={() => handleView(touchpoint.id)}
-                        title="View"
-                      >
-                        <Eye size={16} />
-                      </button>
-                      {touchpoint.type === 'email' && (
-                        <button
-                          className="touchpoint-list__action-btn touchpoint-list__action-btn--visual"
-                          onClick={() => navigate(`/touchpoints/${touchpoint.id}/visual-edit`)}
-                          title="Visual Editor"
-                        >
-                          <Layout size={16} />
-                        </button>
-                      )}
-                      <button
-                        className="touchpoint-list__action-btn"
-                        onClick={() => handleEdit(touchpoint.id)}
-                        title="Edit HTML"
-                      >
-                        <Edit3 size={16} />
-                      </button>
-                      <button 
-                        className="touchpoint-list__action-btn"
-                        onClick={() => handlePrint(touchpoint.id)}
-                        title="Print View"
-                      >
-                        <Printer size={16} />
-                      </button>
-                      {canPublish(touchpoint) && (
-                        <button 
-                          className={`touchpoint-list__action-btn touchpoint-list__action-btn--publish ${
-                            touchpoint.status === 'published' || touchpoint.ghlTemplateId 
-                              ? 'touchpoint-list__action-btn--published' 
-                              : ''
-                          }`}
-                          onClick={() => handlePublish(touchpoint)}
-                          disabled={publishingIds.has(touchpoint.id)}
-                          title={
-                            touchpoint.status === 'published' || touchpoint.ghlTemplateId
-                              ? 'Republish to GHL'
-                              : 'Publish to GHL'
-                          }
-                        >
-                          {publishingIds.has(touchpoint.id) ? (
-                            <Loader2 size={16} className="spin" />
-                          ) : (
-                            <UploadCloud size={16} />
+                    <div className="touchpoint-list__actions" onClick={(e) => e.stopPropagation()}>
+                      {isEmail ? (
+                        <>
+                          <button
+                            className="touchpoint-list__edit-email-btn"
+                            onClick={(e) => { e.stopPropagation(); navigate(`/touchpoints/${touchpoint.id}/visual-edit`); }}
+                            title="Open Visual Email Editor"
+                          >
+                            <Layout size={15} />
+                            Edit Email
+                          </button>
+                          <button
+                            className="touchpoint-list__action-btn touchpoint-list__action-btn--labeled"
+                            onClick={() => handlePrint(touchpoint.id)}
+                            title="Print View"
+                          >
+                            <Printer size={15} />
+                            Print
+                          </button>
+                          <button 
+                            className={`touchpoint-list__action-btn touchpoint-list__action-btn--labeled touchpoint-list__action-btn--publish ${
+                              touchpoint.status === 'published' || touchpoint.ghlTemplateId 
+                                ? 'touchpoint-list__action-btn--published' 
+                                : ''
+                            }`}
+                            onClick={() => handlePublish(touchpoint)}
+                            disabled={publishingIds.has(touchpoint.id)}
+                            title={
+                              touchpoint.status === 'published' || touchpoint.ghlTemplateId
+                                ? 'Republish to GHL'
+                                : 'Publish to GHL'
+                            }
+                          >
+                            {publishingIds.has(touchpoint.id) ? (
+                              <Loader2 size={15} className="spin" />
+                            ) : (
+                              <UploadCloud size={15} />
+                            )}
+                            Publish
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          <button
+                            className="touchpoint-list__action-btn touchpoint-list__action-btn--labeled"
+                            onClick={() => handleEdit(touchpoint.id)}
+                            title="Edit"
+                          >
+                            <Edit3 size={15} />
+                            Edit
+                          </button>
+                          <button
+                            className="touchpoint-list__action-btn touchpoint-list__action-btn--labeled"
+                            onClick={() => handlePrint(touchpoint.id)}
+                            title="Print View"
+                          >
+                            <Printer size={15} />
+                            Print
+                          </button>
+                          {canPublish(touchpoint) && (
+                            <button 
+                              className={`touchpoint-list__action-btn touchpoint-list__action-btn--labeled touchpoint-list__action-btn--publish ${
+                                touchpoint.status === 'published' || touchpoint.ghlTemplateId 
+                                  ? 'touchpoint-list__action-btn--published' 
+                                  : ''
+                              }`}
+                              onClick={() => handlePublish(touchpoint)}
+                              disabled={publishingIds.has(touchpoint.id)}
+                              title={
+                                touchpoint.status === 'published' || touchpoint.ghlTemplateId
+                                  ? 'Republish to GHL'
+                                  : 'Publish to GHL'
+                              }
+                            >
+                              {publishingIds.has(touchpoint.id) ? (
+                                <Loader2 size={15} className="spin" />
+                              ) : (
+                                <UploadCloud size={15} />
+                              )}
+                              Publish
+                            </button>
                           )}
-                        </button>
+                        </>
                       )}
                     </div>
                   </td>
                 </tr>
-              ))}
+                );
+              })}
             </tbody>
           </table>
         )}

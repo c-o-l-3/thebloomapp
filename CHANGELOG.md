@@ -5,6 +5,41 @@ All notable changes to TheBloomApp will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2026-03-08
+
+### Fixed
+- Fixed 500 error on touchpoint save in Visual Email Editor — Zod schema was passing `journey`, `createdAt`, `updatedAt` relation fields through to Prisma
+- Fixed frontend sending full touchpoint object on save — now sends only changed `content` field
+- Fixed broken type/status filters in TouchpointList — filter state existed but was never applied
+- Fixed Dashboard client card click not switching active client — was using broken query param navigation
+- Removed broken "Template Library" quick action link pointing to nonexistent `/templates` route
+
+### Added
+- Added journey selector dropdown to Touchpoints tab — users can now switch between journeys
+- Added Subject Line and Preview Text fields to Visual Email Editor — complete email editing from one screen
+- Added unsaved-changes warning to Visual Email Editor with `beforeunload` listener
+
+### Changed
+- Fixed back button in Visual Email Editor — now navigates to `/touchpoints` instead of unpredictable `navigate(-1)`
+- Simplified touchpoint action buttons — clear "Edit Email" / "Edit" / "Print" / "Publish" labels instead of ambiguous icons
+- Removed duplicate Eye icon (was identical to Print icon)
+- Removed duplicate "🌸 Bloom Dashboard" header from MultiClientDashboard
+- Added user avatar + Sign Out button to global header (consistent across all tabs)
+- Removed standalone user/logout from TouchpointList header
+
+### Files Changed
+- `apps/journey-api/src/routes/touchpoints.js`
+- `apps/journey-visualizer/src/App.jsx`
+- `apps/journey-visualizer/src/App.css`
+- `apps/journey-visualizer/src/components/VisualEmailEditor.jsx`
+- `apps/journey-visualizer/src/components/VisualEmailEditor.css`
+- `apps/journey-visualizer/src/components/TouchpointList.jsx`
+- `apps/journey-visualizer/src/components/TouchpointList.css`
+- `apps/journey-visualizer/src/components/MultiClientDashboard.jsx`
+- `apps/journey-visualizer/src/components/MultiClientDashboard.css`
+
+---
+
 ## [Unreleased]
 
 ### Added

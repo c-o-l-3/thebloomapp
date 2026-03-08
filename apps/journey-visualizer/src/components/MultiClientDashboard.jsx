@@ -110,7 +110,7 @@ function useVirtualList(items, itemHeight, containerHeight, overscan = 5) {
   return { virtualItems, totalHeight, setScrollTop };
 }
 
-export function MultiClientDashboard() {
+export function MultiClientDashboard({ onClientChange }) {
   // State management
   const [clients, setClients] = useState([]);
   const [healthData, setHealthData] = useState(null);
@@ -444,8 +444,11 @@ export function MultiClientDashboard() {
   }, [selectedClients, usingLocalMode, loadClients]);
 
   const handleClientClick = useCallback((clientId) => {
-    navigate(`/?client=${clientId}`);
-  }, [navigate]);
+    if (onClientChange) {
+      onClientChange(clientId);
+    }
+    navigate('/touchpoints');
+  }, [navigate, onClientChange]);
 
   const handleOpenFieldMapping = useCallback((client) => {
     setSelectedMappingClient(client);
@@ -502,50 +505,46 @@ export function MultiClientDashboard() {
 
   return (
     <div className="multi-client-dashboard">
-      {/* Header */}
-      <header className="mcd-header">
-        <div className="mcd-header__content">
-          <div className="mcd-header__logo">
-            <span className="mcd-header__logo-icon">🌸</span>
-            <h1 className="mcd-header__title">Bloom Dashboard</h1>
-            <span className="mcd-header__client-count">
-              {aggregatedStats.totalClients} Clients
+      {/* Toolbar */}
+      <div className="mcd-toolbar">
+        <div className="mcd-toolbar__left">
+          <span className="mcd-toolbar__client-count">
+            {aggregatedStats.totalClients} Clients
+          </span>
+          {usingLocalMode && (
+            <span className="mcd-header__mode-badge" title="Local file mode">
+              📁 Local Mode
             </span>
-          </div>
-          <div className="mcd-header__actions">
-            {usingLocalMode && (
-              <span className="mcd-header__mode-badge" title="Local file mode">
-                📁 Local Mode
-              </span>
-            )}
-            <button
-              className={`mcd-header__refresh-btn ${autoRefresh ? 'mcd-header__refresh-btn--active' : ''}`}
-              onClick={() => setAutoRefresh(!autoRefresh)}
-              title={autoRefresh ? 'Auto-refresh enabled' : 'Auto-refresh disabled'}
-            >
-              {autoRefresh ? '🔄' : '⏸️'}
-            </button>
-            <button
-              className={`mcd-header__health-btn ${showHealthPanel ? 'mcd-header__health-btn--active' : ''}`}
-              onClick={() => setShowHealthPanel(!showHealthPanel)}
-            >
-              💓 Health
-            </button>
-            <button
-              className="mcd-header__refresh-btn"
-              onClick={loadClients}
-              disabled={loading}
-            >
-              {loading ? '⏳' : '🔄'} Refresh
-            </button>
-          </div>
+          )}
+        </div>
+        <div className="mcd-toolbar__actions">
+          <button
+            className={`mcd-header__refresh-btn ${autoRefresh ? 'mcd-header__refresh-btn--active' : ''}`}
+            onClick={() => setAutoRefresh(!autoRefresh)}
+            title={autoRefresh ? 'Auto-refresh enabled' : 'Auto-refresh disabled'}
+          >
+            {autoRefresh ? '🔄' : '⏸️'}
+          </button>
+          <button
+            className={`mcd-header__health-btn ${showHealthPanel ? 'mcd-header__health-btn--active' : ''}`}
+            onClick={() => setShowHealthPanel(!showHealthPanel)}
+          >
+            💓 Health
+          </button>
+          <button
+            className="mcd-header__refresh-btn"
+            onClick={loadClients}
+            disabled={loading}
+          >
+            {loading ? '⏳' : '🔄'} Refresh
+          </button>
         </div>
         {lastRefresh && (
           <div className="mcd-header__last-refresh">
             Last updated: {lastRefresh.toLocaleTimeString()}
           </div>
         )}
-      </header>
+      </div>
 
       {/* Health Panel */}
       {showHealthPanel && healthData && (
@@ -1033,9 +1032,7 @@ export function MultiClientDashboard() {
           <Link to="/email-editor" className="mcd-actions__btn">
             ✉️ Email Editor
           </Link>
-          <Link to="/templates" className="mcd-actions__btn">
-            📄 Template Library
-          </Link>
+
         </div>
       </section>
 

@@ -119,6 +119,24 @@ function Navigation({ onNavigate }) {
  * This ensures consistent navigation across all tabs/pages
  */
 function AppLayout({ selectedClientId, onClientChange }) {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem('auth_token');
+    localStorage.removeItem('user');
+    navigate('/login');
+  };
+
+  const user = (() => {
+    try {
+      return JSON.parse(localStorage.getItem('user') || '{}');
+    } catch {
+      return {};
+    }
+  })();
+
+  const userInitial = (user.name || user.email || '?')[0].toUpperCase();
+
   return (
     <div className="app__container">
       {/* Persistent Header - Same across all routes */}
@@ -135,6 +153,12 @@ function AppLayout({ selectedClientId, onClientChange }) {
             onClientChange={onClientChange}
             selectedClientId={selectedClientId}
           />
+          <div className="app__user-menu">
+            <span className="app__user-avatar" title={user.email || 'User'}>{userInitial}</span>
+            <button className="app__logout-btn" onClick={handleLogout} title="Sign out">
+              Sign out
+            </button>
+          </div>
         </div>
       </header>
 
@@ -460,21 +484,27 @@ function WebhookManagerPage({ selectedClientId }) {
  */
 function TouchpointListPage({ selectedClientId }) {
   const { journeys, loading: journeysLoading } = useJourneys(selectedClientId);
-  
-  // Wait for journeys to load before rendering
+  const [selectedJourneyId, setSelectedJourneyId] = useState(null);
+
+  // Auto-select first journey on load (but allow user to change)
+  React.useEffect(() => {
+    if (journeys.length > 0 && !selectedJourneyId) {
+      setSelectedJourneyId(journeys[0].id);
+    }
+  }, [journeys, selectedJourneyId]);
+
   if (journeysLoading) {
     return <PageLoader />;
   }
 
-  // Get the first journey for the selected client
-  const selectedJourneyId = journeys.length > 0 ? journeys[0].id : null;
-
   return (
     <div className="touchpoint-page">
       <Suspense fallback={<PageLoader />}>
-        <TouchpointList 
+        <TouchpointList
           selectedClientId={selectedClientId}
           selectedJourneyId={selectedJourneyId}
+          journeys={journeys}
+          onJourneyChange={setSelectedJourneyId}
         />
       </Suspense>
     </div>
@@ -497,7 +527,7 @@ function App() {
         <Route element={<ProtectedRoute><AppLayout selectedClientId={selectedClientId} onClientChange={setSelectedClientId} /></ProtectedRoute>}>
           <Route path="/dashboard" element={
             <Suspense fallback={<PageLoader />}>
-              <MultiClientDashboard />
+              <MultiClientDashboard onClientChange={setSelectedClientId} />
             </Suspense>
           } />
           <Route path="/analytics" element={
