@@ -64,9 +64,9 @@ clients/cameron-estate/ghl-imported-templates/
 
 Do not edit the `.json` files directly — they get overwritten in Step 3.
 
-### Step 3: Sync HTML into JSON Files
+### Step 3: Sync HTML into individual JSON files
 
-After editing the `.html` files, run this to write the new HTML into the `.json` files the export script reads from:
+After editing `.html` files, run this to write the new HTML into the individual `.json` files:
 
 ```bash
 python3 -c "
