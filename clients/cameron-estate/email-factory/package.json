@@ -14,6 +14,11 @@
     "push": "node src/build.js --push",
     "publish:sms": "node scripts/publish-sms.js",
     "workflow": "node scripts/workflow.js",
+    "ghl:import": "node scripts/import-ghl-templates.js",
+    "ghl:export": "node scripts/export-ghl-templates.js",
+    "ghl:push": "node scripts/push-to-bloom.js",
+    "ghl:push:dry": "node scripts/push-to-bloom.js --dry-run",
+    "ghl:edit": "node scripts/edit-ghl-templates.js",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "keywords": [
