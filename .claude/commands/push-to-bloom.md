@@ -11,15 +11,35 @@ Push the updated Cameron Estate email templates to Bloom (GoHighLevel) via the G
 ## Run it
 
 ```bash
-cd clients/cameron-estate/email-factory && node scripts/push-to-bloom.js
+# Any client (recommended)
+node apps/journey-api/scripts/ghl-push.js --client=cameron-estate
+node apps/journey-api/scripts/ghl-push.js --client=maravilla-gardens
+
+# Dry run (preview without pushing)
+node apps/journey-api/scripts/ghl-push.js --client=cameron-estate --dry-run
 ```
 
-Credentials are auto-loaded from `apps/journey-api/.env` — no need to pass them manually.
+Credentials load automatically from `clients/{client}/.env` or `apps/journey-api/.env`.
 
-To preview without pushing:
+## Import templates from a new client
+
 ```bash
-cd clients/cameron-estate/email-factory && node scripts/push-to-bloom.js --dry-run
+node apps/journey-api/scripts/ghl-import.js --client=maravilla-gardens
 ```
+
+This fetches all templates from GHL and saves them to `clients/maravilla-gardens/ghl-imported-templates/`.
+
+## Adding a new client
+
+1. Get the **Location ID** and **Private Integration Token** from GHL > Settings > Private Integrations
+2. Create `clients/{client}/.env`:
+   ```
+   GHL_API_KEY=pit-xxxx
+   GHL_LOCATION_ID=xxxx
+   ```
+3. Run import: `node apps/journey-api/scripts/ghl-import.js --client={client}`
+4. Edit the HTML files in `clients/{client}/ghl-imported-templates/`
+5. Push: `node apps/journey-api/scripts/ghl-push.js --client={client}`
 
 ## Key lessons learned
 
