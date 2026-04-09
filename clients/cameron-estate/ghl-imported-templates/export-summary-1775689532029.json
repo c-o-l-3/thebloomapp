@@ -1,0 +1,60 @@
+{
+  "exportedAt": "2026-04-08T23:05:32.029Z",
+  "locationId": "G7APqyfJ6lyi4l28noZj",
+  "dryRun": false,
+  "total": 10,
+  "successful": 10,
+  "failed": 0,
+  "templates": [
+    {
+      "name": "Q. Intro Email",
+      "id": "69c4020a03fb980758be39a6",
+      "action": "updated"
+    },
+    {
+      "name": "Q. E1 - New Lead Welcome",
+      "id": "69c4020a03fb98e6b7be39a8",
+      "action": "updated"
+    },
+    {
+      "name": "001 E Day 12 - FAQ",
+      "id": "6989f34319a4a94f6d7061f9",
+      "action": "updated"
+    },
+    {
+      "name": "001 E Day 1 - Welcome",
+      "id": "6989f3343f4660695176ab31",
+      "action": "updated"
+    },
+    {
+      "name": "001 E Day 10 - Inclusions",
+      "id": "6989f3413f466013e276ac1f",
+      "action": "updated"
+    },
+    {
+      "name": "001 E Day 2 - What to Look For",
+      "id": "6989f336c528f4c2c8193535",
+      "action": "updated"
+    },
+    {
+      "name": "001 E Day 14 - Close",
+      "id": "6989f34673c4ce69cc49fff6",
+      "action": "updated"
+    },
+    {
+      "name": "001 E Day 7 - Pinterest",
+      "id": "6989f33e1cf63d439316bd6a",
+      "action": "updated"
+    },
+    {
+      "name": "001 E Day 5 - Vision",
+      "id": "6989f33b071827972b6f6708",
+      "action": "updated"
+    },
+    {
+      "name": "001 E Day 3 - Stories",
+      "id": "6989f3391cf63d188e16bce0",
+      "action": "updated"
+    }
+  ]
+}
